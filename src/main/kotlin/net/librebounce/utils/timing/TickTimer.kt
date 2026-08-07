@@ -1,0 +1,22 @@
+/*
+ * LibreBounce Hacked Client
+ * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge.
+ * https://github.com/CCBlueX/LibreBounce/
+ */
+package net.librebounce.utils.timing
+
+class TickTimer {
+	private var tick = 0
+
+	fun update() {
+		tick++
+	}
+
+	fun reset() {
+		tick = 0
+	}
+
+	fun get(): Int = tick
+
+	fun hasTimePassed(ticks: Int) = tick >= ticks
+}

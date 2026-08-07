@@ -12,7 +12,16 @@ pluginManagement {
 			name = 'Ornithe Snapshots'
 			url = 'https://maven.ornithemc.net/snapshots'
 		}
+		maven { url = "https://maven.minecraftforge.net/" }
+		maven { url = "https://jitpack.io/" }
+		maven { url = "https://repo.spongepowered.org/repository/maven-public/" }
 		mavenLocal()
 		gradlePluginPortal()
 	}
+    plugins {
+        id 'org.jetbrains.kotlin.jvm' version '2.4.0'
+    }
+}
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
 }

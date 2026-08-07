@@ -1,8 +1,8 @@
 {
 	"schemaVersion": 1,
-	"id": "example_mod",
+	"id": "librebounce",
 	"version": "${version}",
-	"name": "Example mod",
+	"name": "LibreBounce",
 	"description": "This is an example description! Tell everyone what your mod is about!",
 	"authors": [
 		"Me!"
@@ -12,19 +12,19 @@
 		"sources": "https://github.com/OrnitheMC/ornithe-template-mod"
 	},
 	"license": "CC0-1.0",
-	"icon": "assets/example_mod/icon.png",
+	"icon": "assets/librebounce/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"init": [
-			"com.example.example_mod.ExampleMod"
+			"net.librebounce.LibreBounce"
 		]
 	},
 	"mixins": [
-		"example_mod.mixins.json"
+		"librebounce.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.17.3",
-		"minecraft": "1.7.2",
+		"minecraft": "1.8.9",
 		"osl-entrypoints": ">=0.4.0"
 	}
 }
