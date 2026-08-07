@@ -37,6 +37,7 @@ import net.librebounce.utils.kotlin.SharedScopes
 import net.librebounce.utils.movement.BPSUtils
 //import net.librebounce.utils.movement.MovementUtils
 import net.librebounce.utils.movement.TimerBalanceUtils
+import net.ornithemc.osl.entrypoints.api.ModInitializer
 //import net.librebounce.utils.render.MiniMapRegister
 //import net.librebounce.utils.render.shader.Background
 /*import net.librebounce.utils.rotation.RotationUtils
@@ -46,7 +47,7 @@ import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Future
 import javax.swing.UIManager
 
-object LibreBounce {
+object LibreBounce : ModInitializer {
 
     /**
      * Client Information
@@ -133,7 +134,7 @@ object LibreBounce {
     /**
      * Execute if client will be started
      */
-    fun init() {
+    override fun init() {
         isStarting = true
 
         LOGGER.info("Starting $CLIENT_NAME $clientVersionText $clientCommit, by $CLIENT_AUTHOR")
@@ -157,6 +158,7 @@ object LibreBounce {
             WaitTickUtils
             SilentHotbar
             BlinkUtils*/
+
             TimerBalanceUtils
             BPSUtils
 
