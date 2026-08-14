@@ -16,8 +16,8 @@ import net.librebounce.features.module.modules.`fun`.SkinDerp
 import net.librebounce.features.module.modules.`fun`.SnakeGame
 import net.librebounce.features.module.modules.misc.*
 import net.librebounce.features.module.modules.misc.cheatdetector.CheatDetector*/
-import net.librebounce.features.module.impl.movement.Freeze
-import net.librebounce.features.module.impl.render.Arraylist
+import net.librebounce.features.module.impl.movement.*
+import net.librebounce.features.module.impl.render.*
 /*import net.librebounce.features.module.modules.movement.*
 import net.librebounce.features.module.modules.movement.fly.Fly
 import net.librebounce.features.module.modules.movement.liquidwalk.LiquidWalk
@@ -31,6 +31,7 @@ import net.librebounce.features.module.modules.world.*
 import net.librebounce.features.module.modules.world.Timer
 import net.librebounce.features.module.modules.world.scaffolds.Scaffold*/
 import net.librebounce.utils.client.ClientUtils.LOGGER
+import net.librebounce.utils.client.chat
 import java.util.*
 
 private val MODULE_REGISTRY = TreeSet(Comparator.comparing(Module::name))
@@ -229,6 +230,7 @@ object ModuleManager : Listenable, Collection<Module> by MODULE_REGISTRY {
             ChineseHat,
             SnakeGame*/
             Arraylist,
+            ClickGUI,
             Freeze
         )
 
@@ -296,6 +298,10 @@ object ModuleManager : Listenable, Collection<Module> by MODULE_REGISTRY {
      * Handle incoming key presses
      */
     private val onKey = handler<KeyEvent> { event ->
-        MODULE_REGISTRY.forEach { if (it.keyBind == event.key) it.toggle() }
+        MODULE_REGISTRY.forEach { if (it.keyBind == event.key) {
+                it.toggle()
+                chat("Toggled a module through a keybind!")
+            }
+        }
     }
 }

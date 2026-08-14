@@ -3,6 +3,7 @@ package net.librebounce.features.command.impl
 import joptsimple.internal.Strings
 import net.librebounce.LibreBounce.commandManager
 import net.librebounce.features.command.Command
+import kotlin.math.ceil
 
 object HelpCommand : Command("help") {
     override fun execute(args: Array<String>) {
@@ -22,10 +23,13 @@ object HelpCommand : Command("help") {
         }
 
         val maxPageDouble = commandManager.commands.size / 8.0
-        val maxPage = if (maxPageDouble > maxPageDouble.toInt())
+
+        /*val maxPage = if (maxPageDouble > maxPageDouble.toInt())
             maxPageDouble.toInt() + 1
         else
-            maxPageDouble.toInt()
+            maxPageDouble.toInt()*/
+
+        val maxPage = ceil(maxPageDouble).toInt()
 
         if (page > maxPage) {
             chat("The number you have entered is too big, it must be under ${maxPage - 1}.")
@@ -38,6 +42,7 @@ object HelpCommand : Command("help") {
         val commands = commandManager.commands.sortedBy { it.command }
 
         var i = 8 * (page - 1)
+
         while (i < 8 * page && i < commands.size) {
             val command = commands[i]
 

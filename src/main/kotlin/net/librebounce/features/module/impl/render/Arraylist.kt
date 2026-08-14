@@ -12,8 +12,7 @@ import java.awt.Color
 
 object Arraylist : Module("Arraylist", Category.RENDER, defaultState = true) {
     val onRender2D = handler<Render2DEvent> {
-        val color =
-            ColorSettingsInteger(this, "Color").with(Color.WHITE)
+        val color = ColorSettingsInteger(this, "Color").with(Color.WHITE)
 
         var yOffset = 5
 

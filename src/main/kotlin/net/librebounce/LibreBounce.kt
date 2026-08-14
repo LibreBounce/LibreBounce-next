@@ -16,7 +16,7 @@ import net.librebounce.features.command.CommandManager
 import net.librebounce.features.command.CommandManager.registerCommands
 import net.librebounce.features.module.ModuleManager
 import net.librebounce.features.module.ModuleManager.registerModules
-import net.librebounce.file.FileManager
+import net.librebounce.features.ui.elements.clickgui.dropdown.Dropdown
 import net.librebounce.file.FileManager.loadAllConfigs
 import net.librebounce.file.FileManager.saveAllConfigs
 //import net.librebounce.file.configs.models.ClientConfiguration.updateClientWindow
@@ -34,11 +34,9 @@ import net.librebounce.utils.inventory.SilentHotbar
 import net.librebounce.utils.io.MiscUtils
 import net.librebounce.utils.io.MiscUtils.showErrorPopup*/
 import net.librebounce.utils.kotlin.SharedScopes
-//import net.librebounce.utils.movement.BPSUtils
+import net.librebounce.utils.movement.BPSUtils
 //import net.librebounce.utils.movement.MovementUtils
-//import net.librebounce.utils.movement.TimerBalanceUtils
-import net.ornithemc.osl.entrypoints.api.ModInitializer
-import net.ornithemc.osl.entrypoints.api.client.ClientModInitializer
+import net.librebounce.utils.movement.TimerBalanceUtils
 //import net.librebounce.utils.render.MiniMapRegister
 //import net.librebounce.utils.render.shader.Background
 /*import net.librebounce.utils.rotation.RotationUtils
@@ -87,6 +85,7 @@ object LibreBounce {
     //val fileManager = FileManager
 
     // HUD & ClickGUI
+    val clickGui = Dropdown
     /*val hud = HUD
 
     val clickGui = ClickGui
@@ -160,18 +159,15 @@ object LibreBounce {
             SilentHotbar
             BlinkUtils*/
 
-            //TimerBalanceUtils
-            //BPSUtils
+            TimerBalanceUtils
+            BPSUtils
 
             // Load settings
             /*loadSettings(false) {
                 LOGGER.info("Successfully loaded ${it.size} settings.")
             }*/
 
-            // Register commands
             registerCommands()
-
-            // Setup module manager and register modules
             registerModules()
 
             /*runCatching {
@@ -257,5 +253,4 @@ object LibreBounce {
         // Save all available configs
         saveAllConfigs()
     }
-
 }

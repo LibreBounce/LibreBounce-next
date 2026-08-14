@@ -5,12 +5,14 @@
  */
 package net.librebounce.features.module
 
+import net.librebounce.LibreBounce.commandManager
 import net.librebounce.config.*
 import net.librebounce.features.command.Command
 //import net.librebounce.utils.block.BlockUtils.getBlockName
 import net.librebounce.utils.kotlin.StringUtils
 import net.minecraft.block.Block
 import net.minecraft.item.Item
+import org.lwjgl.input.Keyboard
 
 /**
  * Module command
@@ -40,7 +42,31 @@ class ModuleCommand(val module: Module, val values: Collection<Value<*>> = modul
 
         when (val value = module[args[1]]) {
             // TODO: Display all current values, like Myau does
-            null -> chatSyntax("$moduleName <$valueNames>")
+            null -> {
+                when (args[1]) {
+                    "toggle" -> {
+                        module.toggle()
+                        chat("${if (module.state) "Enabled" else "Disabled"} module §8${module.name}§3.")
+                    }
+
+                    "keybind" -> {
+                        if (args[2].isEmpty()) {
+                            val currentKeyName = Keyboard.getKeyName(module.keyBind)
+
+                            chat("The current keybind for §a§l${module.name}§3 is §a§l${currentKeyName}§3.")
+                            chat("To change it, do §7${commandManager.prefix}${module.name} keybind <key>")
+                        } else {
+                            val key = Keyboard.getKeyIndex(args[2].uppercase())
+                            val keyName = Keyboard.getKeyName(key)
+                            module.keyBind = key
+
+                            chat("Bound module §a§l${module.name}§3 to key §a§l${keyName}§3.")
+                        }
+                    }
+
+                    else -> chatSyntax("$moduleName <$valueNames>")
+                }
+            }
 
             is BoolValue -> {
                 if (args.size != 2) {

@@ -3,22 +3,22 @@
  * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge.
  * https://github.com/CCBlueX/LibreBounce/
  */
-/*package net.librebounce.utils.movement
+package net.librebounce.utils.movement
 
 import net.librebounce.event.Listenable
-import net.librebounce.utils.client.MinecraftInstance
+import net.minecraft.client.Minecraft
 import kotlin.math.sqrt
 
-object BPSUtils : MinecraftInstance, Listenable {
+object BPSUtils : Listenable {
 
 	private var lastPosX: Double = 0.0
 	private var lastPosZ: Double = 0.0
 	private var lastTimestamp: Long = 0
 
 	fun getBPS(): Double {
-		val player = mc.player ?: return 0.0
+		val player = Minecraft.getInstance().player ?: return 0.0
 
-		if (player.ticks < 1 || mc.world == null) {
+		if (player.ticks < 1 || Minecraft.getInstance().world == null) {
 			return 0.0
 		}
 
@@ -40,4 +40,4 @@ object BPSUtils : MinecraftInstance, Listenable {
 
 		return bps
 	}
-}*/
+}

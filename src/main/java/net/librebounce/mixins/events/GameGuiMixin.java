@@ -203,8 +203,8 @@ public abstract class GameGuiMixin extends GuiElement {
 			callbackInfo.cancel();
 	}*/
 
-	@Unique
-	private void liquidBounce$injectRender2DEvent(float delta) {
+	@Inject(method = "render", at = @At("HEAD"), cancellable = true)
+	private void libreBounce$injectRender2DEvent(float delta, CallbackInfo ci) {
 		EventManager.INSTANCE.call(new Render2DEvent(delta));
 	}
 }

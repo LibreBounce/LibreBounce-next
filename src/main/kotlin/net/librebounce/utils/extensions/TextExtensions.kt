@@ -46,7 +46,7 @@ fun String.addSpaces(addSpaces: Boolean = true): String {
         if (char.isUpperCase()) {
             var allUppercase = true
 
-            for (j in 0 until length) {
+            for (j in indices) {
                 if (this[j].isLowerCase()) {
                     allUppercase = false
                     break

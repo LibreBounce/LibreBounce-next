@@ -41,7 +41,7 @@ internal inline fun <T : Any> createEventMap(valueSelector: (Class<out Event>) -
  */
 object EventManager : CoroutineScope by CoroutineScope(SupervisorJob()) {
     /**
-     * All normal handlers (except of scripts) should be initialized at startup on the main thread
+     * All dropdown handlers (except of scripts) should be initialized at startup on the main thread
      */
     private val registry = createEventMap { CopyOnWriteArrayList<EventHook<in Event>>() }
 
