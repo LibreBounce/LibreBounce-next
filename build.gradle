@@ -32,9 +32,13 @@ dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc:fabric-language-kotlin:${providers.gradleProperty("fabric_kotlin_version").get()}"
+
 	implementation "org.semver4j:semver4j:5.8.0"
 	implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0"
 	implementation("io.github.axolotlclient.rendering:AxolotlClient-rendering:0.0.11+1.8.9")
+	//implementation "org.lwjgl:lwjgl:3.4.1"
+	//implementation("org.lwjgl:lwjgl-sdl:3.4.2")
+	//modImplementation "io.github.moehreag:legacy-lwjgl3:1.4.4"
 
 	implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.16") {
 		exclude module: "kotlin-stdlib"

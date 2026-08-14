@@ -1,5 +1,6 @@
 package net.librebounce.features.ui.elements.clickgui.dropdown.elements
 
+import io.github.axolotlclient.rendering.font.DefaultFont
 import io.github.axolotlclient.rendering.font.Font
 import net.librebounce.features.module.Category
 import net.librebounce.features.module.ModuleManager
@@ -26,10 +27,10 @@ class CategoryElement(val category: Category) : Element {
         )
 
         drawString(
-            Font,
+            DefaultFont.inter(),
             category.displayName,
-            position.x + 5,
-            position.y - 5,
+            position.x + 5f,
+            position.y - 5f,
             Color.WHITE.withAlpha(255)
         )
 
@@ -37,10 +38,10 @@ class CategoryElement(val category: Category) : Element {
             moduleY += 10
 
             drawString(
-                Inter,
+                DefaultFont.inter(),
                 module.name,
-                position.x + 5,
-                moduleY,
+                position.x + 5f,
+                moduleY.toFloat(),
                 Color.white.withAlpha(255)
             )
 

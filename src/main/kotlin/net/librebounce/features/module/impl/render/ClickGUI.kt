@@ -8,7 +8,5 @@ import net.minecraft.client.Minecraft
 object ClickGUI : Module("ClickGUI", Category.RENDER) {
     override fun onEnable() {
         Minecraft.getInstance().openScreen(clickGui)
-
-        toggle()
     }
 }

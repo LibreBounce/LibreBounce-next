@@ -1,5 +1,6 @@
 package net.librebounce.features.ui.elements.clickgui.dropdown.elements
 
+import io.github.axolotlclient.rendering.font.DefaultFont
 import net.librebounce.config.*
 import net.librebounce.features.module.Module
 import net.librebounce.features.ui.elements.clickgui.dropdown.elements.values.*
@@ -31,24 +32,27 @@ class ModuleElement(val module: Module, var sidebarLocation: Vector2i) : Element
             Color.BLACK.withAlpha(100)
         )
 
-        for (value in Module.values) {
+        val moduleValues = module.values.filter { it.shouldRender() }
+
+        for (value in moduleValues) {
             valueY += 10
 
             drawString(
-                Inter,
+                DefaultFont.inter(),
                 value.name,
                 sidebarLocation.x + 5f,
-                valueY,
+                valueY.toFloat(),
                 Color.WHITE
             )
 
             when (value) {
                 is FloatValue -> FloatElement(value)
-                is FloatRangeValue -> FloatRangeElement(value)
+                //is FloatRangeValue -> FloatRangeElement(value)
                 is IntValue -> IntElement(value)
-                is IntRangeValue -> IntRangeElement(value)
+                //is IntRangeValue -> IntRangeElement(value)
                 is TextValue -> TextElement(value)
                 is ListValue -> ListElement(value)
+                else -> return
                 //is BlockValue -> BlockElement(value)
             }
         }
