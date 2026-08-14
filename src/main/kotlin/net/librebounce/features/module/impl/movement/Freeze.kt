@@ -23,19 +23,19 @@ object Freeze : Module("Freeze", Category.MOVEMENT) {
     private var z = 0.0
 
     override fun onEnable() {
-        x = player.x
-        y = player.y
-        z = player.z
-        velocityX = player.velocityX
-        velocityY = player.velocityY
-        velocityZ = player.velocityZ
+        x = mc.player.x
+        y = mc.player.y
+        z = mc.player.z
+        velocityX = mc.player.velocityX
+        velocityY = mc.player.velocityY
+        velocityZ = mc.player.velocityZ
     }
 
     val onUpdate = handler<UpdateEvent> {
-        player.velocityX = 0.0
-        player.velocityY = 0.0
-        player.velocityZ = 0.0
-        player.updatePositionAndAngles(x, y, z, player.yaw, player.pitch)
+        mc.player.velocityX = 0.0
+        mc.player.velocityY = 0.0
+        mc.player.velocityZ = 0.0
+        mc.player.updatePositionAndAngles(x, y, z, mc.player.yaw, mc.player.pitch)
     }
 
     val onPacket = handler<PacketEvent> { event ->
@@ -53,9 +53,9 @@ object Freeze : Module("Freeze", Category.MOVEMENT) {
     }
 
     override fun onDisable() {
-        player.velocityX = velocityX
-        player.velocityY = velocityY
-        player.velocityZ = velocityZ
-        player.updatePositionAndAngles(x, y, z, player.yaw, player.pitch)
+        mc.player.velocityX = velocityX
+        mc.player.velocityY = velocityY
+        mc.player.velocityZ = velocityZ
+        mc.player.updatePositionAndAngles(x, y, z, mc.player.yaw, mc.player.pitch)
     }
 }

@@ -53,9 +53,6 @@ open class Module(
     }.subjective().excludeWhen(!gameDetecting)*/
 
     val mc = Minecraft.getInstance()
-    val player = mc.player
-    val options = mc.options
-    val world = mc.world
 
     var keyBind = defaultKeyBind
         set(keyBind) {
