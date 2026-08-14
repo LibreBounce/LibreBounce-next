@@ -2,11 +2,11 @@ package net.librebounce.file.configs.models
 
 import net.librebounce.LibreBounce
 import net.librebounce.config.Configurable
-import net.librebounce.utils.client.MinecraftInstance
+//import net.librebounce.utils.client.MinecraftInstance
 /*import net.librebounce.utils.render.IconUtils
 import org.lwjgl.opengl.Display*/
 
-object ClientConfiguration : Configurable("ClientConfiguration"), MinecraftInstance {
+object ClientConfiguration : Configurable("ClientConfiguration") {
     var clientTitle by boolean("ClientTitle", true)
     var customBackground by boolean("CustomBackground", true)
     var particles by boolean("Particles", false)

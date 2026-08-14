@@ -3,7 +3,7 @@
  * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge.
  * https://github.com/CCBlueX/LibreBounce/
  */
-package net.librebounce.utils.movement
+/*package net.librebounce.utils.movement
 
 import net.librebounce.event.Listenable
 import net.librebounce.utils.client.MinecraftInstance
@@ -40,4 +40,4 @@ object BPSUtils : MinecraftInstance, Listenable {
 
 		return bps
 	}
-}
+}*/

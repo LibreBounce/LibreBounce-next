@@ -6,6 +6,7 @@
 package net.librebounce.utils.client
 
 import net.librebounce.LibreBounce.CLIENT_NAME
+import net.minecraft.client.Minecraft
 import net.minecraft.client.options.GameOptions
 import net.minecraft.network.Connection
 import net.minecraft.network.packet.c2s.login.KeyC2SPacket
@@ -17,7 +18,7 @@ import java.lang.reflect.Field
 import java.security.PublicKey
 import javax.crypto.SecretKey
 
-object ClientUtils : MinecraftInstance {
+object ClientUtils {
     var runTimeTicks = 0
 
     var profilerName = ""
@@ -36,7 +37,7 @@ object ClientUtils : MinecraftInstance {
     }*/
 
     fun displayChatMessage(message: String) {
-        mc.player?.sendMessage(LiteralText("§8[§9§l$CLIENT_NAME§8]§r $message"))
+        Minecraft.getInstance().player?.sendMessage(LiteralText("§8[§9§l$CLIENT_NAME§8]§r $message"))
             ?: LOGGER.info("(MCChat) $message")
     }
 }

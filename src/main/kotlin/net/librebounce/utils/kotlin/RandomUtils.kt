@@ -9,7 +9,7 @@ package net.librebounce.utils.kotlin
 import net.librebounce.event.EventManager.call
 import net.librebounce.event.SessionUpdateEvent
 import net.librebounce.file.configs.models.ClientConfiguration
-import net.librebounce.utils.client.MinecraftInstance.Companion.mc
+//import net.librebounce.utils.client.MinecraftInstance.Companion.mc
 import net.minecraft.client.Session
 import kotlin.random.Random
 

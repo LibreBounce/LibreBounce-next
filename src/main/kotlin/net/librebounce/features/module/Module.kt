@@ -19,7 +19,7 @@ import net.librebounce.ui.client.hud.element.elements.Arraylist
 import net.librebounce.ui.client.hud.element.elements.Notification
 import net.librebounce.ui.client.hud.element.elements.Notifications*/
 import net.librebounce.utils.client.ClientUtils.LOGGER
-import net.librebounce.utils.client.MinecraftInstance
+//import net.librebounce.utils.client.MinecraftInstance
 import net.librebounce.utils.client.asIdentifier
 import net.librebounce.utils.client.chat
 //import net.librebounce.utils.client.playSound
@@ -40,7 +40,7 @@ open class Module(
     val gameDetecting: Boolean = canBeEnabled,
     defaultState: Boolean = false,
     defaultHidden: Boolean = false,
-) : Configurable(name), MinecraftInstance, Listenable {
+) : Configurable(name), Listenable {
 
     init {
         if (subjective) {

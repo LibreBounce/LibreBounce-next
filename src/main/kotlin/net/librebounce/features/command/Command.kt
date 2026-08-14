@@ -6,11 +6,11 @@
 package net.librebounce.features.command
 
 import net.librebounce.LibreBounce.commandManager
-import net.librebounce.utils.client.MinecraftInstance
+//import net.librebounce.utils.client.MinecraftInstance
 import net.librebounce.utils.client.asIdentifier
 //import net.librebounce.utils.client.playSound
 
-abstract class Command(val command: String, vararg val alias: String) : MinecraftInstance {
+abstract class Command(val command: String, vararg val alias: String) {
     /**
      * Execute commands with provided [args]
      */

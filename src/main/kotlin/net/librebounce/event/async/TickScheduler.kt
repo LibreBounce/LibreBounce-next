@@ -10,7 +10,8 @@ import net.librebounce.event.GameTickEvent
 import net.librebounce.event.Listenable
 import net.librebounce.event.PacketEvent
 import net.librebounce.event.handler
-import net.librebounce.utils.client.MinecraftInstance
+import net.minecraft.client.Minecraft
+//import net.librebounce.utils.client.MinecraftInstance
 import java.util.function.BooleanSupplier
 import kotlin.coroutines.RestrictsSuspension
 
@@ -26,7 +27,7 @@ import kotlin.coroutines.RestrictsSuspension
  *
  * @author MukjepScarlet
  */
-object TickScheduler : Listenable, MinecraftInstance {
+object TickScheduler : Listenable {
 
     private val currentTickTasks = arrayListOf<BooleanSupplier>()
     private val nextTickTasks = arrayListOf<BooleanSupplier>()
@@ -46,6 +47,6 @@ object TickScheduler : Listenable, MinecraftInstance {
      */
     fun schedule(breakLoop: BooleanSupplier) {
         // Prevent modification in removeIf (Continuation.resume)
-        mc.execute { nextTickTasks += breakLoop }
+        Minecraft.getInstance().execute { nextTickTasks += breakLoop }
     }
 }

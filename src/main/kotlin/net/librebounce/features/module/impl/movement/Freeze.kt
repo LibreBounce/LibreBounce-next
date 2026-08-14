@@ -10,6 +10,7 @@ import net.librebounce.event.UpdateEvent
 import net.librebounce.event.handler
 import net.librebounce.features.module.Category
 import net.librebounce.features.module.Module
+import net.minecraft.client.Minecraft
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket
 import net.minecraft.network.packet.s2c.play.PlayerMoveS2CPacket
 
@@ -22,7 +23,7 @@ object Freeze : Module("Freeze", Category.MOVEMENT) {
     private var z = 0.0
 
     override fun onEnable() {
-        val player = mc.player ?: return
+        val player = Minecraft.getInstance().player ?: return
 
         x = player.x
         y = player.y
@@ -33,16 +34,18 @@ object Freeze : Module("Freeze", Category.MOVEMENT) {
     }
 
     val onUpdate = handler<UpdateEvent> {
-        mc.player.velocityX = 0.0
-        mc.player.velocityY = 0.0
-        mc.player.velocityZ = 0.0
-        mc.player.updatePositionAndAngles(x, y, z, mc.player.yaw, mc.player.pitch)
+        val player = Minecraft.getInstance().player ?: return@handler
+
+        player.velocityX = 0.0
+        player.velocityY = 0.0
+        player.velocityZ = 0.0
+        player.updatePositionAndAngles(x, y, z, player.yaw, player.pitch)
     }
 
     val onPacket = handler<PacketEvent> { event ->
-        if (event.packet is PlayerMoveC2SPacket) {
+        if (event.packet is PlayerMoveC2SPacket)
             event.cancelEvent()
-        }
+
         if (event.packet is PlayerMoveS2CPacket) {
             x = event.packet.x
             y = event.packet.y
@@ -54,9 +57,11 @@ object Freeze : Module("Freeze", Category.MOVEMENT) {
     }
 
     override fun onDisable() {
-        mc.player.velocityX = velocityX
-        mc.player.velocityY = velocityY
-        mc.player.velocityZ = velocityZ
-        mc.player.updatePositionAndAngles(x, y, z, mc.player.yaw, mc.player.pitch)
+        val player = Minecraft.getInstance().player ?: return
+
+        player.velocityX = velocityX
+        player.velocityY = velocityY
+        player.velocityZ = velocityZ
+        player.updatePositionAndAngles(x, y, z, player.yaw, player.pitch)
     }
 }

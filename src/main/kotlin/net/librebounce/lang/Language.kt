@@ -7,19 +7,20 @@ package net.librebounce.lang
 
 import net.librebounce.file.configs.models.ClientConfiguration.overrideLanguage
 import net.librebounce.utils.client.ClientUtils.LOGGER
-import net.librebounce.utils.client.MinecraftInstance
+//import net.librebounce.utils.client.MinecraftInstance
 import net.librebounce.utils.io.decodeJson
+import net.minecraft.client.Minecraft
 
 fun translationMenu(key: String, vararg args: Any) = LanguageManager.getTranslation("menu.$key", *args)
 fun translationButton(key: String, vararg args: Any) = LanguageManager.getTranslation("button.$key", *args)
 fun translationText(key: String, vararg args: Any) = LanguageManager.getTranslation("text.$key", *args)
 fun translation(key: String, vararg args: Any) = LanguageManager.getTranslation(key, *args)
 
-object LanguageManager : MinecraftInstance {
+object LanguageManager {
 
     // Current language
     private val language: String
-        get() = overrideLanguage.ifBlank { mc.options.language }
+        get() = overrideLanguage.ifBlank { Minecraft.getInstance().options.language }
 
     // Common language
     private const val COMMON_UNDERSTOOD_LANGUAGE = "en_US"

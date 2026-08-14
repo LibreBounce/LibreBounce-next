@@ -11,13 +11,14 @@ package net.librebounce.utils.extensions
 /*import net.librebounce.utils.block.set
 import net.librebounce.utils.block.state
 import net.librebounce.utils.block.toVec*/
-import net.librebounce.utils.client.MinecraftInstance.Companion.mc
+//import net.librebounce.utils.client.MinecraftInstance.Companion.mc
 /*import net.librebounce.utils.client.PacketUtils.sendPacket
 import net.librebounce.utils.inventory.SilentHotbar
 import net.librebounce.utils.movement.MovementUtils
 import net.librebounce.utils.render.ColorUtils.stripColor
 import net.librebounce.utils.rotation.Rotation
 import net.librebounce.utils.rotation.RotationUtils.getFixedSensitivityAngle*/
+import net.minecraft.client.Minecraft
 import net.minecraft.client.entity.living.player.LocalClientPlayerEntity
 import net.minecraft.entity.Entity
 import net.minecraft.entity.living.LivingEntity
@@ -78,7 +79,7 @@ fun getNearestPointBB(eye: Vec3d, box: Box):Vec3d {
     return Vec3d(origin[0], origin[1], origin[2])
 }*/
 
-fun PlayerEntity.getPing() = mc.networkHandler.getOnlinePlayer(uuid)?.ping ?: 0
+fun PlayerEntity.getPing() = Minecraft.getInstance().networkHandler.getOnlinePlayer(uuid)?.ping ?: 0
 
 /*fun Entity.isAnimal() =
     this is EntityAnimal
@@ -308,7 +309,7 @@ fun LocalClientPlayerEntity.sendUseItem(stack: ItemStack): Boolean {
 }*/
 
 fun LocalClientPlayerEntity.tryJump() {
-    if (!mc.options.jumpKey.isPressed) {
+    if (!Minecraft.getInstance().options.jumpKey.isPressed) {
         jump()
     }
 }
