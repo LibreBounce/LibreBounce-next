@@ -9,6 +9,5 @@ object Dropdown : Screen() {
         for (category in Category.entries.toTypedArray()) {
             CategoryElement(category)
         }
-        fill(10, 10, 25, 25, 2)
     }
 }

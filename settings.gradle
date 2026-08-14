@@ -12,6 +12,14 @@ pluginManagement {
 			name = 'Ornithe Snapshots'
 			url = 'https://maven.ornithemc.net/snapshots'
 		}
+		maven {
+			name = 'AxolotlClient Releases'
+			url = 'https://maven.axolotlclient.com/releases'
+		}
+		maven {
+			name = 'AxolotlClient Snapshots'
+			url = 'https://maven.axolotlclient.com/snapshots'
+		}
 		maven { url = "https://maven.minecraftforge.net/" }
 		maven { url = "https://jitpack.io/" }
 		maven { url = "https://repo.spongepowered.org/repository/maven-public/" }

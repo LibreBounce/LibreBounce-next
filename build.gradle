@@ -17,6 +17,10 @@ ploceus {
 
 repositories {
 	mavenCentral()
+	maven {
+		name = 'AxolotlClient Releases'
+		url = 'https://maven.axolotlclient.com/releases'
+	}
 	// Add repositories to retrieve artifacts from in here.
 	// You should only use this when depending on other mods because
 	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
@@ -28,9 +32,9 @@ dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc:fabric-language-kotlin:${providers.gradleProperty("fabric_kotlin_version").get()}"
-	// Update Checker - Semver Implementation
 	implementation "org.semver4j:semver4j:5.8.0"
 	implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0"
+	implementation("io.github.axolotlclient.rendering:AxolotlClient-rendering:0.0.11+1.8.9")
 
 	implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.16") {
 		exclude module: "kotlin-stdlib"

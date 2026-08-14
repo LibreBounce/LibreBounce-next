@@ -1,35 +1,50 @@
 package net.librebounce.features.ui.elements.clickgui.dropdown.elements
 
+import io.github.axolotlclient.rendering.font.Font
 import net.librebounce.features.module.Category
 import net.librebounce.features.module.ModuleManager
-import org.joml.Vector2f
+import net.librebounce.utils.render.ColorUtils.withAlpha
+import net.librebounce.utils.render.RenderUtils.drawOutlineRoundedRect
+import net.librebounce.utils.render.RenderUtils.drawString
+import org.joml.Vector2i
+import java.awt.Color
 
 class CategoryElement(val category: Category) : Element {
-    private val position = Vector2f(0f, 0f)
+    private val position = Vector2i(0, 0)
 
     override fun render(mouseX: Int, mouseY: Int, partialT: Float) {
         var moduleY = position.y - 5
 
-        drawOutlineRect(position.x, position.y, position.x + 25, moduleY - 5)
+        drawOutlineRoundedRect(
+            position.x,
+            position.y,
+            position.x + 25,
+            moduleY - 5,
+            Color.black.withAlpha(100),
+            0f,
+            1f
+        )
 
-        draw(
+        drawString(
+            Font,
             category.displayName,
             position.x + 5,
             position.y - 5,
-            00
+            Color.WHITE.withAlpha(255)
         )
 
         for (module in ModuleManager[category]) {
             moduleY += 10
 
-            draw(
+            drawString(
+                Inter,
                 module.name,
                 position.x + 5,
                 moduleY,
-                00
+                Color.white.withAlpha(255)
             )
 
-            if (module.isActive) ModuleElement(module, Vector2f(moduleY, position.x))
+            if (module.isActive) ModuleElement(module, Vector2i(moduleY, position.x))
         }
     }
 }

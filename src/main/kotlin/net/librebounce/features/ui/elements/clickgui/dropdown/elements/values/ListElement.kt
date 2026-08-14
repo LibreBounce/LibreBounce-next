@@ -1,4 +1,7 @@
 package net.librebounce.features.ui.elements.clickgui.dropdown.elements.values
 
-class ListElement {
+import net.librebounce.config.ListValue
+import net.librebounce.features.ui.elements.clickgui.dropdown.elements.Element
+
+class ListElement(value: ListValue) : Element {
 }
