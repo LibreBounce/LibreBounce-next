@@ -26,6 +26,7 @@ import net.librebounce.utils.client.chat
 import net.librebounce.utils.extensions.addSpaces
 import net.librebounce.utils.extensions.toLowerCamelCase
 import net.librebounce.utils.kotlin.RandomUtils.nextFloat
+import net.minecraft.client.Minecraft
 //import net.librebounce.utils.timing.TickedActions.clearTicked
 import org.lwjgl.input.Keyboard
 
@@ -50,6 +51,11 @@ open class Module(
     /*private val onlyInGameValue = boolean("OnlyInGame", true) {
         GameDetector.state
     }.subjective().excludeWhen(!gameDetecting)*/
+
+    val mc = Minecraft.getInstance()
+    val player = mc.player
+    val options = mc.options
+    val world = mc.world
 
     var keyBind = defaultKeyBind
         set(keyBind) {

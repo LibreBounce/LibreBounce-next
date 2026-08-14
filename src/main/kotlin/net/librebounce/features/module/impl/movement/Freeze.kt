@@ -23,8 +23,6 @@ object Freeze : Module("Freeze", Category.MOVEMENT) {
     private var z = 0.0
 
     override fun onEnable() {
-        val player = Minecraft.getInstance().player ?: return
-
         x = player.x
         y = player.y
         z = player.z
@@ -34,8 +32,6 @@ object Freeze : Module("Freeze", Category.MOVEMENT) {
     }
 
     val onUpdate = handler<UpdateEvent> {
-        val player = Minecraft.getInstance().player ?: return@handler
-
         player.velocityX = 0.0
         player.velocityY = 0.0
         player.velocityZ = 0.0
@@ -57,8 +53,6 @@ object Freeze : Module("Freeze", Category.MOVEMENT) {
     }
 
     override fun onDisable() {
-        val player = Minecraft.getInstance().player ?: return
-
         player.velocityX = velocityX
         player.velocityY = velocityY
         player.velocityZ = velocityZ

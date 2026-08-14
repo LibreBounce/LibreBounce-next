@@ -13,7 +13,7 @@
 	],
 	"server": [
 	],
-	"injectors": {
+  "injectors": {
 		"defaultRequire": 1
 	}
 }

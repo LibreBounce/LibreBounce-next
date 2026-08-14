@@ -3,15 +3,14 @@
  * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge.
  * https://github.com/CCBlueX/LibreBounce/
  */
-package net.librebounce.features.module
+package net.librebounce.features.command.impl
 
 import net.librebounce.LibreBounce.commandManager
 import net.librebounce.config.*
 import net.librebounce.features.command.Command
+import net.librebounce.features.module.Module
 //import net.librebounce.utils.block.BlockUtils.getBlockName
 import net.librebounce.utils.kotlin.StringUtils
-import net.minecraft.block.Block
-import net.minecraft.item.Item
 import org.lwjgl.input.Keyboard
 
 /**

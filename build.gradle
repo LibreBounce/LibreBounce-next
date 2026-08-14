@@ -11,16 +11,27 @@ base {
 version = "${project.version}+mc${project.minecraft_version}"
 group = project.maven_group
 
+loom {
+	accessWidenerPath = file("src/main/resources/librebounce.accesswidener")
+}
+
 ploceus {
 	setIntermediaryGeneration(2)
 }
 
 repositories {
+	exclusiveContent {
+		forRepository { mavenCentral() }
+		filter {
+			includeGroup("org.lwjgl")
+		}
+	}
 	mavenCentral()
 	maven {
 		name = 'AxolotlClient Releases'
 		url = 'https://maven.axolotlclient.com/releases'
 	}
+	maven { url = "https://jitpack.io/" }
 	// Add repositories to retrieve artifacts from in here.
 	// You should only use this when depending on other mods because
 	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
@@ -35,22 +46,19 @@ dependencies {
 
 	implementation "org.semver4j:semver4j:5.8.0"
 	implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0"
-	implementation("io.github.axolotlclient.rendering:AxolotlClient-rendering:0.0.11+1.8.9")
+	implementation("io.github.axolotlclient.rendering:AxolotlClient-rendering:0.0.11+1.8.9") {
+		exclude module: "org.lwjgl:lwjgl:3.4.2"
+	}
 	//implementation "org.lwjgl:lwjgl:3.4.1"
 	//implementation("org.lwjgl:lwjgl-sdl:3.4.2")
-	//modImplementation "io.github.moehreag:legacy-lwjgl3:1.4.4"
+	modImplementation "io.github.moehreag:legacy-lwjgl3:1.4.3"
 
 	implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.16") {
 		exclude module: "kotlin-stdlib"
 	}
 
 	implementation "org.joml:joml:${project.joml_version}"
-	/*implementation("com.github.CCBlueX:Elixir:1.2.6") {
-		exclude module: "kotlin-stdlib"
-		exclude module: "authlib"
-	}*/
 
-	// Swing theme
 	implementation "com.formdev:flatlaf:3.7.2"
 
 	mappings ploceus.featherMappings(project.feather_build)
