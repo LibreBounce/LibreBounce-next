@@ -1,4 +1,4 @@
-package net.librebounce.injection.mixins.events;
+package net.librebounce.mixins.events;
 
 import net.librebounce.event.*;
 import net.minecraft.client.entity.living.player.Input;

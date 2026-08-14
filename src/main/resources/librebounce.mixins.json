@@ -1,12 +1,14 @@
 {
 	"required": true,
 	"minVersion": "0.8",
-	"package": "net.librebounce.injection.mixins",
+	"package": "net.librebounce.mixins",
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
 	],
 	"client": [
     "init.MinecraftMixin",
+    "events.ScreenMixin",
+    "events.GameGuiMixin",
     "events.LocalClientPlayerEntityMixin"
 	],
 	"server": [

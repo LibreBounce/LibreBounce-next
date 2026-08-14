@@ -1,4 +1,4 @@
-package net.librebounce.injection.mixins.init;
+package net.librebounce.mixins.init;
 
 import net.librebounce.LibreBounce;
 import net.minecraft.client.Minecraft;
@@ -19,5 +19,10 @@ public abstract class MinecraftMixin {
 	@Inject(method = "initDisplay", at = @At("TAIL"))
 	public void libreBounce$setWindowTitle(CallbackInfo ci) {
 		Display.setTitle(LibreBounce.INSTANCE.getClientTitle());
+	}
+
+	@Inject(method = "shutdown", at = @At("HEAD"))
+	private void shutdown(CallbackInfo callbackInfo) {
+		LibreBounce.INSTANCE.exit();
 	}
 }

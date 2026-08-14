@@ -17,6 +17,7 @@ import net.librebounce.features.module.modules.`fun`.SnakeGame
 import net.librebounce.features.module.modules.misc.*
 import net.librebounce.features.module.modules.misc.cheatdetector.CheatDetector*/
 import net.librebounce.features.module.impl.movement.Freeze
+import net.librebounce.features.module.impl.render.Arraylist
 /*import net.librebounce.features.module.modules.movement.*
 import net.librebounce.features.module.modules.movement.fly.Fly
 import net.librebounce.features.module.modules.movement.liquidwalk.LiquidWalk
@@ -227,6 +228,7 @@ object ModuleManager : Listenable, Collection<Module> by MODULE_REGISTRY {
             ClickRecorder,
             ChineseHat,
             SnakeGame*/
+            Arraylist,
             Freeze
         )
 
@@ -296,5 +298,4 @@ object ModuleManager : Listenable, Collection<Module> by MODULE_REGISTRY {
     private val onKey = handler<KeyEvent> { event ->
         MODULE_REGISTRY.forEach { if (it.keyBind == event.key) it.toggle() }
     }
-
 }

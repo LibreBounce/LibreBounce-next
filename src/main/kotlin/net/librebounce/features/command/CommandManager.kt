@@ -24,6 +24,7 @@ object CommandManager {
     fun registerCommands() {
         commands.clear()
 
+        registerCommand(HelpCommand)
         registerCommand(SayCommand)
         /*registerCommand(AutoDisableCommand)
         registerCommand(BindCommand)

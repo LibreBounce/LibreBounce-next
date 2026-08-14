@@ -43,9 +43,7 @@ open class Module(
 ) : Configurable(name), Listenable {
 
     init {
-        if (subjective) {
-            subjective()
-        }
+        if (subjective) subjective()
     }
 
     // Value that determines whether the module should depend on GameDetector

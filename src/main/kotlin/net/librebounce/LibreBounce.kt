@@ -247,7 +247,7 @@ object LibreBounce {
     /**
      * Execute if client will be stopped
      */
-    fun stopClient() {
+    fun exit() {
         // Call client shutdown
         EventManager.call(ClientShutdownEvent)
 
