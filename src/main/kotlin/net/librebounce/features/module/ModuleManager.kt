@@ -11,6 +11,7 @@ import net.librebounce.event.handler
 import net.librebounce.features.command.CommandManager.registerCommand
 import net.librebounce.features.command.impl.ModuleCommand
 import net.librebounce.features.module.impl.combat.HitDetector
+import net.librebounce.features.module.impl.combat.TickManipulation
 /*import net.librebounce.features.module.modules.combat.*
 import net.librebounce.features.module.modules.exploit.*
 import net.librebounce.features.module.modules.`fun`.Derp
@@ -235,6 +236,7 @@ object ModuleManager : Listenable, Collection<Module> by MODULE_REGISTRY {
             ClickGUI,
             AutoWalk,
             Freeze,
+            TickManipulation,
             HitDetector
         )
 

@@ -2,7 +2,9 @@ package net.librebounce.mixins.init;
 
 import net.librebounce.LibreBounce;
 import net.librebounce.event.EventManager;
+import net.librebounce.event.GameTickEvent;
 import net.librebounce.event.KeyEvent;
+import net.librebounce.event.TickEndEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.main.RunArgs;
@@ -33,6 +35,16 @@ public abstract class MinecraftMixin {
 	private void onKey(CallbackInfo callbackInfo) {
 		if (Keyboard.getEventKeyState() && screen == null)
 			EventManager.INSTANCE.call(new KeyEvent(Keyboard.getEventKey() == 0 ? Keyboard.getEventCharacter() + 256 : Keyboard.getEventKey()));
+	}
+
+	@Inject(method = "tick", at = @At("TAIL"))
+	private void injectEndTickEvent(CallbackInfo ci) {
+		EventManager.INSTANCE.call(TickEndEvent.INSTANCE);
+	}
+
+	@Inject(method = "tick", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;joinPlayerCounter:I", ordinal = 0))
+	private void onTick(final CallbackInfo callbackInfo) {
+		EventManager.INSTANCE.call(GameTickEvent.INSTANCE);
 	}
 
 	@Inject(method = "shutdown", at = @At("HEAD"))

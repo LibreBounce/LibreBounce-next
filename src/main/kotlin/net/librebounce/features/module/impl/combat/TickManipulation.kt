@@ -1,14 +1,18 @@
 package net.librebounce.features.module.impl.combat
 
 import kotlinx.coroutines.Dispatchers
+import net.librebounce.event.AttackEvent
 import net.librebounce.event.DelayedPacketProcessEvent
 import net.librebounce.event.EventState
 import net.librebounce.event.GameLoopEvent
 import net.librebounce.event.GameTickEvent
+import net.librebounce.event.MoveEvent
 import net.librebounce.event.PlayerTickEvent
+import net.librebounce.event.async.waitTicks
 import net.librebounce.event.handler
 import net.librebounce.features.module.Category
 import net.librebounce.features.module.Module
+import net.librebounce.utils.client.chat
 import net.librebounce.utils.simulation.SimulatedPlayer
 import net.minecraft.entity.living.LivingEntity
 import net.minecraft.util.math.Vec3d
@@ -23,6 +27,7 @@ object TickManipulation : Module("TickManipulation", Category.COMBAT) {
     private var ticksToSkip = 0
     private var tickBalance = 0f
     private var reachedTheLimit = false
+    private var attacked = false
     private val tickBuffer = mutableListOf<TickData>()
     var duringTickModification = false
 
@@ -76,28 +81,23 @@ object TickManipulation : Module("TickManipulation", Category.COMBAT) {
 
             duringTickModification = true
 
-            val skipTicks = (bestTick + maxTicksToStop).coerceAtMost(maxTicksAtATime + maxTicksToStop)
+            val skipTicks = (bestTick + maxTicksToStop).coerceAtMost(maxTicksToSkip + maxTicksToStop)
 
             fun tick() {
                 repeat(skipTicks) {
-                    player.onUpdate()
-                    tickBalance--
+                    player.tick()
                 }
             }
 
-            if (mode == "Past") {
-                ticksToSkip = skipTicks
-                waitTicks(skipTicks)
-                tick()
-                modificationFlag = true
-            } else {
-                tick()
-                ticksToSkip = skipTicks
-                waitTicks(skipTicks)
-                modificationFlag = true
+            tick()
+
+            if (attacked) {
+                waitTicks(maxTicksToStop.coerceAtMost(skipTicks))
             }
 
-            if (debug) chat("(TickBase) Lag ticks: ${skipTicks}, best ticks: ${bestTick}, additional pause ticks: ${pauseAfterTick})")
+            modificationFlag = true
+
+            if (debug) chat("(TickBase) Lag ticks: ${skipTicks}, best ticks: ${bestTick}, additional pause ticks: ${maxTicksToSkip})")
 
         }
     }
@@ -105,13 +105,13 @@ object TickManipulation : Module("TickManipulation", Category.COMBAT) {
     val onMove = handler<MoveEvent> {
         val player = mc.player ?: return@handler
 
-        if (player.vehicle != null || Blink.handleEvents()) {
+        if (player.vehicle != null) {
             return@handler
         }
 
         tickBuffer.clear()
 
-        val simPlayer = SimulatedPlayer.fromClientPlayer(/*RotationUtils.modifiedInput*/mc.options.input)
+        val simPlayer = SimulatedPlayer.fromClientPlayer(/*RotationUtils.modifiedInput*/mc.player.input)
 
         simPlayer.yaw = player.yaw//RotationUtils.currentRotation?.yaw ?: player.yaw
 
@@ -136,6 +136,9 @@ object TickManipulation : Module("TickManipulation", Category.COMBAT) {
         }
     }
 
+    val onAttack = handler<AttackEvent> {
+        attacked = true
+    }
     private data class TickData(
         val position: Vec3d,
         val fallDistance: Float,
@@ -151,6 +154,6 @@ object TickManipulation : Module("TickManipulation", Category.COMBAT) {
         val entities = mc.world.entities ?: return null
 
         return entities.asSequence().filterIsInstance<LivingEntity>()
-            .filter { EntityUtils.isSelected(it, true) }.minByOrNull { mc.player.getDistanceToEntity(it) }
+            /*.filter { EntityUtils.isSelected(it, true) }*/.minByOrNull { mc.player.distanceTo(it) }
     }
 }

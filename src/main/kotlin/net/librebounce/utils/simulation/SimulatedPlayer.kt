@@ -37,8 +37,9 @@ import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.border.WorldBorder
-import net.minecraft.world.chunk.Chunk
+//import net.minecraft.world.chunk.Chunk
 import net.minecraft.world.chunk.ChunkSource
+import net.minecraft.world.chunk.WorldChunk
 import kotlin.math.abs
 import kotlin.math.ceil
 
@@ -75,7 +76,7 @@ class SimulatedPlayer(
     var collidingHorizontally: Boolean,
     var collidingVertically: Boolean,
     private val worldBorder: WorldBorder,
-    private val chunkProvider: ChunkSource,
+    private val chunkSource: ChunkSource,
     private var isOutsideBorder: Boolean,
     private var riddenByEntity: Entity?,
     private var attributeMap: AbstractEntityAttributeContainer?,
@@ -145,7 +146,7 @@ class SimulatedPlayer(
                 player.collidingHorizontally,
                 player.collidingVertically,
                 player.world.worldBorder,
-                player.world.chunkProvider,
+                player.world.chunkSource,
                 player.isOutsideBorder,
                 player.riddenByEntity,
                 player.attributeMap,
@@ -280,7 +281,8 @@ class SimulatedPlayer(
             setSprinting(true)
         }
 
-        if (!isSprinting() && input.movementForward >= f && flag3 && !player.isUsingItem && !hasStatusEffect(Potion.blindness) && shouldSprint) {
+        if (!isSprinting() && input.movementForward >= f && flag3 && !player.isUsingItem && !hasStatusEffect(
+                StatusEffect.BLINDNESS) && shouldSprint) {
             setSprinting(true)
         }
 
@@ -370,10 +372,10 @@ class SimulatedPlayer(
     // Entity version of onEntityUpdate
     private fun onEntityUpdate(): Boolean {
         checkWaterCollisions()
-        if (world.isRemote) {
+        if (world.isClient) {
             fire = 0
         } else if (fire > 0) {
-            if (this.isImmuneToLava()) {
+            if (this.isImmuneToFire()) {
                 fire -= 4
 
                 fire.coerceAtLeast(0)
@@ -554,7 +556,7 @@ class SimulatedPlayer(
                     if (collidingHorizontally && isClimbing())
                         velocityY = 0.2
 
-                    if (world.isRemote && (!world.isChunkLoaded(BlockPos(x.toInt(),
+                    if (world.isClient && (!world.isChunkLoaded(BlockPos(x.toInt(),
                             0,
                             z.toInt()
                         )
@@ -781,7 +783,7 @@ class SimulatedPlayer(
                 distanceWalkedOnStepModified = (distanceWalkedOnStepModified.toDouble() + MathHelper.sqrt(d12 * d12 + d13 * d13 + d14 * d14)
                     .toDouble() * 0.6).toFloat()
 
-                if (distanceWalkedOnStepModified > nextStepDistance.toFloat() && block1.material !== Material.air)
+                if (distanceWalkedOnStepModified > nextStepDistance.toFloat() && block1.material !== Material.AIR)
                     nextStepDistance = distanceWalkedOnStepModified.toInt() + 1
             }
 
@@ -793,7 +795,7 @@ class SimulatedPlayer(
 
             val flag2 = isWet()
 
-            if (world.isFlammableWithin(this.getShape().contract(0.001, 0.001, 0.001))) {
+            if (world.containsFireSource(this.getShape().contract(0.001, 0.001, 0.001))) {
                 //this.takeFireDamage(1)
                 if (!flag2 && ++fire == 0)
                     setOnFire(8)
@@ -909,14 +911,14 @@ class SimulatedPlayer(
                         // val result = null
                         // ^^ block.isEntityInsideMaterial(world, pos, state, player, l.toDouble(), material, false) always null
                         if (block.material === material) {
-                            val d0 = ((l1 + 1).toFloat() - LiquidBlock.getLiquidHeightPercent((state.getValue(
+                            val d0 = ((l1 + 1).toFloat() - LiquidBlock.getHeightLoss((state.block(
                                 LiquidBlock.LEVEL
                             ) as Int)
                             )).toDouble()
 
                             if (l.toDouble() >= d0) {
                                 flag = true
-                                vec3 = block.modifyAcceleration(world, pos, player, vec3)
+                                vec3 = block.applyMaterialDrag(world, pos, player, vec3)
                             }
                         }
                     }
@@ -1056,8 +1058,8 @@ class SimulatedPlayer(
     }
 
     fun isInLava(): Boolean {
-        return this.world.isMaterialInBB(this.getShape()
-            .expand(-0.10000000149011612, -0.4000000059604645, -0.10000000149011612), Material.lava
+        return this.world.containsMaterial(this.getShape()
+            .grown(-0.10000000149011612, -0.4000000059604645, -0.10000000149011612), Material.lava
         )
     }
 
@@ -1066,13 +1068,13 @@ class SimulatedPlayer(
     }
 
     private fun isOffsetPositionInLiquid(x: Double, y: Double, z: Double): Boolean {
-        val box = this.getShape().offset(x, y, z)
+        val box = this.getShape().moved(x, y, z)
 
         return this.isLiquidPresentInAABB(box)
     }
 
     private fun isLiquidPresentInAABB(box: Box): Boolean {
-        return world.getCollisions(player, box).isEmpty() && !world.isAnyLiquid(box)
+        return world.getCollisions(player, box).isEmpty() && !world.containsLiquid(box)
     }
 
     fun getCollisions(box: Box): List<Box> {
@@ -1116,18 +1118,18 @@ class SimulatedPlayer(
         }
 
         val d0 = 0.25
-        val entities = this.getEntitiesWithinAABBExcludingEntity(player, box.expand(d0, d0, d0))
+        val entities = this.getEntitiesWithinAABBExcludingEntity(player, box.grown(d0, d0, d0))
 
         for (size in entities.indices) {
             if (riddenByEntity !== entities && vehicle !== entities) {
-                var shape = entities[size].collisionBoundingBox
+                var shape = entities[size].collisionShape
 
-                if (shape != null && shape.intersectsWith(box))
+                if (shape != null && shape.intersects(box))
                     list.add(shape)
 
                 shape = getCollisionBox(player, entities[size])
 
-                if (shape != null && shape.intersectsWith(box))
+                if (shape != null && shape.intersects(box))
                     list.add(shape)
             }
         }
@@ -1138,12 +1140,12 @@ class SimulatedPlayer(
         return world.getBlockState(pos)
     }
 
-    private fun getChunkFromBlockCoords(pos: BlockPos): Chunk {
+    private fun getChunkFromBlockCoords(pos: BlockPos): WorldChunk {
         return this.getChunkFromChunkCoords(pos.x shr 4, pos.z shr 4)
     }
 
-    private fun getChunkFromChunkCoords(x: Int, z: Int): Chunk {
-        return this.chunkProvider.provideChunk(x, z)
+    private fun getChunkFromChunkCoords(x: Int, z: Int): WorldChunk {
+        return this.chunkSource.getChunk(x, z)
     }
 
     private fun isValid(pos: BlockPos): Boolean {
@@ -1155,10 +1157,10 @@ class SimulatedPlayer(
     }
 
     private fun isInsideBorder(border: WorldBorder, insideBorder: Boolean): Boolean {
-        var d0 = border.minX()
-        var d1 = border.minZ()
-        var d2 = border.maxX()
-        var d3 = border.maxZ()
+        var d0 = border.minX
+        var d1 = border.minZ
+        var d2 = border.maxX
+        var d3 = border.maxZ
 
         if (insideBorder) {
             ++d0
@@ -1187,13 +1189,13 @@ class SimulatedPlayer(
     }
 
     private fun isChunkLoaded(x: Int, z: Int, flag: Boolean): Boolean {
-        return chunkProvider.chunkExists(x, z) && (flag || !chunkProvider.provideChunk(x, z).isEmpty)
+        return chunkSource.hasChunk(x, z) && (flag || !chunkSource.getChunk(x, z).isEmpty)
     }
 
     private fun getEntitiesWithinAABBExcludingEntity(entity: Entity, box: Box): List<Entity> {
         return this.getEntitiesInAABBexcluding(entity,
             box,
-            EntityFilter.NOT_SPECTATING
+            EntityFilter.NOT_SPECTATOR
         )
     }
 
@@ -1208,7 +1210,7 @@ class SimulatedPlayer(
         for (i1 in i..j) {
             for (j1 in k..l) {
                 if (isChunkLoaded(i1, j1, true)) {
-                    getChunkFromChunkCoords(i1, j1).getEntitiesWithinAABBForEntity(entity, bb, list, predicate)
+                    getChunkFromChunkCoords(i1, j1).getEntities(entity, bb, list, predicate)
                 }
             }
         }
@@ -1218,17 +1220,17 @@ class SimulatedPlayer(
     private fun getCollisionBox(player: Entity, entity: Entity): Box? {
         return when (entity) {
             is BoatEntity -> entity.shape
-            is MinecartEntity -> player.getCollisionBox(entity)
+            is MinecartEntity -> player.getCollisionAgainstShape(entity)
             else -> null
         }
     }
 
     private fun getAIMoveSpeed(): Float {
-        return this.getEntityAttribute(EntityAttributes.movementSpeed).attributeValue.toFloat()
+        return this.getEntityAttribute(EntityAttributes.MOVEMENT_SPEED).attribute.toFloat()
     }
 
     private fun getEntityAttribute(iAttribute: EntityAttribute?): EntityAttributeInstance {
-        return this.getAttributeMap().getAttributeInstance(iAttribute)
+        return this.getAttributeMap().get(iAttribute)
     }
 
     private fun getAttributeMap(): AbstractEntityAttributeContainer {
@@ -1243,7 +1245,7 @@ class SimulatedPlayer(
 
         return if (isSpectator) {
             false
-        } else if (!ForgeModContainer.fullBoundingBoxLadders) {
+        } else {
             block != null && block.isLadder(world, pos, entity)
         } else {
             val bb = this.box
@@ -1288,7 +1290,7 @@ class SimulatedPlayer(
     }
 
     private fun isRainingAt(pos: BlockPos): Boolean {
-        return if (world.getRainStrength(1.0F) <= 0.2) {
+        return if (world.rainStrength(1.0F) <= 0.2) {
             false
         } else if (!this.canSeeSky(pos)) {
             false

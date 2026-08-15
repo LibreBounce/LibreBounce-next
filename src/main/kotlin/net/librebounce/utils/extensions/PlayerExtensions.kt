@@ -45,19 +45,19 @@ import net.minecraft.util.math.Vec3d
 /**
  * Allows to get the distance between the current entity and [entity] from the nearest corner of the bounding box
  */
-/*fun Entity.getDistanceToEntityBox(entity: Entity) = eyes.distanceTo(getNearestPointBB(eyes, entity.hitBox))
+fun Entity.getDistanceToEntityBox(entity: Entity) = eyes.distanceTo(getNearestPointBB(eyes, entity.hitBox))
 
 fun Entity.getDistanceToBox(box: Box) = eyes.distanceTo(getNearestPointBB(eyes, box))
 
-fun LocalClientPlayerEntity.isNearEdge(threshold: Float): Boolean {
+/*fun LocalClientPlayerEntity.isNearEdge(threshold: Float): Boolean {
     val playerPos = Vec3d(x, y, z)
     val pos = BlockPos(playerPos)
 
     val mutable = BlockPos.Mutable()
     for (x in -3..3) {
         for (z in -3..3) {
-            val checkPos = mutable.set(pos, x, -1, z)
-            if (world.isAirBlock(checkPos)) {
+            val checkPos = mutable.set(x, y.toInt(), z)
+            if (world.isAir(checkPos)) {
                 val checkPosCenter = Vec3d(checkPos.x + 0.5, checkPos.y.toDouble(), checkPos.z + 0.5)
                 val distance = playerPos.distanceTo(checkPosCenter)
                 if (distance <= threshold) {
@@ -67,17 +67,17 @@ fun LocalClientPlayerEntity.isNearEdge(threshold: Float): Boolean {
         }
     }
     return false
-}
+}*/
 
 fun getNearestPointBB(eye: Vec3d, box: Box):Vec3d {
-    val origin = doubleArrayOf(eye.xCoord, eye.yCoord, eye.zCoord)
+    val origin = doubleArrayOf(eye.x, eye.y, eye.z)
     val destMins = doubleArrayOf(box.minX, box.minY, box.minZ)
     val destMaxs = doubleArrayOf(box.maxX, box.maxY, box.maxZ)
     for (i in 0..2) {
         if (origin[i] > destMaxs[i]) origin[i] = destMaxs[i] else if (origin[i] < destMins[i]) origin[i] = destMins[i]
     }
     return Vec3d(origin[0], origin[1], origin[2])
-}*/
+}
 
 fun PlayerEntity.getPing() = Minecraft.getInstance().networkHandler.getOnlinePlayer(uuid)?.ping ?: 0
 
@@ -115,13 +115,13 @@ var Entity?.prevRotation
             lastYaw = value.yaw
             lastPitch = value.pitch
         }
-    }
+    }*/
 
 val Entity.hitBox: Box
     get() {
-        val borderSize = collisionBorderSize.toDouble()
-        return shape.expand(borderSize, borderSize, borderSize)
-    }*/
+        val borderSize = pickRadius.toDouble()
+        return shape.grown(borderSize, borderSize, borderSize)
+    }
 
 val Entity.eyes: Vec3d
     get() = getEyePosition(1f)

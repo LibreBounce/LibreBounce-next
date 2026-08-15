@@ -1,0 +1,66 @@
+package net.librebounce.utils.simulation;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.living.player.LocalClientPlayerEntity;
+import net.minecraft.world.World;
+import org.apache.commons.lang3.tuple.Pair;
+
+public class SimulatedPlayerJavaExtensions {
+
+	/**
+	 * This game movement code had to be kept in its original language as it gives proper results.
+	 */
+	public Pair<Double, Double> checkForCollision(SimulatedPlayer simPlayer, double velocityX, double velocityZ) {
+		LocalClientPlayerEntity player = Minecraft.getInstance().player;
+		World world = player.world;
+
+		double d6;
+
+		double d3 = velocityX;
+		double d5 = velocityZ;
+
+		for (d6 = 0.05; velocityX != 0 && world.getCollisions(player, simPlayer.getBox().moved(velocityX, -1, 0)).isEmpty(); d3 = velocityX) {
+			if (velocityX < d6 && velocityX >= -d6) {
+				velocityX = 0;
+			} else if (velocityX > 0) {
+				velocityX -= d6;
+			} else {
+				velocityX += d6;
+			}
+		}
+
+		//noinspection ConstantConditions
+		for (; velocityZ != 0 && world.getCollisions(player, simPlayer.getBox().moved(0, -1, velocityZ)).isEmpty(); d5 = velocityZ) {
+			if (velocityZ < d6 && velocityZ >= -d6) {
+				velocityZ = 0;
+			} else if (velocityZ > 0) {
+				velocityZ -= d6;
+			} else {
+				velocityZ += d6;
+			}
+		}
+
+		//noinspection ConstantConditions
+		for (; velocityX != 0 && velocityZ != 0 && world.getCollisions(player, simPlayer.getBox().moved(velocityX, -1, velocityZ)).isEmpty(); d5 = velocityZ) {
+			if (velocityX < d6 && velocityX >= -d6) {
+				velocityX = 0;
+			} else if (velocityX > 0) {
+				velocityX -= d6;
+			} else {
+				velocityX += d6;
+			}
+
+			d3 = velocityX;
+
+			if (velocityZ < d6 && velocityZ >= -d6) {
+				velocityZ = 0;
+			} else if (velocityZ > 0) {
+				velocityZ -= d6;
+			} else {
+				velocityZ += d6;
+			}
+		}
+
+		return Pair.of(d3, d5);
+	}
+}
