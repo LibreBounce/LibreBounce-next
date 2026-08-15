@@ -7,6 +7,7 @@ package net.librebounce
 
 import com.formdev.flatlaf.themes.FlatMacLightLaf
 import kotlinx.coroutines.launch
+import net.fabricmc.loader.api.FabricLoader
 import net.librebounce.api.ClientUpdate.gitInfo
 //import net.librebounce.api.loadSettings
 import net.librebounce.event.ClientShutdownEvent
@@ -21,6 +22,7 @@ import net.librebounce.file.FileManager.loadAllConfigs
 import net.librebounce.file.FileManager.saveAllConfigs
 //import net.librebounce.file.configs.models.ClientConfiguration.updateClientWindow
 import net.librebounce.lang.LanguageManager.loadLanguages
+import net.librebounce.utils.attack.CombatUtils
 /*import net.librebounce.ui.client.clickgui.ClickGui
 import net.librebounce.ui.client.clickgui.style.styles.panel.PanelStyle
 import net.librebounce.ui.client.hud.HUD
@@ -61,7 +63,7 @@ object LibreBounce {
 
     const val MINECRAFT_VERSION = "1.8.9"
 
-    val clientVersionText = gitInfo["git.build.version"]?.toString() ?: "unknown"
+    var clientVersionText: String = "unknown"//gitInfo["git.build.version"]?.toString() ?: "unknown"
     val clientVersionNumber = clientVersionText.substring(1).toIntOrNull() ?: 0 // version format: "v<MAJOR.MINOR.PATCH>"
     val clientCommit = gitInfo["git.commit.id.abbrev"]?.let { "git-$it" } ?: "unknown"
     val clientBranch = gitInfo["git.branch"]?.toString() ?: "unknown"
@@ -137,6 +139,9 @@ object LibreBounce {
     fun init() {
         isStarting = true
 
+        val loader: FabricLoader = FabricLoader.getInstance()
+        clientVersionText = loader.getModContainer("librebounce").orElseThrow().metadata.version.toString()
+
         LOGGER.info("Starting $CLIENT_NAME $clientVersionText $clientCommit, by $CLIENT_AUTHOR")
 
         try {
@@ -161,6 +166,7 @@ object LibreBounce {
 
             TimerBalanceUtils
             BPSUtils
+            CombatUtils
 
             // Load settings
             /*loadSettings(false) {

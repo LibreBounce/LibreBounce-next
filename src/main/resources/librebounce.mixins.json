@@ -6,7 +6,7 @@
   "mixins": [
   ],
   "client": [
-    "client.ButtonWidgetMixin",
+    "events.ClientPlayerInteractionManagerMixin",
     "events.GameGuiMixin",
     "events.LocalClientPlayerEntityMixin",
     "events.ScreenMixin",

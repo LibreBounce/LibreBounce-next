@@ -5,7 +5,7 @@ import io.github.axolotlclient.rendering.font.Font
 import java.awt.Color
 
 object RenderUtils {
-    val drawUtil = DrawUtil.get()
+    val drawUtil = DrawUtil.get()!!
 
     fun drawString(font: Font, text: String, x: Float, y: Float, color: Color, shadow: Boolean = false) = drawString(font, text, x, y, color.rgb, shadow)
     fun drawString(font: Font, text: String, x: Float, y: Float, color: Int, shadow: Boolean = false) = drawUtil.`axolotlclient_rendering$drawString`(font, text, x, y, color, shadow)

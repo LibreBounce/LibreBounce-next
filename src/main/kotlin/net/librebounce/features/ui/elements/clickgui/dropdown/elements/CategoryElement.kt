@@ -11,7 +11,7 @@ import org.joml.Vector2i
 import java.awt.Color
 
 class CategoryElement(val category: Category) : Element {
-    private val position = Vector2i(0, 0)
+    private val position = Vector2i(50, 50)
 
     override fun render(mouseX: Int, mouseY: Int, partialT: Float) {
         var moduleY = position.y - 5
