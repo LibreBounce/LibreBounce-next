@@ -1,3 +1,8 @@
 accessWidener v2 named
 
+accessible field net/minecraft/entity/Entity inCobweb Z
+accessible field net/minecraft/entity/living/LivingEntity jumpingCooldown I
+accessible field net/minecraft/entity/living/LivingEntity flyingSpeed F
+accessible field net/minecraft/entity/player/PlayerEntity flyingSpeed F
+
 accessible field net/minecraft/client/options/KeyBinding pressed Z
