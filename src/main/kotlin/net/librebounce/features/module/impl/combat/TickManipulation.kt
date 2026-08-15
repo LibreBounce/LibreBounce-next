@@ -25,8 +25,6 @@ object TickManipulation : Module("TickManipulation", Category.COMBAT) {
     private val debug by boolean("Debug", false).subjective()
 
     private var ticksToSkip = 0
-    private var tickBalance = 0f
-    private var reachedTheLimit = false
     private var attacked = false
     private val tickBuffer = mutableListOf<TickData>()
     var duringTickModification = false

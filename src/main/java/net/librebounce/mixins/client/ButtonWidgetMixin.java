@@ -1,4 +1,4 @@
-package net.librebounce.mixins.client;
+/*package net.librebounce.mixins.client;
 
 import io.github.axolotlclient.rendering.DrawUtil;
 import io.github.axolotlclient.rendering.font.DefaultFont;
@@ -57,4 +57,4 @@ public class ButtonWidgetMixin {
 			textColor.getRGB()
 		);
 	}
-}
+}*/

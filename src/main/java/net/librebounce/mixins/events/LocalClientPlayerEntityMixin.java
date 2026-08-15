@@ -52,7 +52,7 @@ public abstract class LocalClientPlayerEntityMixin {
 		}
 	}
 
-	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/ClientPlayerEntity;tick()V", shift = At.Shift.BEFORE, ordinal = 0), cancellable = true)
+	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/living/player/ClientPlayerEntity;tick()V", shift = At.Shift.BEFORE, ordinal = 0), cancellable = true)
 	private void preTickEvent(CallbackInfo ci) {
 		final PlayerTickEvent tickEvent = new PlayerTickEvent(EventState.PRE);
 		EventManager.INSTANCE.call(tickEvent);
@@ -63,7 +63,7 @@ public abstract class LocalClientPlayerEntityMixin {
 		}
 	}
 
-	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/ClientPlayerEntity;tick()V", shift = At.Shift.AFTER, ordinal = 0))
+	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/entity/living/player/ClientPlayerEntity;tick()V", shift = At.Shift.AFTER, ordinal = 0))
 	private void postTickEvent(CallbackInfo ci) {
 		final PlayerTickEvent tickEvent = new PlayerTickEvent(EventState.POST);
 		EventManager.INSTANCE.call(tickEvent);
