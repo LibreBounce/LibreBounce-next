@@ -87,33 +87,33 @@ fun BlockPos.Mutable.copy(x: Int = this.x, y: Int = this.y, z: Int = this.z) = B
 fun Vec3d.copy(x: Double = this.xCoord, y: Double = this.yCoord, z: Double = this.zCoord) = Vec3d(x, y, z)
 
 fun BlockPos.immutableCopy() = BlockPos(x, y, z)
-fun BlockPos.mutableCopy() = BlockPos.Mutable(x, y, z)
+fun BlockPos.mutableCopy() = BlockPos.Mutable(x, y, z)*/
 
-fun Vec3d.offset(direction: Direction, value: Double): Vec3d {
-    val vec3i = direction.directionVec
+fun Vec3d.moved(direction: Direction, value: Double): Vec3d {
+    val vec3i = direction.normal //direction.directionVec
 
     return Vec3d(
-        this.xCoord + value * vec3i.x.toDouble(),
-        this.yCoord + value * vec3i.y.toDouble(),
-        this.zCoord + value * vec3i.z.toDouble()
+        this.x + value * vec3i.x.toDouble(),
+        this.y + value * vec3i.y.toDouble(),
+        this.z + value * vec3i.z.toDouble()
     )
 }
 
 fun Vec3d.withY(value: Double, useCurrentY: Boolean = false): Vec3d {
-    return Vec3d(xCoord, (if (useCurrentY) yCoord else 0.0) + value, zCoord)
+    return Vec3d(x, (if (useCurrentY) y else 0.0) + value, z)
 }
 
 val Vec3d_ZERO: Vec3d
     get() = Vec3d(0.0, 0.0, 0.0)
 
-val EntityRenderDispatcher.offset
-    get() = Vec3d(offsetX, offsetY, offsetZ)
+//val EntityRenderDispatcher.offset
+    //get() = Vec3d(offsetX, offsetY, offsetZ)
 
-fun Vec3d.toFloatArray() = floatArrayOf(xCoord.toFloat(), yCoord.toFloat(), zCoord.toFloat())
-fun Vec3d.toDoubleArray() = doubleArrayOf(xCoord, yCoord, zCoord)
+fun Vec3d.toFloatArray() = floatArrayOf(x.toFloat(), y.toFloat(), z.toFloat())
+fun Vec3d.toDoubleArray() = doubleArrayOf(x, y, z)
 
-fun Float.ceilInt() = MathHelper.ceiling_float_int(this)
-fun Float.floorInt() = MathHelper.floor(this)*/
+//fun Float.ceilInt() = MathHelper.ceiling_float_int(this)
+fun Float.floorInt() = MathHelper.floor(this)
 fun Float.toRadians() = this * 0.017453292f
 fun Float.toRadiansD() = toRadians().toDouble()
 fun Float.toDegrees() = this * 57.29578f

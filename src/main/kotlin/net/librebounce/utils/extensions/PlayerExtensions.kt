@@ -22,6 +22,15 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.entity.living.player.LocalClientPlayerEntity
 import net.minecraft.entity.Entity
 import net.minecraft.entity.living.LivingEntity
+import net.minecraft.entity.living.mob.GolemEntity
+import net.minecraft.entity.living.mob.MobEntity
+import net.minecraft.entity.living.mob.ambient.BatEntity
+import net.minecraft.entity.living.mob.monster.GhastEntity
+import net.minecraft.entity.living.mob.monster.SlimeEntity
+import net.minecraft.entity.living.mob.monster.boss.EnderDragonEntity
+import net.minecraft.entity.living.mob.passive.VillagerEntity
+import net.minecraft.entity.living.mob.passive.animal.AnimalEntity
+import net.minecraft.entity.living.mob.water.SquidEntity
 /*import net.minecraft.entity.boss.EntityDragon
 import net.minecraft.entity.monster.EntityGhast
 import net.minecraft.entity.monster.EntityGolem
@@ -81,20 +90,20 @@ fun getNearestPointBB(eye: Vec3d, box: Box):Vec3d {
 
 fun PlayerEntity.getPing() = Minecraft.getInstance().networkHandler.getOnlinePlayer(uuid)?.ping ?: 0
 
-/*fun Entity.isAnimal() =
-    this is EntityAnimal
-            || this is EntitySquid
-            || this is EntityGolem
-            || this is EntityBat
+fun Entity.isAnimal() =
+    this is AnimalEntity
+            || this is SquidEntity
+            || this is GolemEntity
+            || this is BatEntity
 
 fun Entity.isMob() =
-    this is EntityMob
-            || this is EntityVillager
-            || this is EntitySlime
-            || this is EntityGhast
-            || this is EntityDragon
+    this is MobEntity
+            || this is VillagerEntity
+            || this is SlimeEntity
+            || this is GhastEntity
+            || this is EnderDragonEntity
 
-fun PlayerEntity.isClientFriend(): Boolean {
+/*fun PlayerEntity.isClientFriend(): Boolean {
     val entityName = name ?: return false
 
     return friendsConfig.isFriend(stripColor(entityName))
@@ -142,25 +151,25 @@ val LivingEntity?.isMoving: Boolean
     get() = MovementUtils.airTicks
 
 val LocalClientPlayerEntity.groundTicks
-    get() = MovementUtils.groundTicks
+    get() = MovementUtils.groundTicks*/
 
 val Entity.isInLiquid: Boolean
     get() = inWater || isInLava
 
-fun Entity.setPosAndPrevPos(currPos: Vec3d, last:Vec3d = currPos, lastTickPosVec3dc3? = null) {
-    setPosition(currPos.xCoord, currPos.yCoord, currPos.zCoord)
-    lastX = last.xCoord
-    lastY = last.yCoord
-    lastZ = last.zCoord
+fun Entity.setPosAndPrevPos(currPos: Vec3d, last: Vec3d = currPos, lastTickPos: Vec3d? = null) {
+    setPosition(currPos.x, currPos.y, currPos.z)
+    lastX = last.x
+    lastY = last.y
+    lastZ = last.z
 
     lastTickPos?.let {
-        this.prevX = it.xCoord
-        this.prevY = it.yCoord
-        this.prevZ = it.zCoord
+        this.prevX = it.x
+        this.prevY = it.y
+        this.prevZ = it.z
     }
 }
 
-fun LocalClientPlayerEntity.setFixedSensitivityAngles(yaw: Float? = null, pitch: Float? = null) {
+/*fun LocalClientPlayerEntity.setFixedSensitivityAngles(yaw: Float? = null, pitch: Float? = null) {
     if (yaw != null) fixedSensitivityYaw = yaw
 
     if (pitch != null) fixedSensitivityPitch = pitch

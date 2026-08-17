@@ -26,6 +26,7 @@ object CommandManager {
 
         registerCommand(HelpCommand)
         registerCommand(SayCommand)
+        registerCommand(UsernameCommand)
         /*registerCommand(AutoDisableCommand)
         registerCommand(BindCommand)
         registerCommand(VClipCommand)

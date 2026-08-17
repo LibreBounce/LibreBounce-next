@@ -8,6 +8,7 @@
   "client": [
     "events.ClientPlayerInteractionManagerMixin",
     "events.GameGuiMixin",
+    "events.GameRendererMixin",
     "events.LocalClientPlayerEntityMixin",
     "events.ScreenMixin",
     "init.MinecraftMixin"

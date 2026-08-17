@@ -165,7 +165,6 @@ object LibreBounce {
             SilentHotbar
             BlinkUtils*/
 
-            MinecraftInstance()
             TimerBalanceUtils
             BPSUtils
             CombatUtils

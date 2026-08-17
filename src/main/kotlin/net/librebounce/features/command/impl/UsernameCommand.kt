@@ -1,7 +1,6 @@
 package net.librebounce.features.command.impl
 
 import net.librebounce.features.command.Command
-import net.librebounce.utils.io.MiscUtils
 
 object UsernameCommand : Command("username", "ign") {
     /**

@@ -50,7 +50,7 @@ object AutoClicker : Module("AutoClicker", Category.COMBAT) {
     private var lastBlocking = 0L
 
     private val shouldAutoClick
-        get() = mc.player.abilities.creativeMode //|| (!breakBlocks || !mc.crosshairTarget.type.isBlock)
+        get() = true//mc.player.abilities.creativeMode //|| (!breakBlocks || !mc.crosshairTarget.type.isBlock)
 
     private var target: LivingEntity? = null
 
@@ -114,9 +114,9 @@ object AutoClicker : Module("AutoClicker", Category.COMBAT) {
     private fun shouldAutoRightClick() = true// mc.player.displayItemInHand?.itemUseAction in arrayOf(UseAction.BLOCK)
 
     private fun handleLeftClick(time: Long, doubleClick: Int) {
-        /*val shouldHit = target == null || if (SmartHit.handleEvents()) SmartHit.shouldHit(target!!) else target!!.damagedTimer <= damagedTimer
+        val shouldHit = target == null || if (SmartHit.handleEvents()) SmartHit.shouldHit(target!!) else target!!.damagedTimer <= damagedTimer
 
-        if (!shouldHit) return*/
+        if (!shouldHit) return
 
         repeat(1 + doubleClick) {
             KeyBinding.click(mc.options.attackKey.keyCode)
