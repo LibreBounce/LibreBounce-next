@@ -6,6 +6,7 @@
 package net.librebounce.features.command
 
 import net.librebounce.LibreBounce.commandManager
+import net.minecraft.client.Minecraft
 //import net.librebounce.utils.client.MinecraftInstance
 import net.librebounce.utils.client.asIdentifier
 //import net.librebounce.utils.client.playSound
@@ -50,6 +51,8 @@ abstract class Command(val command: String, vararg val alias: String) {
      * Print a syntax error to chat
      */
     protected fun chatSyntaxError() = chat("§3Syntax error")
+
+    protected val mc = Minecraft.getInstance()
 
     /**
      * Play edit sound

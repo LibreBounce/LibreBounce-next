@@ -8,16 +8,17 @@ package net.librebounce.utils.client
 import net.minecraft.client.Minecraft
 //import net.minecraft.client.audio.PositionedSoundRecord
 import net.minecraft.resource.Identifier
+import net.ornithemc.osl.lifecycle.api.client.MinecraftInstance
 
-/*interface MinecraftInstance {
+interface MinecraftInstance {
     val mc: Minecraft
-        get() = Companion.mc
+        get() = MinecraftInstance.get()
 
-    companion object {
+    /*companion object {
         @JvmField
         val mc: Minecraft = Minecraft.getInstance()
-    }
-}*/
+    }*/
+}
 
 /*fun Minecraft.playSound(
     resourceLocation: Identifier,

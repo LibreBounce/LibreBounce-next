@@ -29,4 +29,6 @@ object CombatUtils : Listenable {
 
         chat("Hit delay: $hitDelay, last valid attack: ${abs(lastValidAttack.getTime())}, is the last attack a critical hit: $lastAttackCrit")
     }
+
+    val timeUntilHit = (lastValidAttack.getTime() - hitDelay).coerceAtLeast(0)
 }

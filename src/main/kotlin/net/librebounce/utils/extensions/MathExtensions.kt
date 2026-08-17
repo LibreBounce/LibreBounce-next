@@ -18,6 +18,7 @@ import net.minecraft.client.render.entity.EntityRenderDispatcher
 import net.minecraft.entity.Entity
 import net.minecraft.util.*
 import net.minecraft.util.math.*
+import org.joml.Vector2f
 //import javax.vecmath.Vector2f
 import kotlin.math.abs
 import kotlin.math.ceil
@@ -28,7 +29,7 @@ import kotlin.math.roundToInt
  * ```
  * val (x, y, z) = pos
  */
-/*operator fun Vec3i.component1() = x
+operator fun Vec3i.component1() = x
 operator fun Vec3i.component2() = y
 operator fun Vec3i.component3() = z
 
@@ -37,9 +38,9 @@ operator fun Vec3i.component3() = z
  * ```
  * val (x, y, z) = vec
  */
-operator fun Vec3d.component1() = xCoord
-operator fun Vec3d.component2() = yCoord
-operator fun Vec3d.component3() = zCoord
+operator fun Vec3d.component1() = x
+operator fun Vec3d.component2() = y
+operator fun Vec3d.component3() = z
 
 /**
  * Provides:
@@ -47,7 +48,7 @@ operator fun Vec3d.component3() = zCoord
  * val (x, y) = vec
  */
 operator fun Vector2f.component1() = x
-operator fun Vector2f.component2() = y*/
+operator fun Vector2f.component2() = y
 
 /**
  * Provides:
@@ -70,13 +71,13 @@ operator fun Window.component2() = this.scaledHeight
  * Provides:
  * `vec + othervec`, `vec - othervec`, `vec * number`, `vec / number`, `-vec`
  * */
-/*operator fun Vec3d.plus(vec:Vec3d)Vec3dc3 = add(vec)
-operator fun Vec3d.minus(vec:Vec3d)Vec3dc3 = subtract(vec)
-operator fun Vec3d.times(number: Double) =Vec3d(xCoord * number, yCoord * number, zCoord * number)
+operator fun Vec3d.plus(vec:Vec3d): Vec3d = add(vec)
+operator fun Vec3d.minus(vec:Vec3d): Vec3d = subtract(vec)
+operator fun Vec3d.times(number: Double) = Vec3d(x * number, y * number, z * number)
 operator fun Vec3d.div(number: Double) = times(1 / number)
 operator fun Vec3d.unaryMinus():Vec3d = times(-1.0)
 
-fun Vec3i.manhattanDistance(another: Vec3i): Int {
+/*fun Vec3i.manhattanDistance(another: Vec3i): Int {
     return abs(x - another.x) + abs(y - another.y) + abs(z - another.z)
 }
 

@@ -10,6 +10,7 @@ accessible field net/minecraft/entity/living/player/PlayerEntity flyingSpeed F
 accessible field net/minecraft/entity/living/player/PlayerEntity sleeping Z
 
 accessible field net/minecraft/client/options/KeyBinding pressed Z
+accessible field net/minecraft/client/options/KeyBinding clickCount I
 
 accessible method net/minecraft/block/Block defaultState ()Lnet/minecraft/block/state/BlockState;
 accessible field net/minecraft/world/biome/Biome snowy Z
