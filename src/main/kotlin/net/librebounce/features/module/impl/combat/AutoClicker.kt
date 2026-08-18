@@ -41,7 +41,7 @@ object AutoClicker : Module("AutoClicker", Category.COMBAT) {
 
             if (left && shouldLeftClick &&
                 (lastTarget == null || if (SmartHit.handleEvents()) SmartHit.shouldHit(lastTarget!!) else lastTarget!!.damagedTimer <= hurtTime) &&
-                (mc.player.abilities.creativeMode || (!breakBlocks || mc.crosshairTarget.type != HitResult.Type.BLOCK)) &&
+                (player.abilities.creativeMode || (!breakBlocks || mc.crosshairTarget.type != HitResult.Type.BLOCK)) &&
                 leftSettings.canClick()
                 ) {
                 if (debug) chat("Clicked left")
