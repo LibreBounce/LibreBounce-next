@@ -2,8 +2,8 @@ package net.librebounce.features.module.impl.movement
 
 import net.librebounce.event.UpdateEvent
 import net.librebounce.event.handler
-import net.librebounce.features.module.Module
-import net.librebounce.features.module.Category
+import net.librebounce.features.module.base.Module
+import net.librebounce.features.module.base.Category
 import net.minecraft.client.options.GameOptions
 
 object AutoWalk : Module("AutoWalk", Category.MOVEMENT, subjective = true, gameDetecting = false) {

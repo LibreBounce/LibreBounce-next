@@ -10,8 +10,8 @@ import net.librebounce.event.MoveEvent
 import net.librebounce.event.PlayerTickEvent
 import net.librebounce.event.async.waitTicks
 import net.librebounce.event.handler
-import net.librebounce.features.module.Category
-import net.librebounce.features.module.Module
+import net.librebounce.features.module.base.Category
+import net.librebounce.features.module.base.Module
 import net.librebounce.utils.client.chat
 import net.librebounce.utils.simulation.SimulatedPlayer
 import net.minecraft.entity.living.LivingEntity

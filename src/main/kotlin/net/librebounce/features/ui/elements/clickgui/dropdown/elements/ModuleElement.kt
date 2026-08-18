@@ -2,7 +2,7 @@ package net.librebounce.features.ui.elements.clickgui.dropdown.elements
 
 import io.github.axolotlclient.rendering.font.DefaultFont
 import net.librebounce.config.*
-import net.librebounce.features.module.Module
+import net.librebounce.features.module.base.Module
 import net.librebounce.features.ui.elements.clickgui.dropdown.elements.values.*
 import net.librebounce.utils.render.ColorUtils.withAlpha
 import net.librebounce.utils.render.RenderUtils.drawRoundedRect

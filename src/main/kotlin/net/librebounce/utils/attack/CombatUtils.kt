@@ -37,7 +37,7 @@ object CombatUtils : Listenable {
         if (debug) chat("Hit delay: $hitDelay, last valid attack: ${abs(lastValidAttack.getTime())}, is the last attack a critical hit: $lastAttackCrit")
     }
 
-    val timeUntilHit = (lastValidAttack.getTime() - hitDelay).coerceAtLeast(0)
+    val timeUntilHit = (hitDelay - lastValidAttack.getTime()).coerceAtLeast(0)
 
     fun canHit(): Boolean = timeUntilHit.toInt() == 0
     fun canHit(customHurtTime: Int) = customHurtTime <= hitDelay / 50

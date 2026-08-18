@@ -2,11 +2,9 @@ package net.librebounce.features.module.impl.render
 
 import net.librebounce.LibreBounce.moduleManager
 import net.librebounce.event.Render2DEvent
-import net.librebounce.event.UpdateEvent
 import net.librebounce.event.handler
-import net.librebounce.features.module.Category
-import net.librebounce.features.module.Module
-import net.librebounce.utils.render.ColorSettingsInteger
+import net.librebounce.features.module.base.Category
+import net.librebounce.features.module.base.Module
 import net.minecraft.client.Minecraft
 import java.awt.Color
 

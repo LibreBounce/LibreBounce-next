@@ -2,7 +2,7 @@ package net.librebounce.utils.timing
 
 import net.librebounce.event.*
 import net.librebounce.event.async.waitUntil
-import net.librebounce.features.module.Module
+import net.librebounce.features.module.base.Module
 import net.minecraft.item.ItemStack
 import java.util.concurrent.ConcurrentLinkedQueue
 

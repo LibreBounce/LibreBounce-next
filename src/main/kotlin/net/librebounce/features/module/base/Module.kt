@@ -3,9 +3,8 @@
  * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge.
  * https://github.com/CCBlueX/LibreBounce/
  */
-package net.librebounce.features.module
+package net.librebounce.features.module.base
 
-import net.librebounce.LibreBounce.isStarting
 import net.librebounce.config.Configurable
 import net.librebounce.event.Listenable
 //import net.librebounce.features.module.modules.misc.GameDetector
@@ -20,10 +19,8 @@ import net.librebounce.ui.client.hud.element.elements.Notification
 import net.librebounce.ui.client.hud.element.elements.Notifications*/
 import net.librebounce.utils.client.ClientUtils.LOGGER
 //import net.librebounce.utils.client.MinecraftInstance
-import net.librebounce.utils.client.asIdentifier
 import net.librebounce.utils.client.chat
 //import net.librebounce.utils.client.playSound
-import net.librebounce.utils.extensions.addSpaces
 import net.librebounce.utils.extensions.toLowerCamelCase
 import net.librebounce.utils.kotlin.RandomUtils.nextFloat
 import net.minecraft.client.Minecraft

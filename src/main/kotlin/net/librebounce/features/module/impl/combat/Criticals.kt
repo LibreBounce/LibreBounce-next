@@ -3,8 +3,8 @@ package net.librebounce.features.module.impl.combat
 import net.librebounce.event.AttackEvent
 import net.librebounce.event.UpdateEvent
 import net.librebounce.event.handler
-import net.librebounce.features.module.Category
-import net.librebounce.features.module.Module
+import net.librebounce.features.module.base.Category
+import net.librebounce.features.module.base.Module
 import net.librebounce.utils.attack.CombatUtils
 import net.librebounce.utils.simulation.SimulatedPlayer
 

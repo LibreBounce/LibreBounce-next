@@ -1,6 +1,6 @@
 package net.librebounce.features.ui.elements.clickgui.dropdown
 
-import net.librebounce.features.module.Category
+import net.librebounce.features.module.base.Category
 import net.librebounce.features.ui.elements.clickgui.dropdown.elements.CategoryElement
 import net.minecraft.client.gui.screen.Screen
 

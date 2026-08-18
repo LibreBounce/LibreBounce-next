@@ -8,7 +8,7 @@ package net.librebounce.features.command.impl
 import net.librebounce.LibreBounce.commandManager
 import net.librebounce.config.*
 import net.librebounce.features.command.Command
-import net.librebounce.features.module.Module
+import net.librebounce.features.module.base.Module
 //import net.librebounce.utils.block.BlockUtils.getBlockName
 import net.librebounce.utils.kotlin.StringUtils
 import org.lwjgl.input.Keyboard

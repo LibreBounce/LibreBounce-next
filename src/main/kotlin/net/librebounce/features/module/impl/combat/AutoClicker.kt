@@ -2,24 +2,21 @@ package net.librebounce.features.module.impl.combat
 
 import net.librebounce.event.AttackEvent
 import net.librebounce.event.Render3DEvent
-import net.librebounce.event.UpdateEvent
 import net.librebounce.event.handler
-import net.librebounce.features.module.Category
-import net.librebounce.features.module.Module
-//import net.librebounce.features.module.modules.combat.SmartHit
+import net.librebounce.features.module.base.Category
+import net.librebounce.features.module.base.Module
 import net.librebounce.utils.attack.EntityUtils.isLookingOnEntities
 import net.librebounce.utils.attack.EntityUtils.isSelected
 import net.librebounce.utils.client.EntityLookup
 import net.librebounce.utils.extensions.getDistanceToEntityBox
+import net.librebounce.utils.extensions.safeDiv
 //import net.librebounce.utils.extensions.isBlock
 import net.librebounce.utils.kotlin.RandomUtils.nextInt
-import net.librebounce.utils.timing.TimeUtils.randomClickDelay
 import net.minecraft.client.options.KeyBinding
 import net.minecraft.entity.Entity
 import net.minecraft.entity.living.LivingEntity
-import net.minecraft.item.UseAction
 import net.minecraft.item.BlockItem
-import kotlin.random.Random.Default.nextBoolean
+import kotlin.math.roundToInt
 
 object AutoClicker : Module("AutoClicker", Category.COMBAT) {
 
@@ -27,7 +24,7 @@ object AutoClicker : Module("AutoClicker", Category.COMBAT) {
     private val left by boolean("Left", true)
     private val leftCPS by intRange("LeftCPS", 5..8, 1..50) { left }
 
-    private val damagedTimer by int("HurtTime", 10, 0..10) { left /*&& !SmartHit.handleEvents()*/ }
+    private val damagedTimer by int("HurtTime", 10, 0..10) { left && !SmartHit.handleEvents() }
 
     private val breakBlocks by boolean("BreakBlocks", true)
 
@@ -50,7 +47,7 @@ object AutoClicker : Module("AutoClicker", Category.COMBAT) {
     private var lastBlocking = 0L
 
     private val shouldAutoClick
-        get() = true//mc.player.abilities.creativeMode //|| (!breakBlocks || !mc.crosshairTarget.type.isBlock)
+        get() = true//mc.player.abilities.creativeMode || (!breakBlocks || !mc.crosshairTarget.type.isBlock)
 
     private var target: LivingEntity? = null
 
@@ -141,5 +138,15 @@ object AutoClicker : Module("AutoClicker", Category.COMBAT) {
 
             lastBlocking = time
         }
+    }
+
+    fun randomClickDelay(minCPS: Int, maxCPS: Int): Int {
+        val minDelay = 1000 safeDiv minCPS
+        val maxDelay = 1000 safeDiv maxCPS
+        return (Math.random() * (minDelay - maxDelay) + maxDelay).roundToInt()
+    }
+
+    fun randomClickDelay(cps: IntRange): Int {
+        return randomClickDelay(cps.first, cps.last)
     }
 }

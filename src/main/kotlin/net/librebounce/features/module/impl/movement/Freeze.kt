@@ -8,9 +8,8 @@ package net.librebounce.features.module.impl.movement
 import net.librebounce.event.PacketEvent
 import net.librebounce.event.UpdateEvent
 import net.librebounce.event.handler
-import net.librebounce.features.module.Category
-import net.librebounce.features.module.Module
-import net.minecraft.client.Minecraft
+import net.librebounce.features.module.base.Category
+import net.librebounce.features.module.base.Module
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket
 import net.minecraft.network.packet.s2c.play.PlayerMoveS2CPacket
 

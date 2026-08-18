@@ -7,17 +7,13 @@ package net.librebounce.config
 
 import net.librebounce.LibreBounce.moduleManager
 //import net.librebounce.api.ClientApi
-import net.librebounce.features.module.Module
+import net.librebounce.features.module.base.Module
 import net.librebounce.file.FileManager
 //import net.librebounce.utils.attack.EntityUtils.Targets
 import net.librebounce.utils.client.chat
-import net.librebounce.utils.io.HttpClient
-import net.librebounce.utils.kotlin.StringUtils
 //import net.librebounce.utils.render.ColorUtils.translateAlternateColorCodes
 import org.lwjgl.input.Keyboard
-import kotlin.collections.iterator
 import kotlin.reflect.KMutableProperty0
-import kotlin.text.get
 
 /**
  * Utility class for handling settings and scripts in LibreBounce.
