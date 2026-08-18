@@ -11,6 +11,7 @@ import net.librebounce.utils.simulation.SimulatedPlayer
 object Criticals : Module("Criticals", Category.COMBAT) {
     private val mode by choices("Mode", arrayOf("Timer", "Blink"), "Timer")
     private val maxBlinkTime by int("MaxBlinkTime", 250, 0..1000, "ms") { mode == "Blink" }
+    private val debug by boolean("Debug", false)
 
     private var attackHeld = false
     private var prepareToHoldAttack = false
@@ -26,10 +27,12 @@ object Criticals : Module("Criticals", Category.COMBAT) {
 
                 if (mc.player.fallDistance > 0 && simPlayer.onGround && CombatUtils.timeUntilHit > maxBlinkTime && !attackHeld) {
                     prepareToHoldAttack = true
+                    if (debug) chat("(Criticals) Preparing to hold attack")
                 } else if (mc.player.onGround && CombatUtils.timeUntilHit.toInt() == 0 && attackHeld) {
                     releasePackets()
                     attackHeld = false
                     prepareToHoldAttack = false
+                    if (debug) chat("(Criticals) Finished capturing critical hold packet, now releasing it")
                 }
             }
         }
@@ -39,6 +42,7 @@ object Criticals : Module("Criticals", Category.COMBAT) {
         if (prepareToHoldAttack) {
             holdPackets()
             attackHeld = true
+            if (debug) chat("(Criticals) Attacked, now holding packets")
         }
     }
 

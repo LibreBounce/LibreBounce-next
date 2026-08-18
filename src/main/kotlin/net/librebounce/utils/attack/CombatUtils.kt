@@ -9,6 +9,7 @@ import net.librebounce.utils.client.chat
 import net.librebounce.utils.timing.MSTimer
 import net.minecraft.client.Minecraft
 import net.minecraft.entity.Entity
+import net.minecraft.entity.living.LivingEntity
 import net.minecraft.entity.living.player.PlayerEntity
 import kotlin.math.abs
 
@@ -18,11 +19,11 @@ object CombatUtils : Listenable {
     var lastValidAttackIsCrit = false
     var lastAttackCrit = false
     var lastAttackBlocked = false
-    var lastTarget: Entity? = null
+    var lastTarget: LivingEntity? = null
 
     val onAttack = handler<AttackEvent> { event ->
         if (lastTarget != event.targetEntity) {
-            lastTarget = event.targetEntity!!
+            lastTarget = event.targetEntity!! as LivingEntity?
             lastValidAttack.reset()
         }
 

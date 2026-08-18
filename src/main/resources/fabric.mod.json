@@ -3,29 +3,24 @@
 	"id": "librebounce",
 	"version": "${version}",
 	"name": "LibreBounce",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "A lightweight, high-quality libre cheat client for Ornithe 1.8.9.",
 	"authors": [
-		"Me!"
+		"thatonecoder",
+    "CCBlueX"
 	],
 	"contact": {
-		"homepage": "https://example.com/",
-		"sources": "https://github.com/OrnitheMC/ornithe-template-mod"
+		"homepage": "https://github.com/LibreBounce/LibreBounce-next",
+		"sources": "https://github.com/LibreBounce/LibreBounce-next"
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/librebounce/icon.png",
 	"environment": "*",
-	"entrypointss": {
-		"init": [
-			"net.librebounce.LibreBounce"
-		]
-	},
 	"mixins": [
 		"librebounce.mixins.json"
 	],
   "accessWidener": "librebounce.accesswidener",
   "depends": {
 		"fabricloader": ">=0.17.3",
-		"minecraft": "1.8.9",
-		"osl-entrypoints": ">=0.4.0"
+		"minecraft": "1.8.9"
 	}
 }

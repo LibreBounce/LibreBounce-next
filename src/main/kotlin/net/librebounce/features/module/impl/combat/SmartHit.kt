@@ -5,13 +5,14 @@ import net.librebounce.event.GameTickEvent
 import net.librebounce.event.handler
 import net.librebounce.features.module.base.Module
 import net.librebounce.features.module.base.Category
+import net.librebounce.features.module.impl.combat.HitDetector.hitDelay
 import net.librebounce.utils.attack.CombatUtils.canCritHit
 import net.librebounce.utils.attack.CombatUtils.canHit
 import net.librebounce.utils.attack.CombatUtils.lastAttackBlocked
 import net.librebounce.utils.attack.CombatUtils.lastAttackCrit
-import net.librebounce.utils.client.chat
 import net.librebounce.utils.extensions.*
 import net.librebounce.utils.simulation.SimulatedPlayer
+import net.librebounce.utils.timing.MSTimer
 import net.minecraft.entity.Entity
 import net.minecraft.entity.living.player.PlayerEntity
 import kotlin.math.PI
@@ -20,7 +21,6 @@ import kotlin.math.sin
 
 object SmartHit: Module("SmartHit", Category.COMBAT) {
     private val usePredictedTargetHurtTime by boolean("UsePredictedTargetHurtTime", true)
-    private val attackDelay by int("AttackDelay", 9, 0..10, suffix = "ticks")
 
     private val distanceHandling by choices("DistanceHandling", arrayOf("Allow", "Forbid", "Ignore"), "Ignore")
     private val distance by floatRange("Distance", 2.7f..8f, 0f..8f, suffix = "blocks") { distanceHandling != "Ignore" }
@@ -60,14 +60,10 @@ object SmartHit: Module("SmartHit", Category.COMBAT) {
 
     private val debug by boolean("Debug", false).subjective()
 
-    private var simHurtTime = 0
-    private var simTargetHurtTime = 0
+    private var simHurtTime = MSTimer()
+    //private var simTargetHurtTime = MSTimer()
 
-    private var ticksSinceHit = 0
-
-    private var lastHitBlocked = false
-
-    val onAttack = handler<AttackEvent> { event ->
+    /*val onAttack = handler<AttackEvent> { event ->
         val player = mc.player ?: return@handler
         val target = event.targetEntity ?: return@handler
 
@@ -82,11 +78,7 @@ object SmartHit: Module("SmartHit", Category.COMBAT) {
             if (hittable)
                 10 + latency else simTargetHurtTime
         else targetPlayer.damagedTimer
-    }
-
-    val onGameTick = handler<GameTickEvent> { event ->
-        if (simTargetHurtTime > 0) simTargetHurtTime--
-    }
+    }*/
 
     fun shouldHit(target: Entity): Boolean {
         val player = mc.player ?: return false
@@ -105,21 +97,20 @@ object SmartHit: Module("SmartHit", Category.COMBAT) {
 
         val simPlayer = SimulatedPlayer.fromClientPlayer(mc.player.input/*RotationUtils.modifiedInput*/)
         var ticksUntilFalling = 0
-        simHurtTime = player.damagedTimer
+        //simHurtTime = player.damagedTimer
 
         repeat(predictClientMovement + 1) {
             simPlayer.tick()
 
-            if (simHurtTime > 0) --simHurtTime
             if (simPlayer.velocityY >= 0) ++ticksUntilFalling
         }
 
-        val targetHittable = canHit(simTargetHurtTime) || ticksSinceHit >= attackDelay
+        val hittable = canHit()
 
-        if (failsafe && ticksSinceHit > playerLatencyInTicks + 1 &&
+        /*if (failsafe && ticksSinceHit > playerLatencyInTicks + 1 &&
             target.damagedTimer !in (target.damagedTimer + 1 - playerLatencyInTicks)..(target.damagedTimer - 1 - playerLatencyInTicks)) {
             ticksSinceHit = attackDelay + 1
-        }
+        }*/
 
         /*val rotDiff = rotationDifference(
             toRotation(player.hitBox.center, true, target!!),
@@ -156,11 +147,11 @@ object SmartHit: Module("SmartHit", Category.COMBAT) {
         }
 
         val groundHit =
-            player.onGround && /*player.groundTicks > 1 &&*/ simPlayer.onGround && canHit()
+            player.onGround && /*player.groundTicks > 1 &&*/ simPlayer.onGround && hittable
 
         val airHit =
-            (canHit() && (!checkForCriticalHits || !improveCritHandling || ticksUntilFalling < minTicksUntilFallingToCancel)) ||
-            (checkForCriticalHits && canCritHit(player) && (!lastAttackCrit || canHit()))
+            (hittable && (!checkForCriticalHits || !improveCritHandling || ticksUntilFalling < minTicksUntilFallingToCancel)) ||
+            (checkForCriticalHits && canCritHit(player) && (!lastAttackCrit || hittable))
 
         //val baseHurtTime = 3f / (1f + sqrt(dist) - (rotDiff / 180f))
         val damagedTimerNoEscape = (2 * dist * 8).toInt() / 10
@@ -170,14 +161,14 @@ object SmartHit: Module("SmartHit", Category.COMBAT) {
             checkForBlockedHits && lastAttackBlocked && !target.isSwordBlocking -> true
             //minTargetRotationDifference != 0f && rotDiff < minTargetRotationDifference -> true
             //experimentalChecks && player.damagedTimer !in damagedTimerNoEscape..8 && targetHitLikely -> true
-            experimentalChecks && targetDistance > 3.05f && targetHittable -> true
+            experimentalChecks && targetDistance > 3.05f && hittable -> true
             player.health < notBelowOwnHealth || target.health < notBelowTargetHealth -> true
             //notOnEdge && player.isNearEdge(notOnEdgeLimit) -> true
 
             else -> playerHurtTimeAllowed || targetHurtTimeAllowed || distanceAllowed || predictedDistanceAllowed
         }
 
-        if (debug) chat("(SmartHit) Will hit: ${shouldHit}, hit on the way: ${!canHit()}, last hit blocked: ${lastHitBlocked}, current distance: ${dist}, current distance (target POV): ${targetDistance}, predicted distance: ${simDistance}, combined ping: ${combinedPing}, combined ping multiplier: ${combinedPingMult}, own hurttime: ${player.damagedTimer}, simulated own hurttime: ${simHurtTime}, target hurttime: ${target.damagedTimer}, simulated target hurt time: ${simTargetHurtTime}, on ground: ${player.onGround}, predicted ground: ${simPlayer.onGround}, can critical hit: ${canCritHit(player)}")
+        if (debug) chat("(SmartHit) Will hit: ${shouldHit}, hit on the way: ${!hittable}, last hit blocked: ${lastAttackBlocked}, current distance: ${dist}, current distance (target POV): ${targetDistance}, predicted distance: ${simDistance}, combined ping: ${combinedPing}, combined ping multiplier: ${combinedPingMult}, own hurttime: ${player.damagedTimer}, simulated own hurttime: ${simHurtTime}, target hurttime: ${target.damagedTimer}, on ground: ${player.onGround}, predicted ground: ${simPlayer.onGround}, can critical hit: ${canCritHit(player)}")
         //if (debug) chat("(SmartHit) Will hit: ${shouldHit}, hit on the way: ${hitOnTheWay}, last hit blocked: ${lastHitBlocked}, current distance: ${dist}, current distance (target POV): ${targetDistance}, predicted distance: ${simDistance}, combined ping: ${combinedPing}, combined ping multiplier: ${combinedPingMult}, rotation difference: ${rotDiff}, target hit likely: ${targetHitLikely}, own hurttime: ${player.damagedTimer}, simulated own hurttime: ${simHurtTime}, target hurttime: ${target.damagedTimer}, simulated target hurt time: ${simTargetHurtTime}, on ground: ${player.onGround}, predicted ground: ${simPlayer.onGround}, can critical hit: ${canCritHit(player)}")
 
         return shouldHit
@@ -193,7 +184,7 @@ object SmartHit: Module("SmartHit", Category.COMBAT) {
             target.currPos.subtract(target.last).times(predictEnemyPosition.toDouble())
         )*/
 
-        if (simulateKnockback && simHurtTime <= 10 - attackDelay)
+        if (simulateKnockback && simHurtTime.hasTimePassed(hitDelay))
             simulateOwnKnockback(simPlayer, target)
 
         val (currPos, last) = player.currPos to player.last
@@ -219,6 +210,6 @@ object SmartHit: Module("SmartHit", Category.COMBAT) {
 
         if (debug) chat("(SmartHit) Simulated knockback. X: ${knockbackX}, Y + vertical modifier: ${knockbackY}, Z: ${knockbackZ}, horizontal modifier: ${modifier}")
 
-        simHurtTime = attackDelay
+        simHurtTime.reset()
     }
 }

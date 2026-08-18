@@ -19,7 +19,6 @@ import net.librebounce.ui.client.hud.element.elements.Notification
 import net.librebounce.ui.client.hud.element.elements.Notifications*/
 import net.librebounce.utils.client.ClientUtils.LOGGER
 //import net.librebounce.utils.client.MinecraftInstance
-import net.librebounce.utils.client.chat
 //import net.librebounce.utils.client.playSound
 import net.librebounce.utils.extensions.toLowerCamelCase
 import net.librebounce.utils.kotlin.RandomUtils.nextFloat
@@ -49,7 +48,10 @@ open class Module(
         GameDetector.state
     }.subjective().excludeWhen(!gameDetecting)*/
 
+    // Commonly used values & functions
     val mc = Minecraft.getInstance()
+
+    fun chat(message: String) = net.librebounce.utils.client.chat(message)
 
     var keyBind = defaultKeyBind
         set(keyBind) {

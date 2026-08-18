@@ -15,7 +15,7 @@ object Arraylist : Module("Arraylist", Category.RENDER, defaultState = true) {
         var yOffset = 5
 
         for (module in moduleManager) {
-            Minecraft.getInstance().textRenderer.draw("$module.name", 0, yOffset, color.rgb)
+            mc.textRenderer.draw("$module.name", 0, yOffset, color.rgb)
             yOffset += 5
         }
     }

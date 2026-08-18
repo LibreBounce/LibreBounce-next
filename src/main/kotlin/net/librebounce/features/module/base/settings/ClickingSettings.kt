@@ -29,13 +29,9 @@ open class ClickingSettings(owner: Module, prefix: String = "", generalApply: ()
         return false
     }
 
-    fun randomClickDelay(minCPS: Int, maxCPS: Int): Int {
-        val minDelay = 1000 safeDiv minCPS
-        val maxDelay = 1000 safeDiv maxCPS
-        return (Math.random() * (minDelay - maxDelay) + maxDelay).roundToInt()
-    }
-
     fun randomClickDelay(cps: IntRange): Int {
-        return randomClickDelay(cps.first, cps.last)
+        val minDelay = 1000 safeDiv cps.first
+        val maxDelay = 1000 safeDiv cps.last
+        return (Math.random() * (minDelay - maxDelay) + maxDelay).roundToInt()
     }
 }
