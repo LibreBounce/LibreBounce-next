@@ -40,6 +40,8 @@ import net.librebounce.utils.kotlin.SharedScopes
 import net.librebounce.utils.movement.BPSUtils
 //import net.librebounce.utils.movement.MovementUtils
 import net.librebounce.utils.movement.TimerBalanceUtils
+import net.librebounce.utils.timing.TickedActions
+import net.librebounce.utils.timing.WaitTickUtils
 //import net.librebounce.utils.render.MiniMapRegister
 //import net.librebounce.utils.render.shader.Background
 /*import net.librebounce.utils.rotation.RotationUtils
@@ -168,6 +170,8 @@ object LibreBounce {
             TimerBalanceUtils
             BPSUtils
             CombatUtils
+            TickedActions
+            WaitTickUtils
 
             // Load settings
             /*loadSettings(false) {
