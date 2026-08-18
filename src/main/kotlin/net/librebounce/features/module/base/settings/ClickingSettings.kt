@@ -8,8 +8,7 @@ import kotlin.math.roundToInt
 
 open class ClickingSettings(owner: Module, prefix: String = "", generalApply: () -> Boolean = { true }): Configurable("ClickingSettings") {
     private val cps by intRange(prefix + "CPS", 8..12, 0..50) { generalApply() }
-    private val simulateDoubleClicking by boolean(prefix + "SimulateDoubleClicking", false) { generalApply() }
-    private val doubleClicks by intRange(prefix + "DoubleClicks", -1..2, -5..5)
+    private val clicksAtATime by intRange(prefix + "ClicksAtATime", 1..1, 0..5) { generalApply() }
 
     init {
         owner.addValues(this.values)
@@ -17,11 +16,11 @@ open class ClickingSettings(owner: Module, prefix: String = "", generalApply: ()
 
     private var delay = randomClickDelay(cps)
     private var lastClick = MSTimer()
-    var clicks = if (simulateDoubleClicking) doubleClicks.random() + 1 else 1
+    var clicks = clicksAtATime.random()
 
     fun canClick(): Boolean {
         if (lastClick.hasTimePassed(delay)) {
-            clicks = if (simulateDoubleClicking) doubleClicks.random() + 1 else 1
+            clicks = clicksAtATime.random()
             delay = randomClickDelay(cps)
             lastClick.reset()
             return true

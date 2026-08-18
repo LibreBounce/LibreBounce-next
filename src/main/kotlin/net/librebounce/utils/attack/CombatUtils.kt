@@ -40,7 +40,7 @@ object CombatUtils : Listenable {
 
     val timeUntilHit = (hitDelay - lastValidAttack.getTime()).coerceAtLeast(0)
 
-    fun canHit(): Boolean = timeUntilHit.toInt() == 0
+    fun canHit(): Boolean = lastValidAttack.hasTimePassed(hitDelay)
     fun canHit(customHurtTime: Int) = customHurtTime <= hitDelay / 50
 
     fun canCritHit(player: PlayerEntity): Boolean =
