@@ -12,6 +12,7 @@ import net.librebounce.utils.timing.MSTimer
 import net.librebounce.utils.timing.WaitTickUtils
 import net.minecraft.block.PlantBlock
 import net.minecraft.block.Blocks.*
+import net.minecraft.client.Minecraft
 import net.minecraft.item.Item
 import net.minecraft.item.BlockItem
 import net.minecraft.network.packet.c2s.play.PlayerUseC2SPacket
@@ -23,7 +24,9 @@ import net.minecraft.network.packet.s2c.play.SelectSlotS2CPacket
 import net.minecraft.network.packet.s2c.play.OpenInventoryMenuS2CPacket
 import net.minecraft.network.packet.s2c.play.CloseInventoryMenuS2CPacket
 
-object InventoryUtils : MinecraftInstance, Listenable {
+object InventoryUtils : Listenable {
+    val mc = Minecraft.getInstance()
+
     // Is inventory open on server-side?
     var serverOpenInventory
         get() = _serverOpenInventory
@@ -192,7 +195,7 @@ object InventoryUtils : MinecraftInstance, Listenable {
                 timeSinceClosedInventory = System.currentTimeMillis()
 
                 if (packet is OpenInventoryMenuS2CPacket) {
-                    if (packet.id == "minecraft:chest" || packet.id == "minecraft:container")
+                    if (packet.type == "minecraft:chest" || packet.type == "minecraft:container")
                         serverOpenContainer = true
                 } //else
                     //ChestAura.tileTarget = null

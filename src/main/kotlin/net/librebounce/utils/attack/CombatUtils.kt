@@ -5,6 +5,7 @@ import net.librebounce.event.Listenable
 import net.librebounce.event.handler
 import net.librebounce.features.module.impl.combat.HitDetector.debug
 import net.librebounce.features.module.impl.combat.HitDetector.hitDelay
+import net.librebounce.features.module.impl.combat.HitDetector.resetTargetAfter
 import net.librebounce.utils.client.chat
 import net.librebounce.utils.timing.MSTimer
 import net.minecraft.client.Minecraft
@@ -36,6 +37,14 @@ object CombatUtils : Listenable {
         lastAttackBlocked = (event.targetEntity!! as PlayerEntity).isSwordBlocking
 
         if (debug) chat("Hit delay: $hitDelay, last valid attack: ${abs(lastValidAttack.getTime())}, is the last attack a critical hit: $lastAttackCrit")
+    }
+
+    val onUpdate = handler<AttackEvent> { event ->
+        if (lastValidAttack.hasTimePassed(resetTargetAfter * 1000)) {
+            lastTarget = null
+            lastAttackCrit = false
+            lastAttackBlocked = false
+        }
     }
 
     val timeUntilHit = (hitDelay - lastValidAttack.getTime()).coerceAtLeast(0)

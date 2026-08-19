@@ -13,6 +13,7 @@ import net.librebounce.features.command.impl.ModuleCommand
 import net.librebounce.features.module.base.Category
 import net.librebounce.features.module.base.Module
 import net.librebounce.features.module.impl.combat.*
+import net.librebounce.features.module.impl.misc.NoSlotSet
 /*import net.librebounce.features.module.modules.exploit.*
 import net.librebounce.features.module.modules.`fun`.Derp
 import net.librebounce.features.module.modules.`fun`.SkinDerp
@@ -21,6 +22,7 @@ import net.librebounce.features.module.modules.misc.*
 import net.librebounce.features.module.modules.misc.cheatdetector.CheatDetector*/
 import net.librebounce.features.module.impl.movement.*
 import net.librebounce.features.module.impl.render.*
+import net.librebounce.features.module.impl.world.Eagle
 /*import net.librebounce.features.module.modules.movement.*
 import net.librebounce.features.module.modules.movement.fly.Fly
 import net.librebounce.features.module.modules.movement.liquidwalk.LiquidWalk
@@ -240,6 +242,8 @@ object ModuleManager : Listenable, Collection<Module> by MODULE_REGISTRY {
             SmartHit,
             Criticals,
             TickManipulation,
+            Eagle,
+            NoSlotSet,
             HitDetector
         )
 

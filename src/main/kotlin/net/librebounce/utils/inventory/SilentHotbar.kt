@@ -5,9 +5,11 @@ import net.librebounce.event.Listenable
 import net.librebounce.event.PacketEvent
 import net.librebounce.event.handler
 import net.librebounce.utils.client.MinecraftInstance
+import net.minecraft.client.Minecraft
 import net.minecraft.network.packet.c2s.play.SelectSlotC2SPacket
 
-object SilentHotbar : Listenable, MinecraftInstance {
+object SilentHotbar : Listenable {
+    val mc = Minecraft.getInstance()
 
     var hotbarState: SilentHotbarState? = null
 

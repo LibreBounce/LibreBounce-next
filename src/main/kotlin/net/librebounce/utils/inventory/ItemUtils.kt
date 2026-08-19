@@ -1,6 +1,7 @@
 package net.librebounce.utils.inventory
 
 import net.librebounce.utils.client.MinecraftInstance
+import net.minecraft.client.Minecraft
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.entity.living.player.PlayerEntity
 import net.minecraft.inventory.menu.InventoryMenu
@@ -12,14 +13,15 @@ import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 import kotlin.math.roundToInt
 
-object ItemUtils : MinecraftInstance {
+object ItemUtils {
+    val mc = Minecraft.getInstance()
     /**
      * Allows you to create an item using the item json
      *
      * @param itemArguments arguments of item
      * @return created item
      */
-    fun createItem(itemArguments: String): ItemStack? {
+    /*fun createItem(itemArguments: String): ItemStack? {
         return try {
             val args = itemArguments.replace('&', '§').split(" ")
 
@@ -42,7 +44,7 @@ object ItemUtils : MinecraftInstance {
             exception.printStackTrace()
             null
         }
-    }
+    }*/
 
     fun getItems(
         startInclusive: Int = 0, endInclusive: Int = 44, itemDelay: Int? = null,
@@ -87,7 +89,7 @@ val ItemStack.durability
     get() = maxDamage - damage
 
 // Calculates how much estimated durability does the item have thanks to its unbreaking level
-val ItemStack.totalDurability: Int
+/*val ItemStack.totalDurability: Int
     get() {
         // See https://minecraft.wiki/w/Unbreaking or https://minecraft.fandom.com/wiki/Unbreaking?oldid=2326887
         val multiplier =
@@ -95,9 +97,9 @@ val ItemStack.totalDurability: Int
             else getEnchantmentLevel(Enchantment.UNBREAKING) + 1.0
 
         return (multiplier * durability).roundToInt()
-    }
+    }*/
 
-val ItemStack.enchantments: Map<Enchantment, Int>
+/*val ItemStack.enchantments: Map<Enchantment, Int>
     get() {
         val enchantments = mutableMapOf<Enchantment, Int>()
 
@@ -111,16 +113,16 @@ val ItemStack.enchantments: Map<Enchantment, Int>
         }
 
         return enchantments
-    }
+    }*/
 
 val ItemStack.enchantmentCount
     get() = enchantments.size()
 
 // Returns sum of levels of all enchantment levels
-val ItemStack.enchantmentSum
-    get() = enchantments.elements.sum()
+/*val ItemStack.enchantmentSum
+    get() = enchantments.elements.sum()*/
 
-fun ItemStack.getEnchantmentLevel(enchantment: Enchantment) = enchantments.getOrDefault(enchantment, 0)
+//fun ItemStack.getEnchantmentLevel(enchantment: Enchantment) = enchantments.getOrDefault(enchantment, 0)
 
 // Makes Kotlin smart-cast the stack to not null ItemStack
 @OptIn(ExperimentalContracts::class)
@@ -136,9 +138,9 @@ fun ItemStack?.isEmpty(): Boolean {
 fun ItemStack?.hasItemAgePassed(delay: Int) =
     this == null || System.currentTimeMillis() - popAnimationTime >= delay
 
-val ItemStack.attackDamage
+/*val ItemStack.attackDamage
     get() = (attributeModifiers["generic.attackDamage"].firstOrNull()?.value ?: 1.0) +
-            1.25 * getEnchantmentLevel(Enchantment.SHARPNESS)
+            1.25 * getEnchantmentLevel(Enchantment.SHARPNESS)*/
 
 fun ItemStack.isSplashPotion() = item is PotionItem && PotionItem.isSplashPotion(metadata)
 

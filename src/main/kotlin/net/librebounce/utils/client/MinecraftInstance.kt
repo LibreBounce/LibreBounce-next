@@ -16,7 +16,7 @@ interface MinecraftInstance {
 
     /*companion object {
         @JvmField
-        val mc: Minecraft = Minecraft.getInstance()
+        val mc: Minecraft = MinecraftInstance.get()
     }*/
 }
 
