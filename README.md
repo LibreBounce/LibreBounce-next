@@ -1,39 +1,42 @@
-# Ornithe Template Mod
+# LibreBounce
+A [libre software](https://www.gnu.org/philosophy/free-sw.html), mixin-based cheat client for the [Ornithe Mod Loader](https://ornithemc.net), for Minecraft 1.8.9; it's a fork of [LiquidBounce Legacy](https://github.com/CCBlueX/LiquidBounce/tree/legacy), aiming to compete with paid & non-libre hacked clients.
 
-The official Ornithe template mod. You can use it as a template for your own mods!
+If anyone would like to contact me through Discord, my username is `thatonecoder_`. More contact methods may be found through my [Codeberg profile page](https://codeberg.org/thatonecoder), although I cannot guarantee any attempts will be successful.
 
-## WIP Gen2
+Divergences from LiquidBounce Legacy are listed in the [changelog](CHANGELOG.md); note that there are also many refactors, making the code much cleaner.
 
-This template is for "gen2", our work-in-progress generation of development tools. While gen2 brings improvements and new features, it is not yet stable. Keep in mind:
-- gen2 cannot (yet) be installed and used by end-users
-- gen2 intermediary may be re-generated at any time until it becomes stable, this will invalidate your gradle cache
-- gen2 may yet have bugs to be ironed out, please report any issues you find
-
-## Usage
-
-In order to use this mod as a template:
-
-1. Create a new repository from this template with `Use this template`
-    - Tick the box "Include all branches"
-2. Clone the recently-created repo on your PC
-3. Make the necessary changes in order to make it yours:
-    - Update `gradle.properties` in order to use your 
-        - Update your mod's Maven group and mod ID
-            - If you don't know which Maven group to use, and you are planning to host the mod's source code on GitHub, use `io.github.<Your_Username_Here>`
-        - Update your mod's dependencies
-            - Check [our develop page](https://ornithemc.net/develop) for the latest available versions.
-    - Update `fabric.mod.json` in order to reflect your mod's metadata
-        - If you are planning to include (jar-in-jar) a mod, don't forget to declare its dependency on it!
-        - The icon provided here is a placeholder one. If you aren't able to replace it yet, you can delete it and remove the "icon" property
-    - Create a LICENSE file for this mod! If you don't know which license to use, check out [here](https://choosealicense.com/).
-        - If you use `LICENSE.md`, don't forget to update the buildscript in order to use that file name!
-        - In `fabric.mod.json`, don't forget to put the license's [SPDX identifier](https://spdx.org/licenses/) under the `"license"` property`.
-        - The GPLv3 and AGPLv3 are not valid mod licenses, so you can use almost any license except for those.
-    - Update the Java sub-directory structure so it reflects your Maven group
-4. The mod is now ready to be worked on!
+## Issues
+If you notice any bugs or would like a feature added, you can let us know by opening an issue [here](https://github.com/LibreBounce/LibreBounce/issues).
 
 ## License
+This project is subject to the [GNU General Public License v3.0](LICENSE). This only applies for source code located directly in this clean repository. During the development and compilation process, additional source code may be used to which we have obtained no rights. Such code is not covered by the GPL license.
+For those who are unfamiliar with the license, here is a summary of its main points. This is by no means legal advice nor legally binding.
 
-This template on the OrnitheMC GitHub is licensed under the [Creative Common Zero v1.0 license](./LICENSE-TEMPLATE.md).
+You are allowed to use, share, or modify this project, entirely or partially, and distribute at any cost.
 
-Mods created with this template are not automatically licensed under the CC0, and are not required to give any kind of credit back to OrnitheMC for this template.
+However, note that your modified application must also be licensed under the GPL. This means you cannot use this code in a non-libre or non GPL-compatible program, and you must make source code available along with any distributed binaries.
+
+Do the above and share your source code with everyone, just like we do.
+
+## Setting up a Workspace
+LibreBounce is using Gradle, so make sure that it is installed properly. Instructions can be found on [Gradle's website](https://gradle.org/install/).
+1. Clone the repository using `git clone https://github.com/LibreBounce/LibreBounce/`.
+2. CD into the local repository folder.
+3. Depending on which IDE you are using execute either of the following commands:
+    - For IntelliJ: `gradlew --debug setupDevWorkspace idea genIntellijRuns build`
+    - For Eclipse: `gradlew --debug setupDevWorkspace eclipse build`
+4. Open the folder as a Gradle project in your IDE.
+5. Select either the Forge or Vanilla run configuration.
+
+## Contributing
+We highly appreciate contributions. If you would like to support us, feel free to make changes to LibreBounce's source code and submit a pull request. Currently, our main goals are the following, by order of priority:
+
+1. Make rotation patterns that bypass advanced anti-cheats (such as Polar),
+2. Fix a bug where rotation modules still affect the player after being turned off.
+3Add full backwards-compatibility with historical LiquidBounce versions (b68, b72).
+
+Any additional goals are easily found by code searching "TO-DO", and are equally as important, if not more.
+If you have experience in one or more of these fields, we would highly appreciate your support.
+
+## Stats
+![Alt](https://repobeats.axiom.co/api/embed/9ba0cbee722c2c27fba8d83cfc0233dc430ea204.svg "Repobeats analytics image")
