@@ -58,7 +58,7 @@ object RaycastUtils : MinecraftInstance {
                     val eyeDistance = eyePosition.distanceTo(movingObjectPosition.facePos)
 
                     if (eyeDistance < blockReachDistance || blockReachDistance == 0.0) {
-                        if (entity == mc.camera.vehicle && !mc.camera.canRiderInteract()) {
+                        if (entity == mc.camera.vehicle && !mc.camera.isRiding) {
                             if (blockReachDistance == 0.0) targetEntity = entity
                         } else {
                             targetEntity = entity
@@ -126,10 +126,10 @@ object RaycastUtils : MinecraftInstance {
             var d2 = d1
 
             for (entity1 in list) {
-                val f1 = entity1.collisionBorderSize
+                val f1 = entity1.pickRadius
                 val boxes = ArrayList<Box>()
 
-                boxes.add(entity1.shape.expand(f1.toDouble(), f1.toDouble(), f1.toDouble()))
+                boxes.add(entity1.shape.grown(f1.toDouble(), f1.toDouble(), f1.toDouble()))
 
                 for (box in boxes) {
                     val intercept = box.clip(vec3, vec32)

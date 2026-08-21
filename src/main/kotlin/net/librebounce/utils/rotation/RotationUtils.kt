@@ -20,7 +20,7 @@ import net.minecraft.entity.Entity
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.client.entity.living.player.Input
-import net.minecraft.util.*
+//import net.minecraft.util.*
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Box
 import net.minecraft.util.math.Direction
@@ -289,10 +289,10 @@ object RotationUtils : MinecraftInstance, Listenable {
                     val rotationWithDiff = rotation to rotationDifference(rotation, currRotation)
 
                     if (distance <= attackRange) {
-                        if (attackRotation == null || rotationWithDiff.second < attackRotation.second) attackRotation =
+                        if (attackRotation == null || rotationWithDiff.second < attackRotation!!.second) attackRotation =
                             rotationWithDiff
                     } else {
-                        if (lookRotation == null || rotationWithDiff.second < lookRotation.second) lookRotation =
+                        if (lookRotation == null || rotationWithDiff.second < lookRotation!!.second) lookRotation =
                             rotationWithDiff
                     }
                 }
@@ -543,10 +543,10 @@ object RotationUtils : MinecraftInstance, Listenable {
         entity.hitBox.center.withY(entity.hitBox.maxY), entity.hitBox.center.withY(entity.hitBox.minY)
     ).any { isVisible(it) }
 
-    fun isEntityHeightVisible(entity: BlockEntity) = arrayOf(
+    /*fun isEntityHeightVisible(entity: BlockEntity) = arrayOf(
         entity.renderBoundingBox.center.withY(entity.renderBoundingBox.maxY),
         entity.renderBoundingBox.center.withY(entity.renderBoundingBox.minY)
-    ).any { isVisible(it) }
+    ).any { isVisible(it) }*/
 
     /**
      * Set your target rotation
@@ -758,7 +758,7 @@ object RotationUtils : MinecraftInstance, Listenable {
             return@handler
         }
 
-        if (!packet.rotating) {
+        if (!packet.hasAngles()) {
             activeSettings?.resetSimulateShortStopData()
             return@handler
         }
