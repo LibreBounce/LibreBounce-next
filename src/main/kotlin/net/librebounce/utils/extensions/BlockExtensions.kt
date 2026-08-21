@@ -3,12 +3,9 @@ package net.librebounce.utils.extensions
 import net.minecraft.block.*
 import net.minecraft.block.material.Material
 import net.minecraft.block.state.BlockState
-import net.minecraft.client.Minecraft
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.math.Vec3i
-
-private val mc = Minecraft.getInstance()
 
 val BlockPos.state: BlockState?
     get() = mc.world?.getBlockState(this)
@@ -56,38 +53,38 @@ val String.blockByName: Block?
 fun BlockPos.Mutable.set(vec3i: Vec3i, xOffset: Int = 0, yOffset: Int = 0, zOffset: Int = 0): BlockPos.Mutable =
     set(vec3i.x + xOffset, vec3i.y + yOffset, vec3i.z + zOffset)
 
-/*fun BlockPos.getAllInBoxMutable(radius: Int): Iterable<BlockPos> {
-    return BlockPos.getAllInBoxMutable(add(-radius, -radius, -radius), add(radius, radius, radius))
+fun BlockPos.getAllInBoxMutable(radius: Int): Iterable<BlockPos> {
+    return BlockPos.iterateRegionMutable(add(-radius, -radius, -radius), add(radius, radius, radius))
 }
 
 fun BlockPos.getAllInBox(radius: Int): Iterable<BlockPos> {
-    return BlockPos.getAllInBox(add(-radius, -radius, -radius), add(radius, radius, radius))
+    return BlockPos.iterateRegion(add(-radius, -radius, -radius), add(radius, radius, radius))
 }
 
-fun Vec3.getAllInBoxMutable(radius: Double): Iterable<BlockPos> {
+fun Vec3d.getAllInBoxMutable(radius: Double): Iterable<BlockPos> {
     val from = BlockPos(
-        (xCoord - radius).floorInt(),
-        (yCoord - radius).floorInt(),
-        (zCoord - radius).floorInt()
+        (x - radius).floorInt(),
+        (y - radius).floorInt(),
+        (z - radius).floorInt()
     )
     val to = BlockPos(
-        (xCoord + radius).ceilInt(),
-        (yCoord + radius).ceilInt(),
-        (zCoord + radius).ceilInt()
+        (x + radius).ceilInt(),
+        (y + radius).ceilInt(),
+        (z + radius).ceilInt()
     )
-    return BlockPos.getAllInBoxMutable(from, to)
+    return BlockPos.iterateRegionMutable(from, to)
 }
 
-fun Vec3.getAllInBox(radius: Double): Iterable<BlockPos> {
+fun Vec3d.getAllInBox(radius: Double): Iterable<BlockPos> {
     val from = BlockPos(
-        (xCoord - radius).floorInt(),
-        (yCoord - radius).floorInt(),
-        (zCoord - radius).floorInt()
+        (x - radius).floorInt(),
+        (y - radius).floorInt(),
+        (z - radius).floorInt()
     )
     val to = BlockPos(
-        (xCoord + radius).ceilInt(),
-        (yCoord + radius).ceilInt(),
-        (zCoord + radius).ceilInt()
+        (x + radius).ceilInt(),
+        (y + radius).ceilInt(),
+        (z + radius).ceilInt()
     )
-    return BlockPos.getAllInBox(from, to)
-}*/
+    return BlockPos.iterateRegion(from, to)
+}

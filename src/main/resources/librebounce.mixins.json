@@ -4,6 +4,7 @@
   "package": "net.librebounce.mixins",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "events.ConnectionMixin"
   ],
   "client": [
     "events.ClientPlayerInteractionManagerMixin",
