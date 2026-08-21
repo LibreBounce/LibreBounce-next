@@ -28,8 +28,7 @@ class EntityLookup<T : Entity>(
     operator fun getValue(thisRef: Any?, property: KProperty<*>): Collection<T> = entities
 
     private val onUpdate = handler<UpdateEvent> {
-        ticks++
-        ticks %= updateCycle
+        ++ticks; ticks %= updateCycle
 
         if (ticks != 0)
             return@handler

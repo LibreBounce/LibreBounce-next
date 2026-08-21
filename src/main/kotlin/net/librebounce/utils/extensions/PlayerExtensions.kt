@@ -15,9 +15,9 @@ import net.librebounce.utils.block.toVec*/
 /*import net.librebounce.utils.client.PacketUtils.sendPacket
 import net.librebounce.utils.inventory.SilentHotbar
 import net.librebounce.utils.movement.MovementUtils
-import net.librebounce.utils.render.ColorUtils.stripColor
+import net.librebounce.utils.render.ColorUtils.stripColor*/
 import net.librebounce.utils.rotation.Rotation
-import net.librebounce.utils.rotation.RotationUtils.getFixedSensitivityAngle*/
+import net.librebounce.utils.rotation.RotationUtils.getFixedSensitivityAngle
 import net.minecraft.client.Minecraft
 import net.minecraft.client.entity.living.player.LocalClientPlayerEntity
 import net.minecraft.entity.Entity
@@ -51,6 +51,8 @@ import net.minecraft.util.math.Direction
 import net.minecraft.util.math.Vec3d
 //import net.minecraftforge.event.ForgeEventFactory
 
+val mc = Minecraft.getInstance()
+
 /**
  * Allows to get the distance between the current entity and [entity] from the nearest corner of the bounding box
  */
@@ -58,7 +60,7 @@ fun Entity.getDistanceToEntityBox(entity: Entity) = eyes.distanceTo(getNearestPo
 
 fun Entity.getDistanceToBox(box: Box) = eyes.distanceTo(getNearestPointBB(eyes, box))
 
-/*fun LocalClientPlayerEntity.isNearEdge(threshold: Float): Boolean {
+fun LocalClientPlayerEntity.isNearEdge(threshold: Float): Boolean {
     val playerPos = Vec3d(x, y, z)
     val pos = BlockPos(playerPos)
 
@@ -76,7 +78,7 @@ fun Entity.getDistanceToBox(box: Box) = eyes.distanceTo(getNearestPointBB(eyes, 
         }
     }
     return false
-}*/
+}
 
 fun getNearestPointBB(eye: Vec3d, box: Box):Vec3d {
     val origin = doubleArrayOf(eye.x, eye.y, eye.z)
@@ -107,7 +109,7 @@ fun Entity.isMob() =
     val entityName = name ?: return false
 
     return friendsConfig.isFriend(stripColor(entityName))
-}
+}*/
 
 var Entity?.rotation
     get() = Rotation(this?.yaw ?: 0f, this?.pitch ?: 0f)
@@ -124,7 +126,7 @@ var Entity?.prevRotation
             lastYaw = value.yaw
             lastPitch = value.pitch
         }
-    }*/
+    }
 
 val Entity.hitBox: Box
     get() {
@@ -169,7 +171,7 @@ fun Entity.setPosAndPrevPos(currPos: Vec3d, last: Vec3d = currPos, lastTickPos: 
     }
 }
 
-/*fun LocalClientPlayerEntity.setFixedSensitivityAngles(yaw: Float? = null, pitch: Float? = null) {
+fun LocalClientPlayerEntity.setFixedSensitivityAngles(yaw: Float? = null, pitch: Float? = null) {
     if (yaw != null) fixedSensitivityYaw = yaw
 
     if (pitch != null) fixedSensitivityPitch = pitch
@@ -187,8 +189,8 @@ var LocalClientPlayerEntity.fixedSensitivityPitch
         pitch = getFixedSensitivityAngle(pitch.coerceIn(-90f, 90f), pitch)
     }
 
-val IMixinEntity.interpolatedPosition
-    get() = Vec3d(lerpX, lerpY, lerpZ)
+/*val IMixinEntity.interpolatedPosition
+    get() = Vec3d(lerpX, lerpY, lerpZ)*/
 
 // Makes fixedSensitivityYaw, ... += work
 operator fun LocalClientPlayerEntity.plusAssign(value: Float) {
@@ -197,10 +199,10 @@ operator fun LocalClientPlayerEntity.plusAssign(value: Float) {
 }
 
 fun Entity.interpolatedPosition(start: Vec3d, extraHeight: Float? = null) =Vec3d(
-    start.xCoord + (x - start.xCoord) * mc.timer.partialTick,
-    start.yCoord + (y - start.yCoord) * mc.timer.partialTick + (extraHeight ?: 0f),
-    start.zCoord + (z - start.zCoord) * mc.timer.partialTick
-)*/
+    start.x + (x - start.x) * mc.timer.partialTick,
+    start.y + (y - start.y) * mc.timer.partialTick + (extraHeight ?: 0f),
+    start.z + (z - start.z) * mc.timer.partialTick
+)
 
 fun LocalClientPlayerEntity.stopY() {
     velocityY = 0.0

@@ -1,0 +1,183 @@
+package net.librebounce.utils.block
+
+import net.librebounce.utils.client.MinecraftInstance
+import net.librebounce.utils.extensions.immutableCopy
+import net.minecraft.block.Block
+import net.minecraft.block.GlassBlock
+import net.minecraft.block.SoulSandBlock
+import net.minecraft.block.StainedGlassBlock
+import net.minecraft.block.state.BlockState
+import net.minecraft.block.Blocks.*
+import net.minecraft.util.math.Box
+import net.minecraft.util.math.BlockPos
+import net.minecraft.resource.Identifier
+
+typealias Collidable = (Block?) -> Boolean
+
+object BlockUtils : MinecraftInstance {
+
+    /**
+     * Get block name by [id]
+     */
+    fun getBlockName(id: Int): String = Block.byId(id).name
+
+    /**
+     * Check if block bounding box is full or partial (non-full)
+     */
+    fun isBlockBBValid(
+        pos: BlockPos,
+        blockState: BlockState? = null,
+        supportSlabs: Boolean = false,
+        supportPartialBlocks: Boolean = false
+    ): Boolean {
+        val state = blockState ?: pos.state ?: return false
+
+        val box = state.block.getCollisionShape(mc.world, pos, state) ?: return false
+
+        // Support blocks like stairs, slab (1x), dragon-eggs, glass-panes, fences, etc
+        if (supportPartialBlocks && (box.maxY - box.minY < 1.0 || box.maxX - box.minX < 1.0 || box.maxZ - box.minZ < 1.0)) {
+            return true
+        }
+
+        // The slab will only return true if it's placed at a level that can be placed like any normal full block
+        return box.maxX - box.minX == 1.0 && (box.maxY - box.minY == 1.0 || supportSlabs && box.maxY % 1.0 == 0.0) && box.maxZ - box.minZ == 1.0
+    }
+
+    fun isFullBlock(block: Block): Boolean {
+        when (block) {
+            // Soul Sand is considered as full block?!
+            is SoulSandBlock -> return false
+
+            // Glass isn't considered as full block?!
+            is GlassBlock, is StainedGlassBlock -> return true
+        }
+
+        // Many translucent or non-full blocks have blockBounds set to 1.0
+        return block.isOpaque && block.isCube &&
+                block.maxX == 1.0 && block.maxY == 1.0 && block.maxZ == 1.0
+    }
+
+    /**
+     * Get distance to center of [pos]
+     */
+    fun getCenterDistance(pos: BlockPos) =
+        mc.player.distanceTo(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5)
+
+    /**
+     * Search a limited amount [maxBlocksLimit] of specific blocks [targetBlocks] around the player in a specific [radius].
+     * If [targetBlocks] is null it searches every block
+     **/
+    fun searchBlocks(
+        radius: Int,
+        targetBlocks: Set<Block>? = null,
+        maxBlocksLimit: Int? = null,
+        predicate: (BlockPos, Block) -> Boolean = { _, _ -> true }
+    ): MutableMap<BlockPos, Block> {
+        val player = mc.player ?: return mutableMapOf()
+
+        val blocks = mutableMapOf<BlockPos, Block>()
+
+        val mutable = BlockPos.Mutable(0, 0, 0)
+
+        for (x in radius downTo -radius + 1) {
+            for (y in radius downTo -radius + 1) {
+                for (z in radius downTo -radius + 1) {
+                    if (maxBlocksLimit != null && blocks.size >= maxBlocksLimit) {
+                        return blocks
+                    }
+
+                    mutable.set(player.x.toInt() + x, player.y.toInt() + y, player.z.toInt() + z)
+
+                    val block = mutable.block ?: continue
+
+                    if (targetBlocks == null || targetBlocks.contains(block)) {
+                        val pos = mutable.immutableCopy()
+                        if (predicate(pos, block)) {
+                            blocks[pos] = block
+                        }
+                    }
+                }
+            }
+        }
+
+        return blocks
+    }
+
+    /**
+     * Check if [axisAlignedBB] has collidable blocks using custom [collide] check
+     */
+    fun collideBlock(axisAlignedBB: Box, collide: Collidable): Boolean {
+        val player = mc.player
+
+        val y = axisAlignedBB.minY.toInt()
+        val mutable = BlockPos.Mutable(0, 0, 0)
+        for (x in player.shape.minX.toInt() until player.shape.maxX.toInt() + 1) {
+            for (z in player.shape.minZ.toInt() until player.shape.maxZ.toInt() + 1) {
+                val pos = mutable.set(x, y, z)
+                val block = pos.block
+
+                if (!collide(block))
+                    return false
+            }
+        }
+
+        return true
+    }
+
+    /**
+     * Check if [axisAlignedBB] has collidable blocks using custom [collide] check
+     */
+    fun collideBlockIntersects(axisAlignedBB: Box, collide: Collidable): Boolean {
+        val player = mc.player
+
+        val y = axisAlignedBB.minY.toInt()
+        val mutable = BlockPos.Mutable(0, 0, 0)
+        for (x in player.shape.minX.toInt() until player.shape.maxX.toInt() + 1) {
+            for (z in player.shape.minZ.toInt() until player.shape.maxZ.toInt() + 1) {
+                val pos = mutable.set(x, y, z)
+                val block = pos.block
+
+                if (collide(block)) {
+                    val shape = pos.state?.let { block?.getCollisionShape(mc.world, pos, it) }
+                        ?: continue
+
+                    if (player.shape.intersects(shape))
+                        return true
+                }
+            }
+        }
+        return false
+    }
+
+    /**
+     * Bedwars Blocks List
+     */
+    val BEDWARS_BLOCKS = setOf(
+        WOOL,
+        STAINED_HARDENED_CLAY,
+        STAINED_GLASS,
+        PLANKS,
+        LOG,
+        LOG2,
+        END_STONE,
+        OBSIDIAN,
+        WATER
+    )
+
+    /**
+     * Bedwars Blocks Texture List
+     */
+    fun getBlockTexture(block: Block): Identifier {
+        return when (block) {
+            BED -> Identifier("minecraft:textures/items/bed.png")
+            OBSIDIAN -> Identifier("minecraft:textures/blocks/obsidian.png")
+            END_STONE -> Identifier("minecraft:textures/blocks/end_stone.png")
+            STAINED_HARDENED_CLAY -> Identifier("minecraft:textures/blocks/hardened_clay_stained_white.png")
+            STAINED_GLASS -> Identifier("minecraft:textures/blocks/glass.png")
+            WATER -> Identifier("minecraft:textures/blocks/water_still.png")
+            PLANKS -> Identifier("minecraft:textures/blocks/planks_oak.png")
+            WOOL -> Identifier("minecraft:textures/blocks/wool_colored_white.png")
+            else -> Identifier("minecraft:textures/blocks/stone.png")
+        }
+    }
+}

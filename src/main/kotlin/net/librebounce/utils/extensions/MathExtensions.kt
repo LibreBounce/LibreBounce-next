@@ -9,6 +9,7 @@ import net.librebounce.config.FloatRangeValue
 import net.librebounce.config.FloatValue
 import net.librebounce.config.IntRangeValue
 import net.librebounce.config.IntValue
+import net.librebounce.utils.rotation.RotationUtils.getFixedAngleDelta
 /*import net.librebounce.utils.block.toVec
 import net.librebounce.utils.rotation.Rotation
 import net.librebounce.utils.rotation.RotationUtils.getFixedAngleDelta*/
@@ -77,17 +78,17 @@ operator fun Vec3d.times(number: Double) = Vec3d(x * number, y * number, z * num
 operator fun Vec3d.div(number: Double) = times(1 / number)
 operator fun Vec3d.unaryMinus():Vec3d = times(-1.0)
 
-/*fun Vec3i.manhattanDistance(another: Vec3i): Int {
+fun Vec3i.manhattanDistance(another: Vec3i): Int {
     return abs(x - another.x) + abs(y - another.y) + abs(z - another.z)
 }
 
 fun Vec3i.copy(x: Int = this.x, y: Int = this.y, z: Int = this.z) = Vec3i(x, y, z)
 fun BlockPos.copy(x: Int = this.x, y: Int = this.y, z: Int = this.z) = BlockPos(x, y, z)
 fun BlockPos.Mutable.copy(x: Int = this.x, y: Int = this.y, z: Int = this.z) = BlockPos.Mutable(x, y, z)
-fun Vec3d.copy(x: Double = this.xCoord, y: Double = this.yCoord, z: Double = this.zCoord) = Vec3d(x, y, z)
+fun Vec3d.copy(x: Double = this.x, y: Double = this.y, z: Double = this.z) = Vec3d(x, y, z)
 
 fun BlockPos.immutableCopy() = BlockPos(x, y, z)
-fun BlockPos.mutableCopy() = BlockPos.Mutable(x, y, z)*/
+fun BlockPos.mutableCopy() = BlockPos.Mutable(x, y, z)
 
 fun Vec3d.moved(direction: Direction, value: Double): Vec3d {
     val vec3i = direction.normal //direction.directionVec
@@ -106,19 +107,19 @@ fun Vec3d.withY(value: Double, useCurrentY: Boolean = false): Vec3d {
 val Vec3d_ZERO: Vec3d
     get() = Vec3d(0.0, 0.0, 0.0)
 
-//val EntityRenderDispatcher.offset
-    //get() = Vec3d(offsetX, offsetY, offsetZ)
+val EntityRenderDispatcher.offset
+    get() = Vec3d(offsetX, offsetY, offsetZ)
 
 fun Vec3d.toFloatArray() = floatArrayOf(x.toFloat(), y.toFloat(), z.toFloat())
 fun Vec3d.toDoubleArray() = doubleArrayOf(x, y, z)
 
-//fun Float.ceilInt() = MathHelper.ceiling_float_int(this)
+fun Float.ceilInt() = MathHelper.ceil(this)
 fun Float.floorInt() = MathHelper.floor(this)
 fun Float.toRadians() = this * 0.017453292f
 fun Float.toRadiansD() = toRadians().toDouble()
 fun Float.toDegrees() = this * 57.29578f
 fun Float.toDegreesD() = toDegrees().toDouble()
-//fun Float.withGCD() = (this / getFixedAngleDelta()).roundToInt() * getFixedAngleDelta()
+fun Float.withGCD() = (this / getFixedAngleDelta()).roundToInt() * getFixedAngleDelta()
 
 /**
  * Prevents possible NaN / (-) Infinity results.
@@ -130,16 +131,16 @@ infix fun Int.ceilDiv(b: Int): Int = ceil(this / b.toDouble()).toInt()
 
 infix fun Float.safeDiv(b: Float) = if (b == 0f) 0f else this / b
 
-//fun Double.ceilInt() = MathHelper.ceiling_double_int(this)
-//fun Double.floorInt() = MathHelper.floor(this)
+fun Double.ceilInt() = MathHelper.ceil(this)
+fun Double.floorInt() = MathHelper.floor(this)
 fun Double.toRadians() = this * 0.017453292
 fun Double.toRadiansF() = toRadians().toFloat()
 fun Double.toDegrees() = this * 57.295779513
 fun Double.toDegreesF() = toDegrees().toFloat()
-/*fun Double.withGCD() = (this / getFixedAngleDelta()).roundToInt() * getFixedAngleDelta().toDouble()
+fun Double.withGCD() = (this / getFixedAngleDelta()).roundToInt() * getFixedAngleDelta().toDouble()
 
 val Vector2f.abs
-    get() = Vector2f(abs(x), abs(y))*/
+    get() = Vector2f(abs(x), abs(y))
 
 /**
  * Provides: (step is 0.1 by default)
@@ -176,13 +177,13 @@ fun ClosedFloatingPointRange<Float>.random(): Float {
  */
 fun <T> Iterable<T>.shuffled(shuffle: Boolean) = toMutableList().apply { if (shuffle) shuffle() }
 
-/*fun Box.lerpWith(x: Double, y: Double, z: Double) =
+fun Box.lerpWith(x: Double, y: Double, z: Double) =
     Vec3d(minX + (maxX - minX) * x, minY + (maxY - minY) * y, minZ + (maxZ - minZ) * z)
 
-fun Box.lerpWith(point: Vec3d) = lerpWith(point.xCoord, point.yCoord, point.zCoord)
+fun Box.lerpWith(point: Vec3d) = lerpWith(point.x, point.y, point.z)
 fun Box.lerpWith(value: Double) = lerpWith(value, value, value)
-fun Box.offset(other: Vec3d) = offset(other.xCoord, other.yCoord, other.zCoord)
-fun Box.offset(other: BlockPos) = offset(other.toVec())
+fun Box.moved(other: Vec3d) = moved(other.x, other.y, other.z)
+fun Box.moved(other: BlockPos) = moved(other.toVec())
 
 val Box.center
     get() = lerpWith(0.5)
@@ -211,18 +212,21 @@ fun Block.lerpWith(x: Double, y: Double, z: Double) = Vec3d(
     minX + (maxX - minX) * x,
     minY + (maxY - minY) * y,
     minZ + (maxZ - minZ) * z
-)*/
+)
 
-/*fun Vec3d.lerpWith(other:Vec3d, tickDelta: Double) = Vec3d(
-    xCoord + (other.xCoord - xCoord) * tickDelta,
-    yCoord + (other.yCoord - yCoord) * tickDelta,
-    zCoord + (other.zCoord - zCoord) * tickDelta
+fun Vec3d.lerpWith(other: Vec3d, tickDelta: Double) = Vec3d(
+    x + (other.x - x) * tickDelta,
+    y + (other.y - y) * tickDelta,
+    z + (other.z - z) * tickDelta
 )
 
 fun Rotation.lerpWith(other: Rotation, tickDelta: Number) =
-    Rotation((yaw..other.yaw).lerpWith(tickDelta), (pitch..other.pitch).lerpWith(tickDelta))
+    net.librebounce.utils.rotation.Rotation(
+        (yaw..other.yaw).lerpWith(tickDelta),
+        (pitch..other.pitch).lerpWith(tickDelta)
+    )
 
-fun Vec3d.lerpWith(other:Vec3d, tickDelta: Float) = lerpWith(other, tickDelta.toDouble())*/
+fun Vec3d.lerpWith(other: Vec3d, tickDelta: Float) = lerpWith(other, tickDelta.toDouble())
 
 fun ClosedFloatingPointRange<Double>.lerpWith(t: Number) = start + (endInclusive - start) * t.toDouble()
 

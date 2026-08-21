@@ -60,10 +60,12 @@ open class EagleComponent(owner: Module, generalApply: () -> Boolean = { true })
             if (side.axis == Direction.Axis.Y) {
                 continue
             }
-            if(debug) chat("Now in side for loop!")
+            if (debug) chat("Now in side for loop!")
             val neighbor = pos.offset(side)
 
             if (neighbor.isReplaceable) {
+                if (debug) chat("Neighbour is replaceable")
+
                 val calcDif = (if (side.axis == Direction.Axis.Z) {
                     abs(neighbor.z + 0.5 - player.z)
                 } else {
@@ -128,6 +130,7 @@ open class EagleComponent(owner: Module, generalApply: () -> Boolean = { true })
 
                 eagleSneaking = shouldEagle
             } else {
+                if (debug) chat("Tried to sneak")
                 player.isSneaking = shouldEagle
                 eagleSneaking = shouldEagle
             }

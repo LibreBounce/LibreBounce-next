@@ -22,7 +22,7 @@ import net.librebounce.features.module.modules.misc.*
 import net.librebounce.features.module.modules.misc.cheatdetector.CheatDetector*/
 import net.librebounce.features.module.impl.movement.*
 import net.librebounce.features.module.impl.render.*
-import net.librebounce.features.module.impl.world.Eagle
+import net.librebounce.features.module.impl.world.*
 /*import net.librebounce.features.module.modules.movement.*
 import net.librebounce.features.module.modules.movement.fly.Fly
 import net.librebounce.features.module.modules.movement.liquidwalk.LiquidWalk
@@ -31,8 +31,6 @@ import net.librebounce.features.module.modules.movement.noweb.NoWeb
 import net.librebounce.features.module.modules.movement.speed.Speed
 import net.librebounce.features.module.modules.player.*
 import net.librebounce.features.module.modules.player.nofall.NoFall
-import net.librebounce.features.module.modules.render.*
-import net.librebounce.features.module.modules.world.*
 import net.librebounce.features.module.modules.world.Timer
 import net.librebounce.features.module.modules.world.scaffolds.Scaffold*/
 import net.librebounce.utils.client.ClientUtils.LOGGER
@@ -236,6 +234,7 @@ object ModuleManager : Listenable, Collection<Module> by MODULE_REGISTRY {
             SnakeGame*/
             Arraylist,
             ClickGUI,
+            Rotations,
             AutoWalk,
             Freeze,
             AutoClicker,

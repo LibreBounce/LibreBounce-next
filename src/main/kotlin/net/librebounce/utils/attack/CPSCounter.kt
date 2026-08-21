@@ -3,7 +3,7 @@
  * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge.
  * https://github.com/CCBlueX/LibreBounce/
  */
-/*package net.librebounce.utils.attack
+package net.librebounce.utils.attack
 
 import net.librebounce.utils.client.ClientUtils.runTimeTicks
 
@@ -31,4 +31,4 @@ object CPSCounter {
         TIMESTAMP_BUFFERS[button.ordinal].getTimestampsSince(timeStampsSince.toLong())
 
     enum class MouseButton { LEFT, MIDDLE, RIGHT }
-}*/
+}

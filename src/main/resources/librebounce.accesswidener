@@ -8,6 +8,26 @@ accessible field net/minecraft/entity/living/LivingEntity jumpingCooldown I
 accessible field net/minecraft/entity/living/LivingEntity flyingSpeed F
 accessible field net/minecraft/entity/living/player/PlayerEntity flyingSpeed F
 accessible field net/minecraft/entity/living/player/PlayerEntity sleeping Z
+accessible field net/minecraft/client/render/entity/EntityRenderDispatcher offsetX D
+accessible field net/minecraft/client/render/entity/EntityRenderDispatcher offsetY D
+accessible field net/minecraft/client/render/entity/EntityRenderDispatcher offsetZ D
+
+accessible field net/minecraft/client/Minecraft timer Lnet/minecraft/client/TickTimer;
+
+accessible method net/minecraft/network/Connection flushQueue ()V
+accessible field net/minecraft/network/Connection sendQueue Ljava/util/Queue;
+accessible field net/minecraft/network/Connection lock Ljava/util/concurrent/locks/ReentrantReadWriteLock;
+accessible class net/minecraft/network/Connection$QueuedPacket
+
+accessible field net/minecraft/network/packet/s2c/play/EntityVelocityS2CPacket velocityX I
+accessible field net/minecraft/network/packet/s2c/play/EntityVelocityS2CPacket velocityY I
+accessible field net/minecraft/network/packet/s2c/play/EntityVelocityS2CPacket velocityZ I
+
+accessible field net/minecraft/network/packet/c2s/play/PlayerMoveC2SPacket x D
+accessible field net/minecraft/network/packet/c2s/play/PlayerMoveC2SPacket minY D
+accessible field net/minecraft/network/packet/c2s/play/PlayerMoveC2SPacket z D
+accessible field net/minecraft/network/packet/c2s/play/PlayerMoveC2SPacket yaw F
+accessible field net/minecraft/network/packet/c2s/play/PlayerMoveC2SPacket pitch F
 
 accessible field net/minecraft/client/options/KeyBinding pressed Z
 accessible field net/minecraft/client/options/KeyBinding clickCount I
