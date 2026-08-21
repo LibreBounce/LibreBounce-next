@@ -4,15 +4,17 @@
   "package": "net.librebounce.mixins",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "events.ConnectionMixin"
+    "events.ConnectionMixin",
+    "modules.LivingEntityMixin"
   ],
   "client": [
     "events.ClientPlayerInteractionManagerMixin",
     "events.GameGuiMixin",
     "events.GameRendererMixin",
     "events.LocalClientPlayerEntityMixin",
+    "events.MinecraftMixin",
     "events.ScreenMixin",
-    "init.MinecraftMixin"
+    "modules.MinecraftMixin"
   ],
   "server": [
   ],

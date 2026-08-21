@@ -179,14 +179,14 @@ fun LocalClientPlayerEntity.setFixedSensitivityAngles(yaw: Float? = null, pitch:
 
 var LocalClientPlayerEntity.fixedSensitivityYaw
     get() = getFixedSensitivityAngle(mc.player.yaw)
-    set(yaw) {
-        yaw = getFixedSensitivityAngle(yaw, yaw)
+    set(yawValue) {
+        yaw = getFixedSensitivityAngle(yawValue, yaw)
     }
 
 var LocalClientPlayerEntity.fixedSensitivityPitch
     get() = getFixedSensitivityAngle(pitch)
-    set(pitch) {
-        pitch = getFixedSensitivityAngle(pitch.coerceIn(-90f, 90f), pitch)
+    set(pitchValue) {
+        pitch = getFixedSensitivityAngle(pitchValue.coerceIn(-90f, 90f), pitch)
     }
 
 /*val IMixinEntity.interpolatedPosition

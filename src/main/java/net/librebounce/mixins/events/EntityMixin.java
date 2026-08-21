@@ -26,6 +26,12 @@ public class EntityMixin {
 	public double realY;
 	@Unique
 	public double realZ;
+	@Shadow
+	public float yaw;
+	@Shadow
+	public float pitch;
+	@Shadow
+	public boolean onGround;
 
 	@Inject(method = "updateVelocity", at = @At("HEAD"), cancellable = true)
 	private void libreBounce$strafeEvent(float strafe, float forward, float friction, final CallbackInfo callbackInfo) {

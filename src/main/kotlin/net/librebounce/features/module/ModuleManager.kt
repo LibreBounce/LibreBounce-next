@@ -238,6 +238,7 @@ object ModuleManager : Listenable, Collection<Module> by MODULE_REGISTRY {
             AutoWalk,
             Freeze,
             AutoClicker,
+            Aimbot,
             SmartHit,
             Criticals,
             TickManipulation,

@@ -1,15 +1,15 @@
-package net.librebounce.mixins.init;
+package net.librebounce.mixins.events;
 
 import net.librebounce.LibreBounce;
-import net.librebounce.event.EventManager;
-import net.librebounce.event.GameTickEvent;
-import net.librebounce.event.KeyEvent;
-import net.librebounce.event.TickEndEvent;
+import net.librebounce.event.*;
+import net.librebounce.features.module.impl.combat.AutoClicker;
+import net.librebounce.utils.attack.CPSCounter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.main.RunArgs;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -42,9 +42,14 @@ public abstract class MinecraftMixin {
 		EventManager.INSTANCE.call(TickEndEvent.INSTANCE);
 	}
 
-	@Inject(method = "tick", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;joinPlayerCounter:I", ordinal = 0))
+	@Inject(method = "tick", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;joinPlayerCounter:I", ordinal = 0, opcode = Opcodes.GETFIELD))
 	private void onTick(final CallbackInfo callbackInfo) {
 		EventManager.INSTANCE.call(GameTickEvent.INSTANCE);
+	}
+
+	@Inject(method = "runGame", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiler/Profiler;push(Ljava/lang/String;)V", ordinal = 1))
+	private void hook(CallbackInfo ci) {
+		EventManager.INSTANCE.call(GameLoopEvent.INSTANCE);
 	}
 
 	@Inject(method = "shutdown", at = @At("HEAD"))
