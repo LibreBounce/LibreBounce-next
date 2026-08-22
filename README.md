@@ -1,15 +1,17 @@
-# LibreBounce
-A [libre software](https://www.gnu.org/philosophy/free-sw.html), mixin-based cheat client for the [Ornithe Mod Loader](https://ornithemc.net), for Minecraft 1.8.9; it's a fork of [LiquidBounce Legacy](https://github.com/CCBlueX/LiquidBounce/tree/legacy), aiming to compete with paid & non-libre hacked clients.
+# LibreBounce "Nextgen"
+A [libre software](https://www.gnu.org/philosophy/free-sw.html), mixin-based cheat client for the [Ornithe Mod Loader](https://ornithemc.net), Minecraft version 1.8.9; it's a partial recode of [LibreBounce](https://github.com/LibreBounce/LibreBounce) (itself a fork of [LiquidBounce Legacy](https://github.com/CCBlueX/LiquidBounce/tree/legacy)), aiming to compete with paid & non-libre hacked clients.
+
+As this is gradually implementing features from the [original LibreBounce](https://github.com/LibreBounce/LibreBounce), it is not yet feature complete. Any pull requests that bring it closer to parity with the Forge version are highly appreciated!
 
 If anyone would like to contact me through Discord, my username is `thatonecoder_`. More contact methods may be found through my [Codeberg profile page](https://codeberg.org/thatonecoder), although I cannot guarantee any attempts will be successful.
 
-Divergences from LiquidBounce Legacy are listed in the [changelog](CHANGELOG.md); note that there are also many refactors, making the code much cleaner.
+Changes are listed in the [changelog](CHANGELOG.md); note that there are also many refactors, making the code much cleaner.
 
 ## Issues
-If you notice any bugs or would like a feature added, you can let us know by opening an issue [here](https://github.com/LibreBounce/LibreBounce/issues).
+If you notice any bugs or would like a feature added, you can let us know by opening an issue [here](https://github.com/LibreBounce/LibreBounce-next/issues).
 
 ## License
-This project is subject to the [GNU General Public License v3.0](LICENSE). This only applies for source code located directly in this clean repository. During the development and compilation process, additional source code may be used to which we have obtained no rights. Such code is not covered by the GPL license.
+This project is subject to the [GNU General Public License v3.0](LICENSE.md). This only applies for source code located directly in this clean repository. During the development and compilation process, additional source code may be used to which we have obtained no rights. Such code is not covered by the GPL license.
 For those who are unfamiliar with the license, here is a summary of its main points. This is by no means legal advice nor legally binding.
 
 You are allowed to use, share, or modify this project, entirely or partially, and distribute at any cost.
@@ -20,22 +22,20 @@ Do the above and share your source code with everyone, just like we do.
 
 ## Setting up a Workspace
 LibreBounce is using Gradle, so make sure that it is installed properly. Instructions can be found on [Gradle's website](https://gradle.org/install/).
-1. Clone the repository using `git clone https://github.com/LibreBounce/LibreBounce/`.
+1. Clone the repository using `git clone https://github.com/LibreBounce/LibreBounce-next`.
 2. CD into the local repository folder.
-3. Depending on which IDE you are using execute either of the following commands:
-    - For IntelliJ: `gradlew --debug setupDevWorkspace idea genIntellijRuns build`
-    - For Eclipse: `gradlew --debug setupDevWorkspace eclipse build`
+3. Execute the following command: `gradlew build`
 4. Open the folder as a Gradle project in your IDE.
-5. Select either the Forge or Vanilla run configuration.
+5. Select the run configuration.
 
 ## Contributing
 We highly appreciate contributions. If you would like to support us, feel free to make changes to LibreBounce's source code and submit a pull request. Currently, our main goals are the following, by order of priority:
 
-1. Make rotation patterns that bypass advanced anti-cheats (such as Polar),
-2. Fix a bug where rotation modules still affect the player after being turned off.
-3Add full backwards-compatibility with historical LiquidBounce versions (b68, b72).
+1. Reimplement the rotation system from the original LibreBounce, following the new code structure.
+2. Reimplement the original LibreBounce visuals, basing the font and general 2D element rendering on [Axolotl Client's rendering library](https://codeberg.org/AxolotlClient/AxolotlClient-rendering).
+3. Reorganize large amounts of the code, making it much more readable to newcomers.
 
-Any additional goals are easily found by code searching "TO-DO", and are equally as important, if not more.
+Any additional goals are easily found by code searching "TO-DO" or "TODO", and are equally as important, if not more.
 If you have experience in one or more of these fields, we would highly appreciate your support.
 
 ## Stats
