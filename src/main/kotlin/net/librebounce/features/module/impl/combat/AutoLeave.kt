@@ -4,8 +4,8 @@ import net.librebounce.event.UpdateEvent
 import net.librebounce.event.handler
 import net.librebounce.features.module.base.Category
 import net.librebounce.features.module.base.Module
-import net.ccbluex.liquidbounce.utils.client.PacketUtils.sendPacket
-import net.ccbluex.liquidbounce.utils.kotlin.RandomUtils.nextInt
+import net.librebounce.utils.client.PacketUtils.sendPacket
+import net.librebounce.utils.kotlin.RandomUtils.nextInt
 import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket
 import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket.Action.ATTACK
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket.Position

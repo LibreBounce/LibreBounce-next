@@ -1,6 +1,7 @@
 package net.librebounce.utils.attack
 
 import net.librebounce.event.AttackEvent
+import net.librebounce.event.UpdateEvent
 import net.librebounce.event.Listenable
 import net.librebounce.event.handler
 import net.librebounce.features.module.impl.combat.HitDetector.debug
