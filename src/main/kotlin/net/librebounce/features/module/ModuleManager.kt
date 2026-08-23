@@ -239,6 +239,7 @@ object ModuleManager : Listenable, Collection<Module> by MODULE_REGISTRY {
             Freeze,
             AutoClicker,
             Aimbot,
+            AutoLeave,
             SmartHit,
             Criticals,
             TickManipulation,
@@ -313,6 +314,7 @@ object ModuleManager : Listenable, Collection<Module> by MODULE_REGISTRY {
     private val onKey = handler<KeyEvent> { event ->
         MODULE_REGISTRY.forEach { if (it.keyBind == event.key) {
                 it.toggle()
+
                 chat("Toggled ${it.name} through a keybind!")
             }
         }

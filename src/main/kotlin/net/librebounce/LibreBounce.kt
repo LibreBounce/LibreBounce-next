@@ -172,6 +172,9 @@ object LibreBounce {
             TimerBalanceUtils
             BPSUtils
             CombatUtils
+            PacketUtils
+            InventoryUtils
+            SilentHotbar
             TickedActions
             WaitTickUtils
 

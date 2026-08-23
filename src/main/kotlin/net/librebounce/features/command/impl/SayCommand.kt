@@ -12,7 +12,7 @@ import net.minecraft.client.Minecraft
 object SayCommand : Command("say") {
     override fun execute(args: Array<String>) {
         if (args.size > 1) {
-            Minecraft.getInstance().player.sendChat(StringUtils.toCompleteString(args, 1))
+            mc.player.sendChat(StringUtils.toCompleteString(args, 1))
             chat("Message was sent to the chat.")
             return
         }

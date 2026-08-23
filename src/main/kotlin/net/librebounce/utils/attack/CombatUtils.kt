@@ -26,11 +26,13 @@ object CombatUtils : Listenable {
         if (lastTarget != event.targetEntity) {
             lastTarget = event.targetEntity!! as LivingEntity?
             lastValidAttack.reset()
+            
+            if (debug) chat("Reset target stats due to target changing!")
         }
 
         if (lastValidAttack.hasTimePassed(hitDelay)) {
             lastValidAttack.reset()
-            lastValidAttackIsCrit = mc.player.fallDistance > 0
+            lastValidAttackIsCrit = canCritHit(mc.player)
         }
 
         lastAttackCrit = canCritHit(mc.player)
@@ -39,11 +41,14 @@ object CombatUtils : Listenable {
         if (debug) chat("Hit delay: $hitDelay, last valid attack: ${abs(lastValidAttack.getTime())}, is the last attack a critical hit: $lastAttackCrit")
     }
 
-    val onUpdate = handler<AttackEvent> { event ->
+    val onUpdate = handler<UpdateEvent> { event ->
         if (lastValidAttack.hasTimePassed(resetTargetAfter * 1000)) {
             lastTarget = null
             lastAttackCrit = false
             lastAttackBlocked = false
+
+            val seconds = if (resetTargetAfter == 1) "second" else "seconds"
+            if (debug) chat("Reset due to $resetTargetAfter $seconds passing")
         }
     }
 
