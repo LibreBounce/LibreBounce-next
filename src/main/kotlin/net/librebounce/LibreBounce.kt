@@ -173,7 +173,7 @@ object LibreBounce {
             CombatUtils
             PacketUtils
             InventoryUtils
-            SilentHotbar
+            //SilentHotbar
             TickedActions
             WaitTickUtils
 

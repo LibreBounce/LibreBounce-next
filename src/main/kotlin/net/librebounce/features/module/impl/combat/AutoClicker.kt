@@ -9,9 +9,9 @@ import net.librebounce.utils.attack.CombatUtils.canHit
 import net.librebounce.utils.attack.CombatUtils.lastTarget
 import net.librebounce.utils.attack.EntityUtils.isLookingOnEntities
 import net.librebounce.utils.attack.EntityUtils.isSelected
+import net.librebounce.utils.input.InputUtils.requestClick
 import net.librebounce.utils.client.EntityLookup
 import net.librebounce.utils.extensions.getDistanceToEntityBox
-import net.minecraft.client.options.KeyBinding.click
 import net.minecraft.entity.living.LivingEntity
 import net.minecraft.item.BlockItem
 import net.minecraft.item.SwordItem
@@ -46,9 +46,7 @@ object AutoClicker : Module("AutoClicker", Category.COMBAT) {
                 ) {
                 if (debug) chat("Clicked left")
 
-                repeat(leftSettings.clicks) {
-                    click(mc.options.attackKey.keyCode)
-                }
+                requestClick(1, leftSettings.clicks)
             }
 
             if (left && block && shouldLeftClick &&
@@ -57,9 +55,7 @@ object AutoClicker : Module("AutoClicker", Category.COMBAT) {
                 ) {
                 if (debug) chat("Blocked the sword")
 
-                repeat(blockSettings.clicks) {
-                    click(mc.options.useKey.keyCode)
-                }
+                requestClick(3, blockSettings.clicks)
             }
 
             if (right && mc.options.useKey.isPressed &&
@@ -68,9 +64,7 @@ object AutoClicker : Module("AutoClicker", Category.COMBAT) {
                 ) {
                 if (debug) chat("Clicked right")
 
-                repeat(rightSettings.clicks) {
-                    click(mc.options.useKey.keyCode)
-                }
+                requestClick(3, rightSettings.clicks)
             }
         }
     }
