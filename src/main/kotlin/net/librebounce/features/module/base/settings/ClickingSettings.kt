@@ -17,13 +17,9 @@ open class ClickingSettings(owner: Module, prefix: String = "", shouldApply: Boo
     private var lastClick = MSTimer()
     var clicks = clicksAtATime.random()
 
-    fun canClick(): Boolean {
-        if (lastClick.hasTimePassed(delay)) {
-            clicks = clicksAtATime.random()
-            delay = nextRateMilliseconds(cps)
-            lastClick.reset()
-            return true
-        }
-        return false
+    fun canClick() = lastClick.hasTimePassed(delay).also {
+        clicks = clicksAtATime.random()
+        delay = nextRateMilliseconds(cps)
+        lastClick.reset()
     }
 }
