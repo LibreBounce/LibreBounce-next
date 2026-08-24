@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LocalClientPlayerEntity.class)
-public abstract class LocalClientPlayerEntityMixin extends Entity {
+public abstract class LocalClientPlayerEntityMixin {
 	@Shadow
 	public Input input;
 
@@ -54,12 +54,12 @@ public abstract class LocalClientPlayerEntityMixin extends Entity {
 	@Shadow
 	private double lastReportedPosZ;*/
 
-	@Shadow
+	/*@Shadow
 	public double x;
 	@Shadow
 	public double y;
 	@Shadow
-	public double z;
+	public double z;*/
 	@Shadow
 	public float yaw;
 	@Shadow
