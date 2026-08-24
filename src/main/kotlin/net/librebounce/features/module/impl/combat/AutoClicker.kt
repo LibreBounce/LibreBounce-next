@@ -19,7 +19,7 @@ import net.minecraft.world.HitResult
 
 object AutoClicker : Module("AutoClicker", Category.COMBAT) {
     private val left by boolean("Left", true)
-    private val leftSettings = ClickingSettings(this, "Left", { left })
+    private val leftSettings = ClickingSettings(this, "Left", left)
     private val requiresNoInput by boolean("RequiresNoInput", false) { left }
     private val maxAngleDifference by float("MaxAngleDifference", 30f, 10f..180f, suffix = "º") { left && requiresNoInput }
     private val range by float("Range", 3f, 0.1f..5f, suffix = "blocks") { left && requiresNoInput }
@@ -27,11 +27,11 @@ object AutoClicker : Module("AutoClicker", Category.COMBAT) {
     private val breakBlocks by boolean("BreakBlocks", true) { left }
 
     private val block by boolean("Block", false) { left }
-    private val blockSettings = ClickingSettings(this, "Block", { left && block })
+    private val blockSettings = ClickingSettings(this, "Block", left && block)
     private val neverStopHits by boolean("NeverStopHits", true) { left && block }
 
     private val right by boolean("Right", false)
-    private val rightSettings = ClickingSettings(this, "Right", { right })
+    private val rightSettings = ClickingSettings(this, "Right", right)
     private val onlyBlocks by boolean("OnlyBlocks", true) { right }
     private val debug by boolean("Debug", false)
 
@@ -51,7 +51,10 @@ object AutoClicker : Module("AutoClicker", Category.COMBAT) {
                 }
             }
 
-            if (block && shouldLeftClick && player.displayItemInHand?.item is SwordItem && (!neverStopHits || !canHit()) && blockSettings.canClick()) {
+            if (left && block && shouldLeftClick &&
+                player.displayItemInHand?.item is SwordItem && (!neverStopHits || !canHit()) &&
+                blockSettings.canClick()
+                ) {
                 if (debug) chat("Blocked the sword")
 
                 repeat(blockSettings.clicks) {
