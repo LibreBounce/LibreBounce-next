@@ -16,9 +16,10 @@ object InputUtils : MinecraftInstance {
     
     fun requestClick(button: Int, amount: Int = 1) {
         val key = when (button) {
-            1, default -> mc.options.attackKey.keyCode
-            2 -> mc.options.selectKey.keyCode
+            1 -> mc.options.attackKey.keyCode
+            //2 -> mc.options.selectKey.keyCode
             3 -> mc.options.useKey.keyCode
+            else -> mc.options.attackKey.keyCode
         }
 
         repeat(amount) {
