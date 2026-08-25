@@ -87,7 +87,7 @@ object LibreBounce {
     val moduleManager = ModuleManager
     val commandManager = CommandManager
     val eventManager = EventManager
-    //val fileManager = FileManager
+    val fileManager = FileManager
 
     // HUD & ClickGUI
     val clickGui = Dropdown
@@ -171,13 +171,13 @@ object LibreBounce {
             TimerBalanceUtils
             BPSUtils
             CombatUtils
+            MovementUtils
             PacketUtils
-            InventoryUtils
             //SilentHotbar
             TickedActions
             WaitTickUtils
 
-            // Load settings
+            // Load online settings
             /*loadSettings(false) {
                 LOGGER.info("Successfully loaded ${it.size} settings.")
             }*/
@@ -244,11 +244,11 @@ object LibreBounce {
             // Set is starting status
             isStarting = false
 
-            /*if (!FileManager.firstStart && FileManager.backedup) {
+            if (!FileManager.firstStart && FileManager.backedup) {
                 SharedScopes.IO.launch {
                     MiscUtils.showMessageDialog("Warning: backup triggered", "Client update detected! Please check the config folder.")
                 }
-            }*/
+            }
 
             EventManager.call(StartupEvent)
             LOGGER.info("Successfully started client")

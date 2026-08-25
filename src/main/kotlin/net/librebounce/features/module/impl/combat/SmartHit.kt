@@ -112,10 +112,10 @@ object SmartHit: Module("SmartHit", Category.COMBAT) {
             ticksSinceHit = attackDelay + 1
         }*/
 
-        /*val rotDiff = rotationDifference(
+        val rotDiff = rotationDifference(
             toRotation(player.hitBox.center, true, target!!),
             target.rotation
-        )*/
+        )
 
         //val targetCanHit = rotDiff < 22f + (18f * combinedPingMult) && !target.hitBox.contains(player.eyes) && canHit(player.damagedTimer - playerLatencyInTicks)
         //val targetHitLikely = targetCanHit && !target.isUsingItem && targetDistance < 3.08f
@@ -159,7 +159,7 @@ object SmartHit: Module("SmartHit", Category.COMBAT) {
         val shouldHit = when {
             groundHit || airHit -> true
             checkForBlockedHits && lastAttackBlocked && !target.isSwordBlocking -> true
-            //minTargetRotationDifference != 0f && rotDiff < minTargetRotationDifference -> true
+            minTargetRotationDifference != 0f && rotDiff < minTargetRotationDifference -> true
             //experimentalChecks && player.damagedTimer !in damagedTimerNoEscape..8 && targetHitLikely -> true
             experimentalChecks && targetDistance > 3.05f && hittable -> true
             player.health < notBelowOwnHealth || target.health < notBelowTargetHealth -> true

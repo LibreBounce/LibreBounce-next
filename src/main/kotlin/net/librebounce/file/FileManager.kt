@@ -13,7 +13,7 @@ import net.librebounce.LibreBounce.MINECRAFT_VERSION
 import net.librebounce.LibreBounce.isStarting
 import net.librebounce.file.configs.*
 import net.librebounce.utils.client.ClientUtils.LOGGER
-//import net.librebounce.utils.client.MinecraftInstance
+import net.librebounce.utils.client.MinecraftInstance
 import net.librebounce.utils.io.zipFilesTo
 import net.minecraft.client.Minecraft
 //import net.librebounce.utils.render.shader.Background
@@ -21,9 +21,9 @@ import java.io.File
 
 private val FILE_CONFIGS = ArrayList<FileConfig>()
 
-object FileManager : Iterable<FileConfig> by FILE_CONFIGS {
+object FileManager : Iterable<FileConfig> by FILE_CONFIGS, MinecraftInstance {
 
-    val dir = File(Minecraft.getInstance().gameDir, "$CLIENT_NAME-$MINECRAFT_VERSION")
+    val dir = File(mc.gameDir, "$CLIENT_NAME-$MINECRAFT_VERSION")
     val fontsDir = File(dir, "fonts")
     val settingsDir = File(dir, "settings")
     val themesDir = File(dir, "themes")

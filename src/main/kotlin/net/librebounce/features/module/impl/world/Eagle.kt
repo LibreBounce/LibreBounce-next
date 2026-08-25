@@ -4,10 +4,11 @@ import net.librebounce.event.UpdateEvent
 import net.librebounce.event.handler
 import net.librebounce.features.module.base.Category
 import net.librebounce.features.module.base.Module
-import net.librebounce.features.module.impl.world.scaffold.EagleComponent
+import net.librebounce.features.module.impl.world.scaffold.components.EagleComponent
 
 object Eagle : Module("Eagle", Category.WORLD) {
-    private val eagle = EagleComponent(this)
+    private val eagleComponent = EagleComponent(this, debug = this.debug)
+    private val debug by boolean("Debug", false)
 
     val onUpdate = handler<UpdateEvent> {
         eagle.handle()
