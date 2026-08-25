@@ -6,6 +6,7 @@ import net.librebounce.event.handler
 import net.librebounce.features.module.base.Module
 import net.librebounce.utils.client.MinecraftInstance
 import net.librebounce.utils.client.chat
+import net.librebounce.utils.movement.MovementUtils.strafe
 import net.librebounce.utils.extensions.isReplaceable
 import net.librebounce.utils.timing.TickDelayTimer
 
@@ -27,6 +28,7 @@ open class ZitterComponent(owner: Module, shouldApply: Boolean = true, debug: Bo
 
     fun handle() {
         val player = mc.player
+        val input = player.input
 
         when (zitter) {
             "Off" -> return
@@ -73,7 +75,7 @@ open class ZitterComponent(owner: Module, shouldApply: Boolean = true, debug: Bo
             }
 
             "Teleport" -> {
-                MovementUtils.strafe(zitterSpeed)
+                strafe(zitterSpeed)
                 val yaw = (player.yaw + if (zitterDirection) 90.0 else -90.0).toRadians()
                 player.velocityX -= sin(yaw) * zitterStrength
                 player.velocityZ += cos(yaw) * zitterStrength

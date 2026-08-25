@@ -8,9 +8,9 @@ import net.minecraft.util.math.Vec3d
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.math.sqrt
+import kotlin.math.sign
 
 object MovementUtils : MinecraftInstance, Listenable {
-
     var affectSprintOnAttack: Boolean? = null
 
     var speed
@@ -58,23 +58,23 @@ object MovementUtils : MinecraftInstance, Listenable {
         }
 
     fun Vec3d.strafe(
-        yaw: Float = direction.toDegreesF(), speed: Double = sqrt(xCoord * xCoord + zCoord * zCoord),
+        yaw: Float = direction.toDegreesF(), speed: Double = sqrt(x * x + z * z),
         strength: Double = 1.0,
         moveCheck: Boolean = false,
     ): Vec3d {
         if (moveCheck) {
-            xCoord = 0.0
-            zCoord = 0.0
+            x = 0.0
+            z = 0.0
             return this
         }
 
-        val prevX = xCoord * (1.0 - strength)
-        val prevZ = zCoord * (1.0 - strength)
+        val prevX = x * (1.0 - strength)
+        val prevZ = x * (1.0 - strength)
         val useSpeed = speed * strength
 
         val angle = yaw.toRadiansD()
-        xCoord = (-sin(angle) * useSpeed) + prevX
-        zCoord = (cos(angle) * useSpeed) + prevZ
+        x = (-sin(angle) * useSpeed) + prevX
+        z = (cos(angle) * useSpeed) + prevZ
         return this
     }
 
@@ -123,7 +123,7 @@ object MovementUtils : MinecraftInstance, Listenable {
 
             if (it.isMoving) {
                 serverX = it.x
-                serverY = it.y
+                serverY = it.minY
                 serverZ = it.z
             }
         }

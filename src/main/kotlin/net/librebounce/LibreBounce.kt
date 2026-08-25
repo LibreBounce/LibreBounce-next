@@ -18,6 +18,7 @@ import net.librebounce.features.command.CommandManager.registerCommands
 import net.librebounce.features.module.ModuleManager
 import net.librebounce.features.module.ModuleManager.registerModules
 import net.librebounce.features.ui.elements.clickgui.dropdown.Dropdown
+import net.librebounce.file.FileManager
 import net.librebounce.file.FileManager.loadAllConfigs
 import net.librebounce.file.FileManager.saveAllConfigs
 //import net.librebounce.file.configs.models.ClientConfiguration.updateClientWindow
@@ -38,7 +39,7 @@ import net.librebounce.utils.inventory.SilentHotbar
 import net.librebounce.utils.io.MiscUtils.showErrorPopup*/
 import net.librebounce.utils.kotlin.SharedScopes
 import net.librebounce.utils.movement.BPSUtils
-//import net.librebounce.utils.movement.MovementUtils
+import net.librebounce.utils.movement.MovementUtils
 import net.librebounce.utils.movement.TimerBalanceUtils
 import net.librebounce.utils.timing.TickedActions
 import net.librebounce.utils.timing.WaitTickUtils

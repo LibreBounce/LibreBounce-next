@@ -55,9 +55,9 @@ open class EagleComponent(owner: Module, shouldApply: Boolean = true, debug: Boo
         val pos = BlockPos(player).down()
 
         for (side in Direction.entries) {
-            if (side.axis == Direction.Axis.Y) {
+            if (side.axis == Direction.Axis.Y)
                 continue
-            }
+
             if (debug) chat("Now in side for loop!")
             val neighbor = pos.offset(side)
 
@@ -123,13 +123,12 @@ open class EagleComponent(owner: Module, shouldApply: Boolean = true, debug: Boo
                         player.velocityZ *= eagleSpeed
                     }
                 }
-
-                eagleSneaking = shouldEagle
             } else {
-                if (debug) chat("Tried to sneak")
                 player.isSneaking = shouldEagle
-                eagleSneaking = shouldEagle
             }
+
+            eagleSneaking = shouldEagle
+            if (debug) chat("Tried to sneak")
 
             if (eagleSneaking && shouldSchedule) {
                 if (useMaxSneakTime) {
