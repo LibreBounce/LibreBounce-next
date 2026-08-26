@@ -168,13 +168,14 @@ object LibreBounce {
             SilentHotbar
             BlinkUtils*/
 
+            RotationUtils
             InventoryUtils
             TimerBalanceUtils
             BPSUtils
             CombatUtils
             MovementUtils
             PacketUtils
-            //SilentHotbar
+            SilentHotbar
             TickedActions
             WaitTickUtils
 

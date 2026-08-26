@@ -180,9 +180,9 @@ object SmartHit: Module("SmartHit", Category.COMBAT) {
     private fun simulateDistance(simPlayer: SimulatedPlayer, target: Entity, simulateKnockback: Boolean): Double {
         val player = mc.player ?: return 0.0
 
-        val targetBox = target.hitBox/*.moved(
+        val targetBox = target.hitBox.moved(
             target.currPos.subtract(target.last).times(predictEnemyPosition.toDouble())
-        )*/
+        )
 
         if (simulateKnockback && simHurtTime.hasTimePassed(hitDelay))
             simulateOwnKnockback(simPlayer, target)
