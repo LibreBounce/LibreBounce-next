@@ -1,17 +1,24 @@
 package net.librebounce.features.module.impl.combat.component
 
+import net.librebounce.event.Listenable
+import net.librebounce.event.handler
+import net.librebounce.event.Render3DEvent
 import net.librebounce.config.Configurable
 import net.librebounce.features.module.base.Module
+import net.librebounce.utils.client.MinecraftInstance
 import net.librebounce.utils.render.ColorUtils.withAlpha
 import net.librebounce.utils.render.RenderUtils.drawBox
 import net.librebounce.utils.render.RenderUtils.drawCircle
 import net.librebounce.utils.render.RenderUtils.drawEntityBox
 import net.librebounce.utils.render.RenderUtils.drawPlatform
+import net.librebounce.utils.rotation.RotationUtils.currentRotation
+import net.librebounce.utils.rotation.RotationUtils.serverRotation
 import net.minecraft.entity.living.LivingEntity
-import net.librebounce.utils.timing.MSTimer
 import net.minecraft.util.math.Box
+import java.awt.Color
 
-open class MarkComponent(owner: Module, target: LivingEntity?, shouldApply: Boolean = true): Configurable(owner.name) {
+open class MarkComponent(owner: Module, target: LivingEntity?, shouldApply: Boolean = true): Configurable(owner.name),
+    MinecraftInstance, Listenable {
     private val renderAimPointBox by boolean("RenderAimPointBox", false) { shouldApply }.subjective()
     private val aimPointBoxColor by color("AimPointBoxColor", Color.CYAN) { shouldApply && renderAimPointBox }.subjective()
     private val aimPointBoxSize by float("AimPointBoxSize", 0.1f, 0f..0.2F) { shouldApply && renderAimPointBox }.subjective()

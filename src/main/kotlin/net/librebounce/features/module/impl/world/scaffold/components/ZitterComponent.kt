@@ -8,7 +8,11 @@ import net.librebounce.utils.client.MinecraftInstance
 import net.librebounce.utils.client.chat
 import net.librebounce.utils.movement.MovementUtils.strafe
 import net.librebounce.utils.extensions.isReplaceable
+import net.librebounce.utils.extensions.toRadians
 import net.librebounce.utils.timing.TickDelayTimer
+import net.minecraft.client.options.GameOptions
+import kotlin.math.sin
+import kotlin.math.cos
 
 open class ZitterComponent(owner: Module, shouldApply: Boolean = true, debug: Boolean = false): Configurable(owner.name),
     MinecraftInstance, Listenable {
@@ -36,9 +40,9 @@ open class ZitterComponent(owner: Module, shouldApply: Boolean = true, debug: Bo
             "Smooth" -> {
                 val notOnGround = !player.onGround || !player.collidingVertically
 
-                if (player.onGround) {
+                /*if (player.onGround) {
                     input.sneaking = eagleSneaking || GameOptions.isPressed(mc.options.sneakKey)
-                }
+                }*/
 
                 if (input.jumping || mc.options.jumpKey.isPressed || notOnGround) {
                     zitterTimer.reset()

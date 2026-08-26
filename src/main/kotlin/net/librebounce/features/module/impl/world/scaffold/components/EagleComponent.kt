@@ -46,7 +46,7 @@ open class EagleComponent(owner: Module, shouldApply: Boolean = true, debug: Boo
     var eagleSneaking = false
     private var requestedStopSneak = false
 
-    fun handle() {
+    val onUpdate = handler<UpdateEvent> { event ->
         val player = mc.player
         if (eagle == "Off") return
         if (debug) chat("Now in handler!")

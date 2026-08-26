@@ -27,7 +27,6 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.living.LivingEntity
 //import net.minecraft.potion.Potion
 import net.minecraft.util.*
-import java.awt.Color
 
 object Aimbot : Module("Aimbot", Category.COMBAT) {
 

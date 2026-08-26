@@ -35,8 +35,8 @@ import net.librebounce.utils.client.PacketUtils
 //import net.librebounce.utils.inventory.InventoryManager
 import net.librebounce.utils.inventory.InventoryUtils
 import net.librebounce.utils.inventory.SilentHotbar
-/*import net.librebounce.utils.io.MiscUtils
-import net.librebounce.utils.io.MiscUtils.showErrorPopup*/
+import net.librebounce.utils.io.MiscUtils
+import net.librebounce.utils.io.MiscUtils.showErrorPopup
 import net.librebounce.utils.kotlin.SharedScopes
 import net.librebounce.utils.movement.BPSUtils
 import net.librebounce.utils.movement.MovementUtils
@@ -45,9 +45,7 @@ import net.librebounce.utils.timing.TickedActions
 import net.librebounce.utils.timing.WaitTickUtils
 //import net.librebounce.utils.render.MiniMapRegister
 //import net.librebounce.utils.render.shader.Background
-/*import net.librebounce.utils.rotation.RotationUtils
-import net.librebounce.utils.timing.TickedActions
-import net.librebounce.utils.timing.WaitTickUtils*/
+import net.librebounce.utils.rotation.RotationUtils
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Future
 import javax.swing.UIManager
