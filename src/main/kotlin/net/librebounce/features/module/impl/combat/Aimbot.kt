@@ -6,6 +6,7 @@ import net.librebounce.features.module.base.Module
 import net.librebounce.features.module.base.settings.RotationSettings
 import net.librebounce.features.module.base.settings.RandomizationSettings
 import net.librebounce.features.module.impl.combat.AutoClicker
+import net.librebounce.features.module.impl.combat.components.MarkComponent
 //import net.librebounce.features.module.impl.combat.Backtrack.runWithSimulatedPosition
 //import net.librebounce.features.module.modules.world.Fucker
 //import net.librebounce.features.module.modules.world.Nuker
@@ -25,6 +26,7 @@ import net.librebounce.utils.simulation.SimulatedPlayer
 import net.librebounce.utils.timing.MSTimer
 import net.minecraft.entity.Entity
 import net.minecraft.entity.living.LivingEntity
+import net.minecraft.world.HitResult
 //import net.minecraft.potion.Potion
 import net.minecraft.util.*
 
@@ -60,9 +62,7 @@ object Aimbot : Module("Aimbot", Category.COMBAT) {
             "InWeb"
         ), "Distance"
     )
-    private val targetMode by choices("TargetMode", arrayOf("Single", "Switch", "Multi"), "Switch")
-    private val limitedMultiTargets by int("LimitedMultiTargets", 0, 0..50) { targetMode == "Multi" }
-
+    private val targetMode by choices("TargetMode", arrayOf("Single", "Switch"), "Switch")
     private val maxSwitchFOV by float("MaxSwitchFOV", 90f, 30f..180f, suffix = "º") { targetMode == "Switch" }
     private val switchDelay by int("SwitchDelay", 15, 1..1000, suffix = "ms") { targetMode == "Switch" }
 
@@ -117,7 +117,7 @@ object Aimbot : Module("Aimbot", Category.COMBAT) {
     ) { predictClientMovement != 0 }
     private val predictEnemyPosition by float("PredictEnemyPosition", 1.5f, -1f..2f)
 
-    private val markComponent = MarkComponent(this)
+    private val markComponent = MarkComponent(this, target)
 
     // Target
     var target: LivingEntity? = null

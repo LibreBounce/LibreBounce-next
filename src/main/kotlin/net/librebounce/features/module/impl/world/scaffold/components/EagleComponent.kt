@@ -48,7 +48,7 @@ open class EagleComponent(owner: Module, shouldApply: Boolean = true, debug: Boo
 
     val onUpdate = handler<UpdateEvent> { event ->
         val player = mc.player
-        if (eagle == "Off") return
+        if (eagle == "Off") return@handler
         if (debug) chat("Now in handler!")
 
         var dif = 0.5

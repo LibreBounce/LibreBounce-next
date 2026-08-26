@@ -90,10 +90,10 @@ object MovementUtils : MinecraftInstance, Listenable {
             var yaw = yaw
             var forward = 1f
 
-            if (input.forwardSpeed < 0f) {
+            if (input.movementForward < 0f) {
                 yaw += 180f
                 forward = -0.5f
-            } else if (input.forwardSpeed > 0f) {
+            } else if (input.movementForward > 0f) {
                 forward = 0.5f
             }
 

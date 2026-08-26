@@ -84,7 +84,7 @@ open class MarkComponent(owner: Module, target: LivingEntity?, shouldApply: Bool
 
         val entityRenderDispatcher = mc.entityRenderDispatcher
 
-        runWithSimulatedPosition(player, player.interpolatedPosition(player.last)) {
+        /*runWithSimulatedPosition(player, player.interpolatedPosition(player.last)) {
             runWithSimulatedPosition(target, target.interpolatedPosition(target.last)) {
                 val rotationVec = player.eyes + getRotationVector(
                     serverRotation.lerpWith(currentRotation ?: player.rotation, mc.timer.partialTick)
@@ -94,6 +94,6 @@ open class MarkComponent(owner: Module, target: LivingEntity?, shouldApply: Bool
 
                 drawBox(offSetBox, aimPointBoxColor)
             }
-        }
+        }*/
     }
 }

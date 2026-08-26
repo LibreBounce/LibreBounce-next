@@ -9,8 +9,4 @@ import net.librebounce.features.module.impl.world.scaffold.components.EagleCompo
 object Eagle : Module("Eagle", Category.WORLD) {
     private val eagleComponent = EagleComponent(this, debug = this.debug)
     private val debug by boolean("Debug", false)
-
-    val onUpdate = handler<UpdateEvent> {
-        eagle.handle()
-    }
 }

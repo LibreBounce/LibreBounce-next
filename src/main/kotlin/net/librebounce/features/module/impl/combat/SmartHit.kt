@@ -10,6 +10,8 @@ import net.librebounce.utils.attack.CombatUtils.canCritHit
 import net.librebounce.utils.attack.CombatUtils.canHit
 import net.librebounce.utils.attack.CombatUtils.lastAttackBlocked
 import net.librebounce.utils.attack.CombatUtils.lastAttackCrit
+import net.librebounce.utils.rotation.RotationUtils.toRotation
+import net.librebounce.utils.rotation.RotationUtils.rotationDifference
 import net.librebounce.utils.extensions.*
 import net.librebounce.utils.simulation.SimulatedPlayer
 import net.librebounce.utils.timing.MSTimer

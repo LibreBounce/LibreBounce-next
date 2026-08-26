@@ -35,8 +35,8 @@ import net.librebounce.utils.client.PacketUtils
 //import net.librebounce.utils.inventory.InventoryManager
 import net.librebounce.utils.inventory.InventoryUtils
 import net.librebounce.utils.inventory.SilentHotbar
-import net.librebounce.utils.io.MiscUtils
-import net.librebounce.utils.io.MiscUtils.showErrorPopup
+/*import net.librebounce.utils.io.MiscUtils
+import net.librebounce.utils.io.MiscUtils.showErrorPopup*/
 import net.librebounce.utils.kotlin.SharedScopes
 import net.librebounce.utils.movement.BPSUtils
 import net.librebounce.utils.movement.MovementUtils
@@ -244,11 +244,11 @@ object LibreBounce {
             // Set is starting status
             isStarting = false
 
-            if (!FileManager.firstStart && FileManager.backedup) {
+            /*if (!FileManager.firstStart && FileManager.backedup) {
                 SharedScopes.IO.launch {
                     MiscUtils.showMessageDialog("Warning: backup triggered", "Client update detected! Please check the config folder.")
                 }
-            }
+            }*/
 
             EventManager.call(StartupEvent)
             LOGGER.info("Successfully started client")
