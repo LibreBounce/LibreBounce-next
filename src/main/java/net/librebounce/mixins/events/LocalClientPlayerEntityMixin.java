@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LocalClientPlayerEntity.class)
 public abstract class LocalClientPlayerEntityMixin extends Entity {
-	public LocalClientPlayerEntity() {
+	public LocalClientPlayerEntityMixin() {
         super(null, null);
     }
 
