@@ -32,7 +32,7 @@ accessible field net/minecraft/network/packet/c2s/play/PlayerMoveC2SPacket minY 
 accessible field net/minecraft/network/packet/c2s/play/PlayerMoveC2SPacket z D
 accessible field net/minecraft/network/packet/c2s/play/PlayerMoveC2SPacket yaw F
 accessible field net/minecraft/network/packet/c2s/play/PlayerMoveC2SPacket pitch F
-accessible field net/minecraft/network/packet/c2s/play/PlayerMoveC2SPacket hasPos ()V
+accessible field net/minecraft/network/packet/c2s/play/PlayerMoveC2SPacket hasPos Z
 
 mutable field net/minecraft/entity/Entity yaw F
 mutable field net/minecraft/entity/Entity pitch F

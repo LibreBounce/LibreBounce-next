@@ -8,7 +8,8 @@ import net.librebounce.features.module.impl.world.scaffold.components.EagleCompo
 
 object Eagle : Module("Eagle", Category.WORLD) {
     private var shouldDebug = false
-    private val eagleComponent = EagleComponent(this, debug = this.debug)
-    private val debug by boolean("Debug", false)
-    shouldDebug = debug
+    private val eagleComponent = EagleComponent(this, debug = shouldDebug)
+    private val debug by boolean("Debug", false).onChange { _, new ->
+        shouldDebug = new
+    }
 }
