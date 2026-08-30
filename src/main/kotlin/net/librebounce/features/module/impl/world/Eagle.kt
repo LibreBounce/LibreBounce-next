@@ -10,6 +10,6 @@ object Eagle : Module("Eagle", Category.WORLD) {
     private var shouldDebug = false
     private val eagleComponent = EagleComponent(this, debug = shouldDebug)
     private val debug by boolean("Debug", false).onChange { _, new ->
-        shouldDebug = new.get()
+        shouldDebug = debug
     }
 }
