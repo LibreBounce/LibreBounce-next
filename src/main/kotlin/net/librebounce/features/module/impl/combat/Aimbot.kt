@@ -6,39 +6,29 @@ import net.librebounce.features.module.base.Module
 import net.librebounce.features.module.base.settings.RotationSettings
 import net.librebounce.features.module.base.settings.RandomizationSettings
 import net.librebounce.features.module.impl.combat.AutoClicker
+import net.librebounce.features.module.impl.combat.components.MarkComponent
 //import net.librebounce.features.module.impl.combat.Backtrack.runWithSimulatedPosition
 //import net.librebounce.features.module.modules.world.Fucker
 //import net.librebounce.features.module.modules.world.Nuker
 //import net.librebounce.features.module.modules.world.scaffolds.*
 import net.librebounce.utils.attack.EntityUtils.isLookingOnEntities
 import net.librebounce.utils.attack.EntityUtils.isSelected
-import net.librebounce.utils.client.ClientUtils.runTimeTicks
 import net.librebounce.utils.extensions.*
 import net.librebounce.utils.inventory.ItemUtils.isConsumingItem
 import net.librebounce.utils.inventory.SilentHotbar
-import net.librebounce.utils.render.ColorUtils.withAlpha
-/*import net.librebounce.utils.render.RenderUtils.drawBox
-import net.librebounce.utils.render.RenderUtils.drawCircle
-import net.librebounce.utils.render.RenderUtils.drawEntityBox
-import net.librebounce.utils.render.RenderUtils.drawPlatform*/
-import net.librebounce.utils.rotation.RaycastUtils.raycastEntity
-import net.librebounce.utils.rotation.RaycastUtils.runWithModifiedRaycastResult
 import net.librebounce.utils.rotation.RotationUtils
 import net.librebounce.utils.rotation.RotationUtils.currentRotation
-import net.librebounce.utils.rotation.RotationUtils.getRotationVector
 import net.librebounce.utils.rotation.RotationUtils.isFaced
 import net.librebounce.utils.rotation.RotationUtils.rotationDifference
 import net.librebounce.utils.rotation.RotationUtils.searchCenter
-import net.librebounce.utils.rotation.RotationUtils.serverRotation
 import net.librebounce.utils.rotation.RotationUtils.setTargetRotation
 import net.librebounce.utils.simulation.SimulatedPlayer
 import net.librebounce.utils.timing.MSTimer
-import net.librebounce.utils.timing.TickedActions.nextTick
 import net.minecraft.entity.Entity
 import net.minecraft.entity.living.LivingEntity
+import net.minecraft.world.HitResult
 //import net.minecraft.potion.Potion
 import net.minecraft.util.*
-import java.awt.Color
 
 object Aimbot : Module("Aimbot", Category.COMBAT) {
 
@@ -72,14 +62,11 @@ object Aimbot : Module("Aimbot", Category.COMBAT) {
             "InWeb"
         ), "Distance"
     )
-    private val targetMode by choices("TargetMode", arrayOf("Single", "Switch", "Multi"), "Switch")
-    private val limitedMultiTargets by int("LimitedMultiTargets", 0, 0..50) { targetMode == "Multi" }
-
+    private val targetMode by choices("TargetMode", arrayOf("Single", "Switch"), "Switch")
     private val maxSwitchFOV by float("MaxSwitchFOV", 90f, 30f..180f, suffix = "º") { targetMode == "Switch" }
     private val switchDelay by int("SwitchDelay", 15, 1..1000, suffix = "ms") { targetMode == "Switch" }
 
     private val autoF5 by boolean("AutoF5", false).subjective()
-    private val onScaffold by boolean("OnScaffold", false)
     private val onDestroyBlock by boolean("OnDestroyBlock", false)
 
     // Rotations
@@ -130,32 +117,7 @@ object Aimbot : Module("Aimbot", Category.COMBAT) {
     ) { predictClientMovement != 0 }
     private val predictEnemyPosition by float("PredictEnemyPosition", 1.5f, -1f..2f)
 
-    // Visuals
-    private val renderAimPointBox by boolean("RenderAimPointBox", false).subjective()
-    private val aimPointBoxColor by color("AimPointBoxColor", Color.CYAN) { renderAimPointBox }.subjective()
-    private val aimPointBoxSize by float("AimPointBoxSize", 0.1f, 0f..0.2F) { renderAimPointBox }.subjective()
-
-    private val mark by choices("Mark", arrayOf("None", "Platform", "Box", "Circle"), "Circle").subjective()
-
-    private val markColor by color("MarkColor", Color(255, 0, 0, 70)) { mark in arrayOf("Platform", "Box") }.subjective()
-    private val markHittableColor by color("MarkHittableColor", Color(37, 126, 255, 70)) { mark in arrayOf("Platform", "Box") }.subjective()
-
-    // Circle options
-    private val circleStartColor by color("CircleStartColor", Color.BLUE) { mark == "Circle" }.subjective()
-    private val circleEndColor by color("CircleEndColor", Color.CYAN.withAlpha(0)) { mark == "Circle" }.subjective()
-    private val fillInnerCircle by boolean("FillInnerCircle", false) { mark == "Circle" }.subjective()
-    private val withHeight by boolean("WithHeight", true) { mark == "Circle" }.subjective()
-    private val animateHeight by boolean("AnimateHeight", false) { withHeight }.subjective()
-    private val heightRange by floatRange("HeightRange", 0.0f..0.4f, -2f..2f) { withHeight }.subjective()
-    private val extraWidth by float("ExtraWidth", 0F, 0F..2F) { mark == "Circle" }.subjective()
-    private val animateCircleY by boolean("AnimateCircleY", true) { fillInnerCircle || withHeight }.subjective()
-    private val circleYRange by floatRange("CircleYRange", 0F..0.5F, 0F..2F) { animateCircleY }.subjective()
-    private val duration by float(
-        "Duration", 1.5F, 0.5F..3F, suffix = "Seconds"
-    ) { animateCircleY || animateHeight }.subjective()
-
-    // Box option
-    private val boxOutline by boolean("Outline", true) { mark == "Box" }.subjective()
+    private val markComponent = MarkComponent(this, target)
 
     // Target
     var target: LivingEntity? = null
@@ -212,35 +174,12 @@ object Aimbot : Module("Aimbot", Category.COMBAT) {
      * Render event
      */
     val onRender3D = handler<Render3DEvent> {
-        //drawAimPointBox()
-
         if (cancelRun) {
             target = null
             return@handler
         }
 
         target ?: return@handler
-
-        val color = if ((target as LivingEntity).damagedTimer == 0) markHittableColor else markColor
-
-        /*if (targetMode != "Multi") {
-            when (mark) {
-                "None" -> return@handler
-                "Platform" -> drawPlatform(target!!, color)
-                "Box" -> drawEntityBox(target!!, color, boxOutline)
-                "Circle" -> drawCircle(
-                    target!!,
-                    duration * 1000F,
-                    heightRange.takeIf { animateHeight } ?: heightRange.endInclusive..heightRange.endInclusive,
-                    extraWidth,
-                    fillInnerCircle,
-                    withHeight,
-                    circleYRange.takeIf { animateCircleY },
-                    circleStartColor.rgb,
-                    circleEndColor.rgb
-                )
-            }
-        }*/
     }
 
     /**
@@ -418,11 +357,6 @@ object Aimbot : Module("Aimbot", Category.COMBAT) {
         return rotation != null
     }
 
-    private fun switchToSlot(slot: Int) {
-        SilentHotbar.selectSlotSilently(this, slot, immediate = true)
-        SilentHotbar.resetSlot(this, true)
-    }
-
     private fun shouldPrioritize(): Boolean = when {
         //!onScaffold && (Scaffold.handleEvents() && (Scaffold.placeRotation != null || currentRotation != null) || Tower.handleEvents() && Tower.isTowering) -> true
 
@@ -433,38 +367,8 @@ object Aimbot : Module("Aimbot", Category.COMBAT) {
         else -> false
     }
 
-    /*private fun drawAimPointBox() {
-        val player = mc.player ?: return
-        val target = this.target ?: return
-
-        if (!renderAimPointBox) {
-            return
-        }
-
-        val f = aimPointBoxSize.toDouble()
-
-        val box = Box(0.0, 0.0, 0.0, f, f, f)
-
-        val entityRenderDispatcher = mc.entityRenderDispatcher
-
-        runWithSimulatedPosition(player, player.interpolatedPosition(player.last)) {
-            runWithSimulatedPosition(target, target.interpolatedPosition(target.last)) {
-                val rotationVec = player.eyes + getRotationVector(
-                    serverRotation.lerpWith(currentRotation ?: player.rotation, mc.timer.partialTick)
-                ) * player.getDistanceToEntityBox(target).coerceAtMost(attackRange.toDouble())
-
-                val offSetBox = box.offset(rotationVec - entityRenderDispatcher.offset)
-
-                drawBox(offSetBox, aimPointBoxColor)
-            }
-        }
-    }*/
-
-    /**
-     * Check if run should be cancelled
-     */
     private val cancelRun
-        inline get() = mc.player.isSpectator || !isAlive(mc.player) || (notOnConsume && isConsumingItem())
+        inline get() = mc.player.isSpectator || !isAlive(mc.player) || (notOnConsume && isConsumingItem()) || (onDestroyBlock ||  mc.crosshairTarget.type != HitResult.Type.BLOCK)
 
     private fun isAlive(entity: LivingEntity) = entity.isAlive && entity.health > 0
 

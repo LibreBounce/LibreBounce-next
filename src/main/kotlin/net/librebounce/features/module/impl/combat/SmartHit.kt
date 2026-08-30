@@ -10,6 +10,8 @@ import net.librebounce.utils.attack.CombatUtils.canCritHit
 import net.librebounce.utils.attack.CombatUtils.canHit
 import net.librebounce.utils.attack.CombatUtils.lastAttackBlocked
 import net.librebounce.utils.attack.CombatUtils.lastAttackCrit
+import net.librebounce.utils.rotation.RotationUtils.toRotation
+import net.librebounce.utils.rotation.RotationUtils.rotationDifference
 import net.librebounce.utils.extensions.*
 import net.librebounce.utils.simulation.SimulatedPlayer
 import net.librebounce.utils.timing.MSTimer
@@ -112,10 +114,10 @@ object SmartHit: Module("SmartHit", Category.COMBAT) {
             ticksSinceHit = attackDelay + 1
         }*/
 
-        /*val rotDiff = rotationDifference(
+        val rotDiff = rotationDifference(
             toRotation(player.hitBox.center, true, target!!),
             target.rotation
-        )*/
+        )
 
         //val targetCanHit = rotDiff < 22f + (18f * combinedPingMult) && !target.hitBox.contains(player.eyes) && canHit(player.damagedTimer - playerLatencyInTicks)
         //val targetHitLikely = targetCanHit && !target.isUsingItem && targetDistance < 3.08f
@@ -159,7 +161,7 @@ object SmartHit: Module("SmartHit", Category.COMBAT) {
         val shouldHit = when {
             groundHit || airHit -> true
             checkForBlockedHits && lastAttackBlocked && !target.isSwordBlocking -> true
-            //minTargetRotationDifference != 0f && rotDiff < minTargetRotationDifference -> true
+            minTargetRotationDifference != 0f && rotDiff < minTargetRotationDifference -> true
             //experimentalChecks && player.damagedTimer !in damagedTimerNoEscape..8 && targetHitLikely -> true
             experimentalChecks && targetDistance > 3.05f && hittable -> true
             player.health < notBelowOwnHealth || target.health < notBelowTargetHealth -> true
@@ -180,9 +182,9 @@ object SmartHit: Module("SmartHit", Category.COMBAT) {
     private fun simulateDistance(simPlayer: SimulatedPlayer, target: Entity, simulateKnockback: Boolean): Double {
         val player = mc.player ?: return 0.0
 
-        val targetBox = target.hitBox/*.moved(
+        val targetBox = target.hitBox.moved(
             target.currPos.subtract(target.last).times(predictEnemyPosition.toDouble())
-        )*/
+        )
 
         if (simulateKnockback && simHurtTime.hasTimePassed(hitDelay))
             simulateOwnKnockback(simPlayer, target)

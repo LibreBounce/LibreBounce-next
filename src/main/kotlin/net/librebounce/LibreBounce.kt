@@ -18,6 +18,7 @@ import net.librebounce.features.command.CommandManager.registerCommands
 import net.librebounce.features.module.ModuleManager
 import net.librebounce.features.module.ModuleManager.registerModules
 import net.librebounce.features.ui.elements.clickgui.dropdown.Dropdown
+import net.librebounce.file.FileManager
 import net.librebounce.file.FileManager.loadAllConfigs
 import net.librebounce.file.FileManager.saveAllConfigs
 //import net.librebounce.file.configs.models.ClientConfiguration.updateClientWindow
@@ -38,15 +39,13 @@ import net.librebounce.utils.inventory.SilentHotbar
 import net.librebounce.utils.io.MiscUtils.showErrorPopup*/
 import net.librebounce.utils.kotlin.SharedScopes
 import net.librebounce.utils.movement.BPSUtils
-//import net.librebounce.utils.movement.MovementUtils
+import net.librebounce.utils.movement.MovementUtils
 import net.librebounce.utils.movement.TimerBalanceUtils
 import net.librebounce.utils.timing.TickedActions
 import net.librebounce.utils.timing.WaitTickUtils
 //import net.librebounce.utils.render.MiniMapRegister
 //import net.librebounce.utils.render.shader.Background
-/*import net.librebounce.utils.rotation.RotationUtils
-import net.librebounce.utils.timing.TickedActions
-import net.librebounce.utils.timing.WaitTickUtils*/
+import net.librebounce.utils.rotation.RotationUtils
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Future
 import javax.swing.UIManager
@@ -87,7 +86,7 @@ object LibreBounce {
     val moduleManager = ModuleManager
     val commandManager = CommandManager
     val eventManager = EventManager
-    //val fileManager = FileManager
+    val fileManager = FileManager
 
     // HUD & ClickGUI
     val clickGui = Dropdown
@@ -167,17 +166,18 @@ object LibreBounce {
             SilentHotbar
             BlinkUtils*/
 
+            RotationUtils
             InventoryUtils
             TimerBalanceUtils
             BPSUtils
             CombatUtils
+            MovementUtils
             PacketUtils
-            InventoryUtils
-            //SilentHotbar
+            SilentHotbar
             TickedActions
             WaitTickUtils
 
-            // Load settings
+            // Load online settings
             /*loadSettings(false) {
                 LOGGER.info("Successfully loaded ${it.size} settings.")
             }*/

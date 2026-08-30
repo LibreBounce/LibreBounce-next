@@ -24,7 +24,7 @@ object AutoClicker : Module("AutoClicker", Category.COMBAT) {
     private val maxAngleDifference by float("MaxAngleDifference", 30f, 10f..180f, suffix = "º") { left && requiresNoInput }
     private val range by float("Range", 3f, 0.1f..5f, suffix = "blocks") { left && requiresNoInput }
     private val hurtTime by int("HurtTime", 10, 0..10) { left }
-    private val breakBlocks by boolean("BreakBlocks", true) { left }
+    private val onDestroyBlock by boolean("OnDestroyBlock", false) { left }
 
     private val block by boolean("Block", false) { left }
     private val blockSettings = ClickingSettings(this, "Block", left && block)
@@ -41,7 +41,7 @@ object AutoClicker : Module("AutoClicker", Category.COMBAT) {
 
             if (left && shouldLeftClick &&
                 (lastTarget == null || if (SmartHit.handleEvents()) SmartHit.shouldHit(lastTarget!!) else lastTarget!!.damagedTimer <= hurtTime) &&
-                (player.abilities.creativeMode || (!breakBlocks || mc.crosshairTarget.type != HitResult.Type.BLOCK)) &&
+                (player.abilities.creativeMode || (onDestroyBlock || mc.crosshairTarget.type != HitResult.Type.BLOCK)) &&
                 leftSettings.canClick()
                 ) {
                 if (debug) chat("Clicked left")
@@ -50,7 +50,7 @@ object AutoClicker : Module("AutoClicker", Category.COMBAT) {
             }
 
             if (left && block && shouldLeftClick &&
-                player.displayItemInHand?.item is SwordItem && (!neverStopHits || !canHit()) &&
+                player.displayItemInHand?.item is SwordItem && (!neverStopHits || !timeUntilHit > 50) &&
                 blockSettings.canClick()
                 ) {
                 if (debug) chat("Blocked the sword")

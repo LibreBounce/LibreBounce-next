@@ -8,15 +8,14 @@ import net.librebounce.features.module.impl.combat.HitDetector.debug
 import net.librebounce.features.module.impl.combat.HitDetector.hitDelay
 import net.librebounce.features.module.impl.combat.HitDetector.resetTargetAfter
 import net.librebounce.utils.client.chat
+import net.librebounce.utils.client.MinecraftInstance
 import net.librebounce.utils.timing.MSTimer
-import net.minecraft.client.Minecraft
 import net.minecraft.entity.Entity
 import net.minecraft.entity.living.LivingEntity
 import net.minecraft.entity.living.player.PlayerEntity
 import kotlin.math.abs
 
-object CombatUtils : Listenable {
-    private val mc = Minecraft.getInstance()
+object CombatUtils : MinecraftInstance, Listenable {
     var lastValidAttack = MSTimer()
     var lastValidAttackIsCrit = false
     var lastAttackCrit = false
