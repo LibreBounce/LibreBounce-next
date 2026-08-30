@@ -1,16 +1,17 @@
-package net.librebounce.features.module.impl.combat.component
+package net.librebounce.features.module.impl.combat.components
 
 import net.librebounce.event.Listenable
 import net.librebounce.event.handler
 import net.librebounce.event.Render3DEvent
 import net.librebounce.config.Configurable
 import net.librebounce.features.module.base.Module
+import net.librebounce.utils.combat.CombatUtils
 import net.librebounce.utils.client.MinecraftInstance
 import net.librebounce.utils.render.ColorUtils.withAlpha
-import net.librebounce.utils.render.RenderUtils.drawBox
+/*import net.librebounce.utils.render.RenderUtils.drawBox
 import net.librebounce.utils.render.RenderUtils.drawCircle
 import net.librebounce.utils.render.RenderUtils.drawEntityBox
-import net.librebounce.utils.render.RenderUtils.drawPlatform
+import net.librebounce.utils.render.RenderUtils.drawPlatform*/
 import net.librebounce.utils.rotation.RotationUtils.currentRotation
 import net.librebounce.utils.rotation.RotationUtils.serverRotation
 import net.minecraft.entity.living.LivingEntity
@@ -55,11 +56,11 @@ open class MarkComponent(owner: Module, target: LivingEntity?, shouldApply: Bool
 
         if (renderAimPointBox) drawAimPointBox()
 
-        val color = if ((target as LivingEntity).damagedTimer == 0) markHittableColor else markColor
+        val color = if ((target as LivingEntity) == CombatUtils.target) if (CombatUtils.canHit()) markHittableColor else markColor
+            else if (target.damagedTimer == 0) markHittableColor else markColor
 
         when (mark) {
-            "None" -> return@handler
-            "Platform" -> drawPlatform(target!!, color)
+            /*"Platform" -> drawPlatform(target!!, color)
             "Box" -> drawEntityBox(target!!, color, boxOutline)
             "Circle" -> drawCircle(
                 target!!,
@@ -71,7 +72,8 @@ open class MarkComponent(owner: Module, target: LivingEntity?, shouldApply: Bool
                 circleYRange.takeIf { animateCircleY },
                 circleStartColor.rgb,
                 circleEndColor.rgb
-            )
+            )*/
+            default -> return@handler
         }
     }
 

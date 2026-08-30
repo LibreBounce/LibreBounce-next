@@ -5,8 +5,8 @@ import net.librebounce.event.handler
 import net.librebounce.features.module.base.Category
 import net.librebounce.features.module.base.Module
 import net.librebounce.features.module.base.settings.ClickingSettings
-import net.librebounce.utils.attack.CombatUtils.canHit
 import net.librebounce.utils.attack.CombatUtils.lastTarget
+import net.librebounce.utils.attack.CombatUtils.timeUntilHit
 import net.librebounce.utils.attack.EntityUtils.isLookingOnEntities
 import net.librebounce.utils.attack.EntityUtils.isSelected
 import net.librebounce.utils.input.InputUtils.requestClick

@@ -78,7 +78,7 @@ object MovementUtils : MinecraftInstance, Listenable {
         return this
     }
 
-    fun forward(distance: Double, vertical: Double = 0) =
+    fun forward(distance: Double, vertical: Double = 0.0) =
         mc.player?.run {
             val yaw = yaw.toRadiansD()
 
@@ -105,7 +105,7 @@ object MovementUtils : MinecraftInstance, Listenable {
     fun isOnGround(height: Double) =
         mc.world != null && mc.player != null &&
             mc.world.getCollisions(mc.player,
-                mc.player.shape.offset(Vec3d_ZERO.withY(-height))
+                mc.player.shape.moved(Vec3d_ZERO.withY(-height))
             ).isNotEmpty()
 
     var serverOnGround = false
@@ -121,7 +121,7 @@ object MovementUtils : MinecraftInstance, Listenable {
         (event.packet as? PlayerMoveC2SPacket)?.let {
             serverOnGround = it.onGround
 
-            if (it.isMoving) {
+            if (it.hasPos) {
                 serverX = it.x
                 serverY = it.minY
                 serverZ = it.z

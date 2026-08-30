@@ -21,7 +21,7 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
-object SmartHit: Module("SmartHit", Category.COMBAT) {
+object SmartHit : Module("SmartHit", Category.COMBAT) {
     private val usePredictedTargetHurtTime by boolean("UsePredictedTargetHurtTime", true)
 
     private val distanceHandling by choices("DistanceHandling", arrayOf("Allow", "Forbid", "Ignore"), "Ignore")

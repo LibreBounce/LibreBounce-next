@@ -117,10 +117,11 @@ object Aimbot : Module("Aimbot", Category.COMBAT) {
     ) { predictClientMovement != 0 }
     private val predictEnemyPosition by float("PredictEnemyPosition", 1.5f, -1f..2f)
 
+    var target: LivingEntity? = null
+
     private val markComponent = MarkComponent(this, target)
 
     // Target
-    var target: LivingEntity? = null
     private val prevTargetEntities = mutableListOf<Int>()
 
     private val switchTimer = MSTimer()
