@@ -42,6 +42,8 @@ open class EagleComponent(owner: Module, shouldApply: Boolean = true, debug: Boo
         owner.addValues(this.values)
     }
 
+    private var debug = debug
+
     private var placedBlocksWithoutEagle = 0
     var eagleSneaking = false
     private var requestedStopSneak = false

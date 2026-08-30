@@ -50,7 +50,7 @@ object AutoClicker : Module("AutoClicker", Category.COMBAT) {
             }
 
             if (left && block && shouldLeftClick &&
-                player.displayItemInHand?.item is SwordItem && (!neverStopHits || !timeUntilHit > 50) &&
+                player.displayItemInHand?.item is SwordItem && (!neverStopHits || timeUntilHit > 50) &&
                 blockSettings.canClick()
                 ) {
                 if (debug) chat("Blocked the sword")

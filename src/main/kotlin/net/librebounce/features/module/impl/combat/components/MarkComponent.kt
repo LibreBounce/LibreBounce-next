@@ -5,7 +5,7 @@ import net.librebounce.event.handler
 import net.librebounce.event.Render3DEvent
 import net.librebounce.config.Configurable
 import net.librebounce.features.module.base.Module
-import net.librebounce.utils.combat.CombatUtils
+import net.librebounce.utils.attack.CombatUtils
 import net.librebounce.utils.client.MinecraftInstance
 import net.librebounce.utils.render.ColorUtils.withAlpha
 /*import net.librebounce.utils.render.RenderUtils.drawBox
@@ -73,7 +73,7 @@ open class MarkComponent(owner: Module, target: LivingEntity?, shouldApply: Bool
                 circleStartColor.rgb,
                 circleEndColor.rgb
             )*/
-            default -> return@handler
+            "None" -> return@handler
         }
     }
 

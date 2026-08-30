@@ -1,5 +1,8 @@
 accessWidener v2 named
 
+accessible field net/minecraft/entity/Entity x D
+accessible field net/minecraft/entity/Entity y D
+accessible field net/minecraft/entity/Entity z D
 accessible field net/minecraft/entity/Entity inCobweb Z
 accessible field net/minecraft/entity/Entity inWater Z
 accessible field net/minecraft/entity/Entity onFireTimer I
@@ -29,6 +32,7 @@ accessible field net/minecraft/network/packet/c2s/play/PlayerMoveC2SPacket minY 
 accessible field net/minecraft/network/packet/c2s/play/PlayerMoveC2SPacket z D
 accessible field net/minecraft/network/packet/c2s/play/PlayerMoveC2SPacket yaw F
 accessible field net/minecraft/network/packet/c2s/play/PlayerMoveC2SPacket pitch F
+accessible field net/minecraft/network/packet/c2s/play/PlayerMoveC2SPacket hasPos ()V
 
 mutable field net/minecraft/entity/Entity yaw F
 mutable field net/minecraft/entity/Entity pitch F
