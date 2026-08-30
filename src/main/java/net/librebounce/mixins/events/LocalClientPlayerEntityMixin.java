@@ -64,11 +64,8 @@ public abstract class LocalClientPlayerEntityMixin extends Entity {
 	public double y;
 	@Shadow
 	public double z;*/
-	@Shadow
 	public float yaw;
-	@Shadow
 	public float pitch;
-	@Shadow
 	public boolean onGround;
 
 	@Shadow
