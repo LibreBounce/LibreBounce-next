@@ -56,7 +56,7 @@ open class MarkComponent(owner: Module, target: LivingEntity?, shouldApply: Bool
 
         if (renderAimPointBox) drawAimPointBox()
 
-        val color = if ((target as LivingEntity) == CombatUtils.target) if (CombatUtils.canHit()) markHittableColor else markColor
+        val color = if ((target as LivingEntity) == CombatUtils.lastTarget) if (CombatUtils.canHit()) markHittableColor else markColor
             else if (target.damagedTimer == 0) markHittableColor else markColor
 
         when (mark) {
