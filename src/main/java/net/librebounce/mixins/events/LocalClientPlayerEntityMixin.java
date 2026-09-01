@@ -3,6 +3,7 @@ package net.librebounce.mixins.events;
 import net.librebounce.event.*;
 import net.librebounce.utils.rotation.Rotation;
 import net.librebounce.utils.rotation.RotationUtils;
+import net.librebounce.utils.movement.MovementUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.living.player.Input;
 import net.minecraft.client.entity.living.player.LocalClientPlayerEntity;
@@ -50,20 +51,17 @@ public abstract class LocalClientPlayerEntityMixin extends Entity {
 	@Shadow
 	private boolean serverSneakState;
 	@Shadow
-	private double lastReportedPosX;
+	private double sentX;
 	@Shadow
 	private int positionUpdateTicks;
 	@Shadow
-	private double lastReportedPosY;
+	private double sentY;
 	@Shadow
-	private double lastReportedPosZ;*/
+	private double sentZ;*/
 
-	/*@Shadow
 	public double x;
-	@Shadow
 	public double y;
-	@Shadow
-	public double z;*/
+	public double z;
 	public float yaw;
 	public float pitch;
 	public boolean onGround;
@@ -72,12 +70,18 @@ public abstract class LocalClientPlayerEntityMixin extends Entity {
 	private float sentYaw;
 	@Shadow
 	private float sentPitch;
+	@Shadow
+	private double sentX;
+	@Shadow
+	private double sentY;
+	@Shadow
+	private double sentZ
 
 	/**
 	 * @author CCBlueX
 	 */
-	/*@Inject(method = "sendMovementToServer", at = @At("HEAD"), cancellable = true)
-	private void sendMovementToServer(CallbackInfo ci) {
+	@Inject(method = "sendMovementToServer", at = @At("HEAD"), cancellable = true)
+	private void libreBounce$events(CallbackInfo ci) {
 		MotionEvent motionEvent = new MotionEvent(
 			x,
 			getShape().minY,
@@ -87,18 +91,6 @@ public abstract class LocalClientPlayerEntityMixin extends Entity {
 		);
 
 		EventManager.INSTANCE.call(motionEvent);
-	}*/
-	@Inject(method = "sendMovementToServer", at = @At("HEAD"), cancellable = true)
-	private void libreBounce$events(CallbackInfo ci) {
-		/*MotionEvent motionEvent = new MotionEvent(
-			x,
-			getShape().minY,
-			z,
-			onGround,
-			EventState.PRE
-		);
-
-		EventManager.INSTANCE.call(motionEvent);*/
 
 		/*final InventoryMove inventoryMove = InventoryMove.INSTANCE;
 		final Sneak sneak = Sneak.INSTANCE;
@@ -129,7 +121,7 @@ public abstract class LocalClientPlayerEntityMixin extends Entity {
 			serverSneakState = sneaking;
 		}*/
 
-		/*final MovementUtils movementUtils = MovementUtils.INSTANCE;
+		final MovementUtils movementUtils = MovementUtils.INSTANCE;
 
 		if (motionEvent.getOnGround()) {
 			movementUtils.setGroundTicks(movementUtils.getGroundTicks() + 1);
@@ -137,7 +129,7 @@ public abstract class LocalClientPlayerEntityMixin extends Entity {
 		} else {
 			movementUtils.setGroundTicks(0);
 			movementUtils.setAirTicks(movementUtils.getAirTicks() + 1);
-		}*/
+		}
 
 		if (isCamera()) {
 			float yaw1 = yaw;
@@ -150,22 +142,22 @@ public abstract class LocalClientPlayerEntityMixin extends Entity {
 				pitch1 = currentRotation.getPitch();
 			}
 
-			/*double xDiff = motionEvent.getX() - lastReportedPosX;
-			double yDiff = motionEvent.getY() - lastReportedPosY;
-			double zDiff = motionEvent.getZ() - lastReportedPosZ;*/
+			double xDiff = motionEvent.getX() - sentX;
+			double yDiff = motionEvent.getY() - sentY;
+			double zDiff = motionEvent.getZ() - sentZ;
 			double yawDiff = yaw - this.sentYaw;
 			double pitchDiff = pitch - this.sentPitch;
-			//boolean moved = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff > 9.0E-4 || positionUpdateTicks >= 20;
+			boolean moved = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff > 9.0E-4 || positionUpdateTicks >= 20;
 			boolean rotated = /*!FreeCam.INSTANCE.shouldDisableRotations() && */(yawDiff != 0 || pitchDiff != 0);
 
-			/*if (vehicle == null) {
+			if (vehicle == null) {
 				if (moved && rotated) {
 					sendQueue.addToSendQueue(new PlayerMoveC2SPacket.PositionAndAngles(motionEvent.getX(), motionEvent.getY(), motionEvent.getZ(), yaw, pitch, motionEvent.getOnGround()));
 				} else if (moved) {
 					sendQueue.addToSendQueue(new PlayerMoveC2SPacket.Position(motionEvent.getX(), motionEvent.getY(), motionEvent.getZ(), motionEvent.getOnGround()));
 				} else if (rotated) {*/
 					networkHandler.sendPacket(new PlayerMoveC2SPacket.Angles(yaw, pitch, onGround));
-				/*} else {
+				} else {
 					sendQueue.addToSendQueue(new PlayerMoveC2SPacket(motionEvent.getOnGround()));
 				}
 			} else {
@@ -176,23 +168,23 @@ public abstract class LocalClientPlayerEntityMixin extends Entity {
 			++positionUpdateTicks;
 
 			if (moved) {
-				lastReportedPosX = motionEvent.getX();
-				lastReportedPosY = motionEvent.getY();
-				lastReportedPosZ = motionEvent.getZ();
+				sentX = motionEvent.getX();
+				sentY = motionEvent.getY();
+				sentZ = motionEvent.getZ();
 				positionUpdateTicks = 0;
-			}*/
+			}
 
 			//if (!FreeCam.INSTANCE.shouldDisableRotations()) {
 				RotationUtils.INSTANCE.setServerRotation(new Rotation(yaw1, pitch1));
 			//}
 
-			/*if (rotated) {
-				this.lastReportedYaw = yaw;
-				this.lastReportedPitch = pitch;
-			}*/
+			if (rotated) {
+				this.sentYaw = yaw;
+				this.sentPitch = pitch;
+			}
 		}
 
-		//EventManager.INSTANCE.call(new MotionEvent(x, getShape().minY, z, onGround, EventState.POST));
+		EventManager.INSTANCE.call(new MotionEvent(x, getShape().minY, z, onGround, EventState.POST));
 
 		EventManager.INSTANCE.call(RotationUpdateEvent.INSTANCE);
 

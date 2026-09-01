@@ -9,7 +9,6 @@ import net.librebounce.utils.attack.CombatUtils.lastTarget
 import net.librebounce.utils.attack.CombatUtils.timeUntilHit
 import net.librebounce.utils.attack.EntityUtils.isLookingOnEntities
 import net.librebounce.utils.attack.EntityUtils.isSelected
-import net.librebounce.utils.input.InputUtils.requestClick
 import net.librebounce.utils.client.EntityLookup
 import net.librebounce.utils.extensions.getDistanceToEntityBox
 import net.minecraft.entity.living.LivingEntity
@@ -33,38 +32,25 @@ object AutoClicker : Module("AutoClicker", Category.COMBAT) {
     private val right by boolean("Right", false)
     private val rightSettings = ClickingSettings(this, "Right", right)
     private val onlyBlocks by boolean("OnlyBlocks", true) { right }
-    private val debug by boolean("Debug", false)
+    //private val debug by boolean("Debug", false)
 
     val onRender3D = handler<Render3DEvent> {
         mc.player?.let { player ->
             val shouldLeftClick = if (requiresNoInput) lookingAtAnEntity() else mc.options.attackKey.isPressed
+            val heldItem = player.displayItemInHand
 
             if (left && shouldLeftClick &&
                 (lastTarget == null || if (SmartHit.handleEvents()) SmartHit.shouldHit(lastTarget!!) else lastTarget!!.damagedTimer <= hurtTime) &&
-                (player.abilities.creativeMode || (onDestroyBlock || mc.crosshairTarget.type != HitResult.Type.BLOCK)) &&
-                leftSettings.canClick()
-                ) {
-                if (debug) chat("Clicked left")
-
-                requestClick(1, leftSettings.clicks)
+                (player.abilities.creativeMode || (onDestroyBlock || mc.crosshairTarget.type != HitResult.Type.BLOCK))) {
+                leftSettings.requestClick(1)
             }
 
-            if (left && block && shouldLeftClick &&
-                player.displayItemInHand?.item is SwordItem && (!neverStopHits || timeUntilHit > 50) &&
-                blockSettings.canClick()
-                ) {
-                if (debug) chat("Blocked the sword")
-
-                requestClick(3, blockSettings.clicks)
+            if (left && block && shouldLeftClick && heldItem?.item is SwordItem && (!neverStopHits || timeUntilHit > 50)) {
+                blockSettings.requestClick(3)
             }
 
-            if (right && mc.options.useKey.isPressed &&
-                (!onlyBlocks || player.displayItemInHand?.item is BlockItem) &&
-                rightSettings.canClick()
-                ) {
-                if (debug) chat("Clicked right")
-
-                requestClick(3, rightSettings.clicks)
+            if (right && mc.options.useKey.isPressed && (!onlyBlocks || heldItem?.item is BlockItem)) {
+                rightSettings.requestClick(3)
             }
         }
     }
