@@ -66,6 +66,7 @@ public abstract class LocalClientPlayerEntityMixin extends Entity {
 	public float pitch;
 	public boolean onGround;
 
+
 	@Shadow
 	private float sentYaw;
 	@Shadow
@@ -76,6 +77,9 @@ public abstract class LocalClientPlayerEntityMixin extends Entity {
 	private double sentY;
 	@Shadow
 	private double sentZ;
+
+	@Shadow
+	private int ticksSinceSentPosition;
 
 	/**
 	 * @author CCBlueX
@@ -147,7 +151,7 @@ public abstract class LocalClientPlayerEntityMixin extends Entity {
 			double zDiff = motionEvent.getZ() - sentZ;
 			double yawDiff = yaw - this.sentYaw;
 			double pitchDiff = pitch - this.sentPitch;
-			boolean moved = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff > 9.0E-4 || positionUpdateTicks >= 20;
+			boolean moved = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff > 9.0E-4 || ticksSinceSentPosition >= 20;
 			boolean rotated = /*!FreeCam.INSTANCE.shouldDisableRotations() && */(yawDiff != 0 || pitchDiff != 0);
 
 			if (vehicle == null) {
@@ -156,7 +160,7 @@ public abstract class LocalClientPlayerEntityMixin extends Entity {
 				} else if (moved) {
 					sendQueue.addToSendQueue(new PlayerMoveC2SPacket.Position(motionEvent.getX(), motionEvent.getY(), motionEvent.getZ(), motionEvent.getOnGround()));
 				} else if (rotated) {
-					networkHandler.sendPacket(new PlayerMoveC2SPacket.Angles(yaw, pitch, onGround));
+					sendQueue.addToSendQueue(new PlayerMoveC2SPacket.Angles(yaw, pitch, onGround));
 				} else {
 					sendQueue.addToSendQueue(new PlayerMoveC2SPacket(motionEvent.getOnGround()));
 				}
@@ -165,13 +169,13 @@ public abstract class LocalClientPlayerEntityMixin extends Entity {
 				moved = false;
 			}
 
-			++positionUpdateTicks;
+			++ticksSinceSentPosition;
 
 			if (moved) {
 				sentX = motionEvent.getX();
 				sentY = motionEvent.getY();
 				sentZ = motionEvent.getZ();
-				positionUpdateTicks = 0;
+				ticksSinceSentPosition = 0;
 			}
 
 			//if (!FreeCam.INSTANCE.shouldDisableRotations()) {
