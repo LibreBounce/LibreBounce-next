@@ -149,23 +149,23 @@ public abstract class LocalClientPlayerEntityMixin extends Entity {
 			double xDiff = motionEvent.getX() - sentX;
 			double yDiff = motionEvent.getY() - sentY;
 			double zDiff = motionEvent.getZ() - sentZ;
-			double yawDiff = yaw - this.sentYaw;
-			double pitchDiff = pitch - this.sentPitch;
+			double yawDiff = yaw1 - this.sentYaw;
+			double pitchDiff = pitch1 - this.sentPitch;
 			boolean moved = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff > 9.0E-4 || ticksSinceSentPosition >= 20;
 			boolean rotated = /*!FreeCam.INSTANCE.shouldDisableRotations() && */(yawDiff != 0 || pitchDiff != 0);
 
 			if (vehicle == null) {
 				if (moved && rotated) {
-					networkHandler.sendPacket(new PlayerMoveC2SPacket.PositionAndAngles(motionEvent.getX(), motionEvent.getY(), motionEvent.getZ(), yaw, pitch, motionEvent.getOnGround()));
+					networkHandler.sendPacket(new PlayerMoveC2SPacket.PositionAndAngles(motionEvent.getX(), motionEvent.getY(), motionEvent.getZ(), yaw1, pitch1, motionEvent.getOnGround()));
 				} else if (moved) {
 					networkHandler.sendPacket(new PlayerMoveC2SPacket.Position(motionEvent.getX(), motionEvent.getY(), motionEvent.getZ(), motionEvent.getOnGround()));
 				} else if (rotated) {
-					networkHandler.sendPacket(new PlayerMoveC2SPacket.Angles(yaw, pitch, onGround));
+					networkHandler.sendPacket(new PlayerMoveC2SPacket.Angles(yaw1, pitch1, onGround));
 				} else {
 					networkHandler.sendPacket(new PlayerMoveC2SPacket(motionEvent.getOnGround()));
 				}
 			} else {
-				networkHandler.sendPacket(new PlayerMoveC2SPacket.PositionAndAngles(velocityX, -999, velocityZ, yaw, pitch, motionEvent.getOnGround()));
+				networkHandler.sendPacket(new PlayerMoveC2SPacket.PositionAndAngles(velocityX, -999, velocityZ, yaw1, pitch1, motionEvent.getOnGround()));
 				moved = false;
 			}
 
@@ -183,8 +183,8 @@ public abstract class LocalClientPlayerEntityMixin extends Entity {
 			//}
 
 			if (rotated) {
-				this.sentYaw = yaw;
-				this.sentPitch = pitch;
+				this.sentYaw = yaw1;
+				this.sentPitch = pitch1;
 			}
 		}
 
