@@ -36,6 +36,9 @@ accessible field net/minecraft/network/packet/c2s/play/PlayerMoveC2SPacket hasPo
 
 mutable field net/minecraft/entity/Entity yaw F
 mutable field net/minecraft/entity/Entity pitch F
+mutable field net/minecraft/entity/Entity x D
+mutable field net/minecraft/entity/Entity y D
+mutable field net/minecraft/entity/Entity z D
 
 accessible field net/minecraft/client/options/KeyBinding pressed Z
 accessible field net/minecraft/client/options/KeyBinding clickCount I
