@@ -155,7 +155,7 @@ public abstract class LocalClientPlayerEntityMixin extends Entity {
 					sendQueue.addToSendQueue(new PlayerMoveC2SPacket.PositionAndAngles(motionEvent.getX(), motionEvent.getY(), motionEvent.getZ(), yaw, pitch, motionEvent.getOnGround()));
 				} else if (moved) {
 					sendQueue.addToSendQueue(new PlayerMoveC2SPacket.Position(motionEvent.getX(), motionEvent.getY(), motionEvent.getZ(), motionEvent.getOnGround()));
-				} else if (rotated) {*/
+				} else if (rotated) {
 					networkHandler.sendPacket(new PlayerMoveC2SPacket.Angles(yaw, pitch, onGround));
 				} else {
 					sendQueue.addToSendQueue(new PlayerMoveC2SPacket(motionEvent.getOnGround()));
