@@ -86,7 +86,7 @@ object LibreBounce {
     val moduleManager = ModuleManager
     val commandManager = CommandManager
     val eventManager = EventManager
-    val fileManager = FileManager
+    //val fileManager = FileManager
 
     // HUD & ClickGUI
     val clickGui = Dropdown
