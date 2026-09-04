@@ -156,16 +156,16 @@ public abstract class LocalClientPlayerEntityMixin extends Entity {
 
 			if (vehicle == null) {
 				if (moved && rotated) {
-					sendQueue.addToSendQueue(new PlayerMoveC2SPacket.PositionAndAngles(motionEvent.getX(), motionEvent.getY(), motionEvent.getZ(), yaw, pitch, motionEvent.getOnGround()));
+					networkHandler.sendPacket(new PlayerMoveC2SPacket.PositionAndAngles(motionEvent.getX(), motionEvent.getY(), motionEvent.getZ(), yaw, pitch, motionEvent.getOnGround()));
 				} else if (moved) {
-					sendQueue.addToSendQueue(new PlayerMoveC2SPacket.Position(motionEvent.getX(), motionEvent.getY(), motionEvent.getZ(), motionEvent.getOnGround()));
+					networkHandler.sendPacket(new PlayerMoveC2SPacket.Position(motionEvent.getX(), motionEvent.getY(), motionEvent.getZ(), motionEvent.getOnGround()));
 				} else if (rotated) {
-					sendQueue.addToSendQueue(new PlayerMoveC2SPacket.Angles(yaw, pitch, onGround));
+					networkHandler.sendPacket(new PlayerMoveC2SPacket.Angles(yaw, pitch, onGround));
 				} else {
-					sendQueue.addToSendQueue(new PlayerMoveC2SPacket(motionEvent.getOnGround()));
+					networkHandler.sendPacket(new PlayerMoveC2SPacket(motionEvent.getOnGround()));
 				}
 			} else {
-				sendQueue.addToSendQueue(new PlayerMoveC2SPacket.PositionAndAngles(velocityX, -999, velocityZ, yaw, pitch, motionEvent.getOnGround()));
+				networkHandler.sendPacket(new PlayerMoveC2SPacket.PositionAndAngles(velocityX, -999, velocityZ, yaw, pitch, motionEvent.getOnGround()));
 				moved = false;
 			}
 
