@@ -34,11 +34,15 @@ accessible field net/minecraft/network/packet/c2s/play/PlayerMoveC2SPacket yaw F
 accessible field net/minecraft/network/packet/c2s/play/PlayerMoveC2SPacket pitch F
 accessible field net/minecraft/network/packet/c2s/play/PlayerMoveC2SPacket hasPos Z
 
-mutable field net/minecraft/entity/Entity yaw F
-mutable field net/minecraft/entity/Entity pitch F
 mutable field net/minecraft/entity/Entity x D
 mutable field net/minecraft/entity/Entity y D
 mutable field net/minecraft/entity/Entity z D
+mutable field net/minecraft/entity/Entity yaw F
+mutable field net/minecraft/entity/Entity pitch F
+
+accessible field net/minecraft/util/math/Vec3d x D
+accessible field net/minecraft/util/math/Vec3d y D
+accessible field net/minecraft/util/math/Vec3d z D
 
 accessible field net/minecraft/client/options/KeyBinding pressed Z
 accessible field net/minecraft/client/options/KeyBinding clickCount I
