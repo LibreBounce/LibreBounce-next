@@ -23,7 +23,7 @@ private val FILE_CONFIGS = ArrayList<FileConfig>()
 
 object FileManager : Iterable<FileConfig> by FILE_CONFIGS, MinecraftInstance {
 
-    val dir = File(mc.gameDir, "$CLIENT_NAME-$MINECRAFT_VERSION")
+    val dir = File(Minecraft.getInstance().gameDir, "$CLIENT_NAME-$MINECRAFT_VERSION")
     val fontsDir = File(dir, "fonts")
     val settingsDir = File(dir, "settings")
     val themesDir = File(dir, "themes")
