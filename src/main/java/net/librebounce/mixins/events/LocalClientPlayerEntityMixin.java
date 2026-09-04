@@ -75,7 +75,7 @@ public abstract class LocalClientPlayerEntityMixin extends Entity {
 	@Shadow
 	private double sentY;
 	@Shadow
-	private double sentZ
+	private double sentZ;
 
 	/**
 	 * @author CCBlueX
