@@ -20,7 +20,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.living.player.LocalClientPlayerEntity;
 import net.minecraft.entity.living.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
+import net.minecraft.potion.StatusEffect;
 import net.minecraft.entity.living.effect.StatusEffectInstance;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -46,10 +46,10 @@ public abstract class LivingEntity {
     protected abstract float getJumpUpwardsMotion();
 
     @Shadow
-    public abstract StatusEffectInstance getEffectInstance(Potion potionIn);
+    public abstract StatusEffectInstance getEffectInstance(StatusEffect potionIn);
 
     @Shadow
-    public abstract boolean hasStatusEffect(Potion potionIn);
+    public abstract boolean hasStatusEffect(StatusEffect potionIn);
 
     @Shadow
     public void onLivingUpdate() {
@@ -80,8 +80,8 @@ public abstract class LivingEntity {
 
         velocityY = prejumpEvent.getMotion();
 
-        if (hasStatusEffect(Potion.jump))
-            velocityY += (float) (getEffectInstance(Potion.jump).getAmplifier() + 1) * 0.1F;
+        if (hasStatusEffect(StatusEffect.jump))
+            velocityY += (float) (getEffectInstance(StatusEffect.jump).getAmplifier() + 1) * 0.1F;
 
         if (isSprinting()) {
             float fixedYaw = this.yaw;

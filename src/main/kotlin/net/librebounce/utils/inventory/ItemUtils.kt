@@ -124,7 +124,7 @@ val ItemStack.enchantmentCount
 
 //fun ItemStack.getEnchantmentLevel(enchantment: Enchantment) = enchantments.getOrDefault(enchantment, 0)
 
-// Makes Kotlin smart-cast the stack to not null ItemStack
+// Makes Kotlin smart-cast the item to not null ItemStack
 @OptIn(ExperimentalContracts::class)
 fun ItemStack?.isEmpty(): Boolean {
     contract {

@@ -22,7 +22,7 @@ import net.librebounce.utils.timing.TickedActions.awaitTicked
 import net.librebounce.utils.timing.TickedActions.clickNextTick
 import net.librebounce.utils.timing.TickedActions.isTicked
 import net.minecraft.block.BlockWithBlockEntity
-import net.minecraft.block.BlockFalling
+import net.minecraft.block.FallingBlock
 import net.minecraft.block.CraftingTableBlock
 import net.minecraft.client.gui.screen.inventory.menu.SurvivalInventoryScreen
 import net.minecraft.enchantment.Enchantment
@@ -30,7 +30,7 @@ import net.minecraft.entity.ItemEntity
 import net.minecraft.init.Blocks.*
 import net.minecraft.item.Items
 import net.minecraft.item.*
-import net.minecraft.potion.Potion
+import net.minecraft.entity.living.effect.StatusEffect
 
 object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
     private val drop by boolean("Drop", true).subjective()
@@ -48,7 +48,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
         5,
         0..36,
     ) { limitStackCounts }.subjective()
-    // TODO: max potion, vehicle, ..., stacks?
+    // TODO: max potion, vehicle, ..., items?
 
     private val maxFishingRodStacks by int("MaxFishingRodStacks", 1, 1..10).subjective()
 
@@ -124,7 +124,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
         }
     }
 
-    // Compact multiple small stacks into one to free up inventory space
+    // Compact multiple small items into one to free up inventory space
     suspend fun mergeStacks() {
         if (!mergeStacks || !shouldOperate())
             return
@@ -135,37 +135,37 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
         while (true) {
             if (!shouldOperate()) return
 
-            val stacks = player.menu.inventory
+            val items = player.menu.inventory
 
-            // List of stack indices with different types to be compacted by double-clicking
-            val indicesToDoubleClick = stacks.withIndex()
+            // List of item indices with different types to be compacted by double-clicking
+            val indicesToDoubleClick = items.withIndex()
                 .groupBy { it.value?.item }
                 .mapNotNull { (item, groupedStacks) ->
                     item ?: return@mapNotNull null
 
                     val sortedStacks = groupedStacks
-                        // Only try to merge non-full stacks, without limiting stack counts in isStackUseful
+                        // Only try to merge non-full items, without limiting item counts in isStackUseful
                         .filter {
                             it.value.hasItemAgePassed(minItemAge) &&
-                                    it.value.size != it.value.maxStackSize && isStackUseful(
+                                    it.value.size != it.value.maxSize && isStackUseful(
                                 it.value,
-                                stacks,
+                                items,
                                 noLimits = true
                             )
                         }
-                        // Prioritise stacks that are lower in inventory
+                        // Prioritise items that are lower in inventory
                         .sortedByDescending { it.index }
-                        // Prioritise stacks that are sorted
-                        .sortedByDescending { canBeSortedTo(it.index, it.value?.item, stacks.size) }
+                        // Prioritise items that are sorted
+                        .sortedByDescending { canBeSortedTo(it.index, it.value?.item, items.size) }
 
-                    // Return first stack that can be merged with a different stack of the same type else null
+                    // Return first item that can be merged with a different item of the same type else null
                     sortedStacks.firstOrNull { (_, clickedStack) ->
-                        sortedStacks.any { (_, stackToMerge) ->
-                            clickedStack != stackToMerge
-                                    && clickedStack.size + stackToMerge.size <= clickedStack.maxStackSize
-                                    // Check if stacks have the same NBT data and are actually mergeable
-                                    && clickedStack.isItemEqual(stackToMerge)
-                                    && ItemStack.areItemStackTagsEqual(clickedStack, stackToMerge)
+                        sortedStacks.any { (_, itemToMerge) ->
+                            clickedStack != itemToMerge
+                                    && clickedStack.size + itemToMerge.size <= clickedStack.maxSize
+                                    // Check if items have the same NBT data and are actually mergeable
+                                    && clickedStack.isItemEqual(itemToMerge)
+                                    && ItemStack.areItemStackTagsEqual(clickedStack, itemToMerge)
                         }
                     }?.index
                 }
@@ -187,8 +187,8 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
             if (indicesToDoubleClick.isEmpty())
                 break
 
-            // This part isn't fully instant because of the complex vanilla merging behaviour, stack size changes and so on
-            // Waits a tick to see how the stacks got merged
+            // This part isn't fully instant because of the complex vanilla merging behaviour, item size changes and so on
+            // Waits a tick to see how the items got merged
             awaitTicked()
         }
     }
@@ -206,33 +206,33 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
         while (true) {
             if (!shouldOperate()) return
 
-            val stacks = player.menu.inventory
+            val items = player.menu.inventory
 
-            val pairsToRepair = stacks.withIndex()
-                .filter { (_, stack) ->
-                    // Check if stack is damageable and either has no enchantments or just unbreaking.
-                    stack.hasItemAgePassed(minItemAge) && shouldBeRepaired(stack)
+            val pairsToRepair = items.withIndex()
+                .filter { (_, item) ->
+                    // Check if item is damageable and either has no enchantments or just unbreaking.
+                    item.hasItemAgePassed(minItemAge) && shouldBeRepaired(item)
                 }
                 .groupBy { it.value.item }.values
-                .filter { stackGroup ->
+                .filter { itemGroup ->
                     // Only try to repair groups of items when they contain a useful item that can be repaired
                     // Prevents repairing of items that would get thrown out
-                    stackGroup.any { isStackUseful(it.value, stacks, noLimits = true) && it.value.isItemDamaged }
+                    itemGroup.any { isStackUseful(it.value, items, noLimits = true) && it.value.isItemDamaged }
                 }
                 .mapNotNull { groupStacks ->
-                    // Get all pairs of stacks that can be merged
+                    // Get all pairs of items that can be merged
                     groupStacks.withIndex().flatMap { (index, indexedStack) ->
                         groupStacks.drop(index + 1).map { indexedStack to it }
                     }.mapNotNull {
-                        val (index1, stack1) = it.first
-                        val (index2, stack2) = it.second
+                        val (index1, item1) = it.first
+                        val (index2, item2) = it.second
 
-                        // Get combined durability of both stacks (with vanilla repair bonus) coerced to max durability
-                        getCombinedDurabilityIfBeneficial(stack1, stack2)?.let { durability ->
+                        // Get combined durability of both items (with vanilla repair bonus) coerced to max durability
+                        getCombinedDurabilityIfBeneficial(item1, item2)?.let { durability ->
                             RepairTriple(index1, index2, durability)
                         }
                     }.maxByOrNull { it.durability }?.takeIf { bestCombination ->
-                        // If there is a stack with higher or equal durability than the best combination, don't repair
+                        // If there is a item with higher or equal durability than the best combination, don't repair
                         bestCombination.durability >= groupStacks.maxOf { it.value.totalDurability }
                     }
                 }
@@ -243,15 +243,15 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
                 if (isTicked(index1) || isTicked(index2))
                     continue
 
-                // Drag and drop stack1 to crafting grid
+                // Drag and drop item1 to crafting grid
                 click(index1, 0, 0)
                 click(1, 0, 0)
 
-                // Drag and drop stack2 to crafting grid
+                // Drag and drop item2 to crafting grid
                 click(index2, 0, 0)
                 click(2, 0, 0)
 
-                val repairedStack = player.menu.getSlot(0).stack
+                val repairedStack = player.menu.getSlot(0).item
                 val repairedItem = repairedStack.item
 
                 // Handle armor repairs with support for AutoArmor smart-swapping and equipping straight from crafting output
@@ -300,11 +300,11 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
                         if (!canBeSortedTo(hotbarIndex, repairedItem))
                             continue
 
-                        val hotbarStack = stacks.getOrNull(stacks.size - 9 + hotbarIndex)
+                        val hotbarStack = items.getOrNull(items.size - 9 + hotbarIndex)
 
                         // If occupied hotbar slot isn't already sorted or isn't strictly best, sort to it
                         if (!canBeSortedTo(hotbarIndex, hotbarStack?.item)
-                            || !isStackUseful(hotbarStack, stacks, strictlyBest = true)
+                            || !isStackUseful(hotbarStack, items, strictlyBest = true)
                         ) {
                             // Sort repaired item to hotbar right after repairing
                             click(0, hotbarIndex, 2)
@@ -320,7 +320,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
             if (pairsToRepair.isEmpty())
                 break
 
-            // Waits a tick to see how the stacks got repaired
+            // Waits a tick to see how the items got repaired
             awaitTicked()
         }
     }
@@ -338,20 +338,20 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
             // Stop if player violates invopen or nomove checks
             if (!shouldOperate()) return
 
-            val stacks = player.menu.inventory
+            val items = player.menu.inventory
 
             val index = hotbarIndex + 36
 
-            val stack = stacks.getOrNull(index)
-            val item = stack?.item
+            val item = items.getOrNull(index)
+            val item = item?.item
 
             // Search for best item to sort
             suspend fun searchAndSort(strictlyBest: Boolean = false): Boolean {
                 // InventorySlot is already sorted
-                if (isRightType(item) && isStackUseful(stack, stacks, strictlyBest = strictlyBest))
+                if (isRightType(item) && isStackUseful(item, items, strictlyBest = strictlyBest))
                     return true
 
-                for ((otherIndex, otherStack) in stacks.withIndex()) {
+                for ((otherIndex, otherStack) in items.withIndex()) {
                     if (isTicked(otherIndex))
                         continue
 
@@ -360,9 +360,9 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
                     // Check if an item is the correct type, isn't bad and isn't already sorted to a different slot
                     if (isRightType(otherItem) && isStackUseful(
                             otherStack,
-                            stacks,
+                            items,
                             strictlyBest = strictlyBest
-                        ) && !canBeSortedTo(otherIndex, otherItem, stacks.size)
+                        ) && !canBeSortedTo(otherIndex, otherItem, items.size)
                     ) {
                         // If best item to sort was found, but its item age hasn't yet passed, skip search for this hotbar slot
                         if (otherStack.hasItemAgePassed(minItemAge))
@@ -396,14 +396,14 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
             if (isTicked(index))
                 continue
 
-            val stacks = player.menu.inventory
-            val stack = stacks.getOrNull(index) ?: continue
+            val items = player.menu.inventory
+            val item = items.getOrNull(index) ?: continue
 
-            if (!stack.hasItemAgePassed(minItemAge))
+            if (!item.hasItemAgePassed(minItemAge))
                 continue
 
-            // If stack isn't useful, drop it
-            if (!isStackUseful(stack, stacks))
+            // If item isn't useful, drop it
+            if (!isStackUseful(item, items))
                 click(index, 1, 4)
         }
 
@@ -441,60 +441,60 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
         delay(delay.random().coerceAtMost(coerceTo).toLong())
     }
 
-    fun canBeSortedTo(index: Int, item: Item?, stacksSize: Int? = null): Boolean {
+    fun canBeSortedTo(index: Int, item: Item?, itemsSize: Int? = null): Boolean {
         if (!sort) return false
 
-        // If stacksSize argument is passed, check if index is a hotbar slot
+        // If itemsSize argument is passed, check if index is a hotbar slot
         val index =
-            if (stacksSize != null) index.toHotbarIndex(stacksSize) ?: return false
+            if (itemsSize != null) index.toHotbarIndex(itemsSize) ?: return false
             else index
 
         return SORTING_TARGETS[SORTING_VALUES.getOrNull(index)?.get()]?.invoke(item) == true
     }
 
-    // TODO: Simplify all is useful checks by a single getBetterAlternativeCount and checking if it is above 0, above stack limit, ...
+    // TODO: Simplify all is useful checks by a single getBetterAlternativeCount and checking if it is above 0, above item limit, ...
     fun isStackUseful(
-        stack: ItemStack?, stacks: List<ItemStack?>, entityStacksMap: Map<ItemStack, ItemEntity>? = null,
+        item: ItemStack?, items: List<ItemStack?>, entityStacksMap: Map<ItemStack, ItemEntity>? = null,
         noLimits: Boolean = false, strictlyBest: Boolean = false,
     ): Boolean {
-        val item = stack?.item ?: return false
+        val item = item?.item ?: return false
 
         return when (item) {
             in ITEMS_WHITELIST -> true
 
             is EnderPearlItem, is EnchantedBookItem, is BedItem -> true
 
-            is FoodItem -> isUsefulFood(stack, stacks, entityStacksMap, noLimits, strictlyBest)
-            is BlockItem -> isUsefulBlock(stack, stacks, entityStacksMap, noLimits, strictlyBest)
+            is FoodItem -> isUsefulFood(item, items, entityStacksMap, noLimits, strictlyBest)
+            is BlockItem -> isUsefulBlock(item, items, entityStacksMap, noLimits, strictlyBest)
 
             is ArmorItem, is ToolItem, is SwordItem, is BowItem, is FishingRodItem, is ShearsItem -> isUsefulEquipment(
-                stack,
-                stacks,
+                item,
+                items,
                 entityStacksMap
             )
 
             is BoatItem, is MinecartItem -> !ignoreVehicles
 
-            is PotionItem -> isUsefulPotion(stack)
+            is PotionItem -> isUsefulPotion(item)
 
-            is BucketItem -> isUsefulBucket(stack, stacks, entityStacksMap)
+            is BucketItem -> isUsefulBucket(item, items, entityStacksMap)
 
-            is FlintAndSteelItem -> isUsefulLighter(stack, stacks, entityStacksMap)
+            is FlintAndSteelItem -> isUsefulLighter(item, items, entityStacksMap)
 
-            in THROWABLE_ITEMS -> isUsefulThrowable(stack, stacks, entityStacksMap, noLimits, strictlyBest)
+            in THROWABLE_ITEMS -> isUsefulThrowable(item, items, entityStacksMap, noLimits, strictlyBest)
 
             else -> false
         }
     }
 
     private fun isUsefulEquipment(
-        stack: ItemStack?, stacks: List<ItemStack?>,
+        item: ItemStack?, items: List<ItemStack?>,
         entityStacksMap: Map<ItemStack, ItemEntity>? = null,
     ): Boolean {
-        val item = stack?.item ?: return false
+        val item = item?.item ?: return false
 
         return when (item) {
-            is ArmorItem -> stack in getBestArmorSet(stacks, entityStacksMap)
+            is ArmorItem -> item in getBestArmorSet(items, entityStacksMap)
 
             is ToolItem -> {
                 val blockType = when (item) {
@@ -503,35 +503,35 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
                     else -> dirt
                 }
 
-                return hasBestParameters(stack, stacks, entityStacksMap) {
+                return hasBestParameters(item, items, entityStacksMap) {
                     it.item.getStrVsBlock(it, blockType) * it.durability
                 }
             }
 
             is FishingRodItem -> {
-                val fishingRod = stacks.count { it?.item is FishingRodItem }
+                val fishingRod = items.count { it?.item is FishingRodItem }
 
                 if (fishingRod <= maxFishingRodStacks) return true
 
-                hasBestParameters(stack, stacks, entityStacksMap) {
+                hasBestParameters(item, items, entityStacksMap) {
                     it.durability.toFloat()
                 }
             }
 
             is ShearsItem ->
-                hasBestParameters(stack, stacks, entityStacksMap) {
+                hasBestParameters(item, items, entityStacksMap) {
                     it.durability.toFloat() * it.getEnchantmentLevel(Enchantment.efficiency)
                 }
 
             // TODO: Knockback and Fire Aspect are also great
             // For instance, a Sharpness + Knockback/Fire Aspect Diamond Sword is better than a Sharpness 2 Iron Sword
             is SwordItem ->
-                hasBestParameters(stack, stacks, entityStacksMap) {
+                hasBestParameters(item, items, entityStacksMap) {
                     it.attackDamage.toFloat()
                 }
 
             is BowItem ->
-                hasBestParameters(stack, stacks, entityStacksMap) {
+                hasBestParameters(item, items, entityStacksMap) {
                     it.getEnchantmentLevel(Enchantment.power).toFloat()
                 }
 
@@ -539,43 +539,43 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
         }
     }
 
-    private fun isUsefulPotion(stack: ItemStack?): Boolean {
-        val item = stack?.item ?: return false
+    private fun isUsefulPotion(item: ItemStack?): Boolean {
+        val item = item?.item ?: return false
 
         if (item !is PotionItem) return false
 
-        val isSplash = stack.isSplashPotion()
-        val isHarmful = item.getEffects(stack)?.any { it.id in NEGATIVE_EFFECT_IDS } ?: return false
+        val isSplash = item.isSplashPotion()
+        val isHarmful = item.getEffects(item)?.any { it.id in NEGATIVE_EFFECT_IDS } ?: return false
 
         // Only keep helpful potions and, if 'onlyGoodPotions' is disabled, also splash harmful potions
         return !isHarmful || (!onlyGoodPotions && isSplash)
     }
 
     private fun isUsefulLighter(
-        stack: ItemStack?, stacks: List<ItemStack?>,
+        item: ItemStack?, items: List<ItemStack?>,
         entityStacksMap: Map<ItemStack, ItemEntity>? = null,
     ): Boolean {
-        val item = stack?.item ?: return false
+        val item = item?.item ?: return false
 
         if (item !is FlintAndSteelItem) return false
 
-        val index = stacks.indexOf(stack)
+        val index = items.indexOf(item)
 
-        val isSorted = canBeSortedTo(index, item, stacks.size)
+        val isSorted = canBeSortedTo(index, item, items.size)
 
         if (isSorted) return true
 
-        val stacksToIterate = stacks.toMutableList()
+        val itemsToIterate = items.toMutableList()
 
         var distanceSqToItem = .0
 
         if (!entityStacksMap.isNullOrEmpty()) {
-            distanceSqToItem = mc.player.getSquaredDistanceToEntity(entityStacksMap[stack] ?: return false)
-            stacksToIterate += entityStacksMap.keys
+            distanceSqToItem = mc.player.getSquaredDistanceToEntity(entityStacksMap[item] ?: return false)
+            itemsToIterate += entityStacksMap.keys
         }
 
-        return stacksToIterate.withIndex().none { (otherIndex, otherStack) ->
-            if (otherStack == stack)
+        return itemsToIterate.withIndex().none { (otherIndex, otherStack) ->
+            if (otherStack == item)
                 return@none false
 
             val otherItem = otherStack?.item ?: return@none false
@@ -584,7 +584,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
                 return@none false
 
             // Items dropped on ground should have index -1
-            val otherIndex = if (otherIndex > stacks.lastIndex) -1 else otherIndex
+            val otherIndex = if (otherIndex > items.lastIndex) -1 else otherIndex
 
             // Only when both items are dropped on ground
             if (index == otherIndex) {
@@ -593,20 +593,20 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
                 return distanceSqToItem > mc.player.getSquaredDistanceToEntity(otherItemEntity)
             }
 
-            canBeSortedTo(otherIndex, otherItem, stacks.size)
-                    || otherStack.totalDurability > stack.totalDurability || otherIndex > index
+            canBeSortedTo(otherIndex, otherItem, items.size)
+                    || otherStack.totalDurability > item.totalDurability || otherIndex > index
         }
     }
 
     private fun isUsefulFood(
-        stack: ItemStack?, stacks: List<ItemStack?>, entityStacksMap: Map<ItemStack, ItemEntity>?,
+        item: ItemStack?, items: List<ItemStack?>, entityStacksMap: Map<ItemStack, ItemEntity>?,
         ignoreLimits: Boolean, strictlyBest: Boolean,
     ): Boolean {
-        val item = stack?.item ?: return false
+        val item = item?.item ?: return false
 
         if (item !is FoodItem) return false
 
-        // Skip checks if there is no stack limit set and when you are not strictly searching for best option
+        // Skip checks if there is no item limit set and when you are not strictly searching for best option
         if (ignoreLimits || !limitStackCounts) {
             if (!strictlyBest)
                 return true
@@ -614,23 +614,23 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
         } else if (maxFoodStacks == 0)
             return false
 
-        val stackSaturation = item.getSaturationModifier(stack) * stack.size
+        val itemSaturation = item.getSaturationModifier(item) * item.size
 
-        val index = stacks.indexOf(stack)
+        val index = items.indexOf(item)
 
-        val isSorted = canBeSortedTo(index, item, stacks.size)
+        val isSorted = canBeSortedTo(index, item, items.size)
 
-        val stacksToIterate = stacks.toMutableList()
+        val itemsToIterate = items.toMutableList()
 
         var distanceSqToItem = .0
 
         if (!entityStacksMap.isNullOrEmpty()) {
-            distanceSqToItem = mc.player.getSquaredDistanceToEntity(entityStacksMap[stack] ?: return false)
-            stacksToIterate += entityStacksMap.keys
+            distanceSqToItem = mc.player.getSquaredDistanceToEntity(entityStacksMap[item] ?: return false)
+            itemsToIterate += entityStacksMap.keys
         }
 
-        val betterCount = stacksToIterate.withIndex().count { (otherIndex, otherStack) ->
-            if (stack == otherStack)
+        val betterCount = itemsToIterate.withIndex().count { (otherIndex, otherStack) ->
+            if (item == otherStack)
                 return@count false
 
             val otherItem = otherStack?.item ?: return@count false
@@ -639,14 +639,14 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
                 return@count false
 
             // Items dropped on ground should have index -1
-            val otherIndex = if (otherIndex > stacks.lastIndex) -1 else otherIndex
+            val otherIndex = if (otherIndex > items.lastIndex) -1 else otherIndex
 
             val otherStackSaturation = otherItem.getSaturationModifier(otherStack) * otherStack.size
 
-            when (otherStackSaturation.compareTo(stackSaturation)) {
-                // Other stack has bigger saturation sum
+            when (otherStackSaturation.compareTo(itemSaturation)) {
+                // Other item has bigger saturation sum
                 1 -> true
-                // Both stacks are equally good
+                // Both items are equally good
                 0 -> {
                     // Only true when both items are dropped on ground
                     if (index == otherIndex) {
@@ -655,9 +655,9 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
                         // If other item is closer, count it as better
                         distanceSqToItem > mc.player.getSquaredDistanceToEntity(otherItemEntity)
                     } else {
-                        val isOtherSorted = canBeSortedTo(otherIndex, otherItem, stacks.size)
+                        val isOtherSorted = canBeSortedTo(otherIndex, otherItem, items.size)
 
-                        // Count as better alternative only when compared stack isn't sorted and the other is sorted, or has higher index
+                        // Count as better alternative only when compared item isn't sorted and the other is sorted, or has higher index
                         !isSorted && (isOtherSorted || otherIndex > index)
                     }
                 }
@@ -671,12 +671,12 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
     }
 
     private fun isUsefulBlock(
-        stack: ItemStack?, stacks: List<ItemStack?>, entityStacksMap: Map<ItemStack, ItemEntity>?,
+        item: ItemStack?, items: List<ItemStack?>, entityStacksMap: Map<ItemStack, ItemEntity>?,
         ignoreLimits: Boolean, strictlyBest: Boolean,
     ): Boolean {
-        if (!isSuitableBlock(stack)) return false
+        if (!isSuitableBlock(item)) return false
 
-        // Skip checks if there is no stack limit set and when you are not strictly searching for best option
+        // Skip checks if there is no item limit set and when you are not strictly searching for best option
         if (ignoreLimits || !limitStackCounts) {
             if (!strictlyBest)
                 return true
@@ -684,30 +684,30 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
         } else if (maxBlockStacks == 0)
             return false
 
-        val index = stacks.indexOf(stack)
+        val index = items.indexOf(item)
 
-        val isSorted = canBeSortedTo(index, stack!!.item, stacks.size)
+        val isSorted = canBeSortedTo(index, item!!.item, items.size)
 
-        val stacksToIterate = stacks.toMutableList()
+        val itemsToIterate = items.toMutableList()
 
         var distanceSqToItem = .0
 
         if (!entityStacksMap.isNullOrEmpty()) {
-            distanceSqToItem = mc.player.getSquaredDistanceToEntity(entityStacksMap[stack] ?: return false)
-            stacksToIterate += entityStacksMap.keys
+            distanceSqToItem = mc.player.getSquaredDistanceToEntity(entityStacksMap[item] ?: return false)
+            itemsToIterate += entityStacksMap.keys
         }
 
-        val betterCount = stacksToIterate.withIndex().count { (otherIndex, otherStack) ->
-            if (otherStack == stack || !isSuitableBlock(otherStack))
+        val betterCount = itemsToIterate.withIndex().count { (otherIndex, otherStack) ->
+            if (otherStack == item || !isSuitableBlock(otherStack))
                 return@count false
 
             // Items dropped on ground should have index -1
-            val otherIndex = if (otherIndex > stacks.lastIndex) -1 else otherIndex
+            val otherIndex = if (otherIndex > items.lastIndex) -1 else otherIndex
 
-            when (otherStack!!.size.compareTo(stack.size)) {
-                // Found a stack that has higher size
+            when (otherStack!!.size.compareTo(item.size)) {
+                // Found a item that has higher size
                 1 -> true
-                // Both stacks are equally good
+                // Both items are equally good
                 0 -> {
                     // Only true when both items are dropped on ground
                     if (index == otherIndex) {
@@ -716,9 +716,9 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
                         // If other item is closer, count it as better
                         distanceSqToItem > mc.player.getSquaredDistanceToEntity(otherItemEntity)
                     } else {
-                        val isOtherSorted = canBeSortedTo(otherIndex, otherStack.item, stacks.size)
+                        val isOtherSorted = canBeSortedTo(otherIndex, otherStack.item, items.size)
 
-                        // Count as better alternative only when compared stack isn't sorted and the other is sorted, or has higher index
+                        // Count as better alternative only when compared item isn't sorted and the other is sorted, or has higher index
                         !isSorted && (isOtherSorted || otherIndex > index)
                     }
                 }
@@ -732,14 +732,14 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
     }
 
     private fun isUsefulThrowable(
-        stack: ItemStack?, stacks: List<ItemStack?>,
+        item: ItemStack?, items: List<ItemStack?>,
         entityStacksMap: Map<ItemStack, ItemEntity>?, ignoreLimits: Boolean, strictlyBest: Boolean,
     ): Boolean {
-        val item = stack?.item ?: return false
+        val item = item?.item ?: return false
 
         if (item !in THROWABLE_ITEMS) return false
 
-        // Skip checks if there is no stack limit set and when you are not strictly searching for best option
+        // Skip checks if there is no item limit set and when you are not strictly searching for best option
         if (ignoreLimits || !limitStackCounts) {
             if (!strictlyBest)
                 return true
@@ -747,21 +747,21 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
         } else if (maxBlockStacks == 0)
             return false
 
-        val index = stacks.indexOf(stack)
+        val index = items.indexOf(item)
 
-        val isSorted = canBeSortedTo(index, item, stacks.size)
+        val isSorted = canBeSortedTo(index, item, items.size)
 
-        val stacksToIterate = stacks.toMutableList()
+        val itemsToIterate = items.toMutableList()
 
         var distanceSqToItem = .0
 
         if (!entityStacksMap.isNullOrEmpty()) {
-            distanceSqToItem = mc.player.getSquaredDistanceToEntity(entityStacksMap[stack] ?: return false)
-            stacksToIterate += entityStacksMap.keys
+            distanceSqToItem = mc.player.getSquaredDistanceToEntity(entityStacksMap[item] ?: return false)
+            itemsToIterate += entityStacksMap.keys
         }
 
-        val betterCount = stacksToIterate.withIndex().count { (otherIndex, otherStack) ->
-            if (otherStack == stack)
+        val betterCount = itemsToIterate.withIndex().count { (otherIndex, otherStack) ->
+            if (otherStack == item)
                 return@count false
 
             val otherItem = otherStack?.item ?: return@count false
@@ -769,12 +769,12 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
             if (otherItem !in THROWABLE_ITEMS) return@count false
 
             // Items dropped on ground should have index -1
-            val otherIndex = if (otherIndex > stacks.lastIndex) -1 else otherIndex
+            val otherIndex = if (otherIndex > items.lastIndex) -1 else otherIndex
 
-            when (otherStack.size.compareTo(stack.size)) {
-                // Found a stack that has higher size
+            when (otherStack.size.compareTo(item.size)) {
+                // Found a item that has higher size
                 1 -> true
-                // Both stacks are equally good
+                // Both items are equally good
                 0 -> {
                     // Only true when both items are dropped on ground
                     if (index == otherIndex) {
@@ -783,9 +783,9 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
                         // If other item is closer, count it as better
                         distanceSqToItem > mc.player.getSquaredDistanceToEntity(otherItemEntity)
                     } else {
-                        val isOtherSorted = canBeSortedTo(otherIndex, otherStack.item, stacks.size)
+                        val isOtherSorted = canBeSortedTo(otherIndex, otherStack.item, items.size)
 
-                        // Count as better alternative only when compared stack isn't sorted and the other is sorted, or has higher index
+                        // Count as better alternative only when compared item isn't sorted and the other is sorted, or has higher index
                         !isSorted && (isOtherSorted || otherIndex > index)
                     }
                 }
@@ -800,30 +800,30 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
 
     // Limit buckets to max 1 per type
     private fun isUsefulBucket(
-        stack: ItemStack?, stacks: List<ItemStack?>,
+        item: ItemStack?, items: List<ItemStack?>,
         entityStacksMap: Map<ItemStack, ItemEntity>?,
     ): Boolean {
-        val item = stack?.item ?: return false
+        val item = item?.item ?: return false
 
         if (item !is BucketItem) return false
 
-        val index = stacks.indexOf(stack)
+        val index = items.indexOf(item)
 
-        val isSorted = canBeSortedTo(index, item, stacks.size)
+        val isSorted = canBeSortedTo(index, item, items.size)
 
         if (isSorted) return true
 
-        val stacksToIterate = stacks.toMutableList()
+        val itemsToIterate = items.toMutableList()
 
         var distanceSqToItem = .0
 
         if (!entityStacksMap.isNullOrEmpty()) {
-            distanceSqToItem = mc.player.getSquaredDistanceToEntity(entityStacksMap[stack] ?: return false)
-            stacksToIterate += entityStacksMap.keys
+            distanceSqToItem = mc.player.getSquaredDistanceToEntity(entityStacksMap[item] ?: return false)
+            itemsToIterate += entityStacksMap.keys
         }
 
-        return stacksToIterate.withIndex().none { (otherIndex, otherStack) ->
-            if (otherStack == stack)
+        return itemsToIterate.withIndex().none { (otherIndex, otherStack) ->
+            if (otherStack == item)
                 return@none false
 
             val otherItem = otherStack?.item ?: return@none false
@@ -832,7 +832,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
                 return@none false
 
             // Items dropped on ground should have index -1
-            val otherIndex = if (otherIndex > stacks.lastIndex) -1 else otherIndex
+            val otherIndex = if (otherIndex > items.lastIndex) -1 else otherIndex
 
             // Only when both items are dropped on ground
             if (index == otherIndex) {
@@ -841,54 +841,54 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
                 return distanceSqToItem > mc.player.getSquaredDistanceToEntity(otherItemEntity)
             }
 
-            canBeSortedTo(otherIndex, otherItem, stacks.size) || otherIndex > index
+            canBeSortedTo(otherIndex, otherItem, items.size) || otherIndex > index
         }
     }
 
     private fun hasBestParameters(
-        stack: ItemStack?, stacks: List<ItemStack?>,
+        item: ItemStack?, items: List<ItemStack?>,
         entityStacksMap: Map<ItemStack, ItemEntity>? = null, parameters: (ItemStack) -> Float,
     ): Boolean {
-        val item = stack?.item ?: return false
+        val item = item?.item ?: return false
 
-        val index = stacks.indexOf(stack)
+        val index = items.indexOf(item)
 
-        val currentStats = parameters(stack)
+        val currentStats = parameters(item)
 
-        val isSorted = canBeSortedTo(index, item, stacks.size)
+        val isSorted = canBeSortedTo(index, item, items.size)
 
-        val stacksToIterate = stacks.toMutableList()
+        val itemsToIterate = items.toMutableList()
 
         var distanceSqToItem = .0
 
         if (!entityStacksMap.isNullOrEmpty()) {
-            distanceSqToItem = mc.player.getSquaredDistanceToEntity(entityStacksMap[stack] ?: return false)
-            stacksToIterate += entityStacksMap.keys
+            distanceSqToItem = mc.player.getSquaredDistanceToEntity(entityStacksMap[item] ?: return false)
+            itemsToIterate += entityStacksMap.keys
         }
 
-        stacksToIterate.forEachIndexed { otherIndex, otherStack ->
+        itemsToIterate.forEachIndexed { otherIndex, otherStack ->
             val otherItem = otherStack?.item ?: return@forEachIndexed
 
             // Check if items aren't the same instance but are the same type
-            if (stack == otherStack || item.javaClass != otherItem.javaClass)
+            if (item == otherStack || item.javaClass != otherItem.javaClass)
                 return@forEachIndexed
 
             // Items dropped on ground should have index -1
-            val otherIndex = if (otherIndex > stacks.lastIndex) -1 else otherIndex
+            val otherIndex = if (otherIndex > items.lastIndex) -1 else otherIndex
 
             val otherStats = parameters(otherStack)
 
-            val isOtherSorted = canBeSortedTo(otherIndex, otherItem, stacks.size)
+            val isOtherSorted = canBeSortedTo(otherIndex, otherItem, items.size)
 
             // Compare stats one by one
             when (otherStats.compareTo(currentStats)) {
                 // Other item had better base stat, compared item isn't the best
                 1 -> return false
                 // Both have the same base stat, compare sum of their enchantment levels
-                0 -> when (otherStack.enchantmentSum.compareTo(stack.enchantmentSum)) {
+                0 -> when (otherStack.enchantmentSum.compareTo(item.enchantmentSum)) {
                     1 -> return false
                     // Same base stat, sum of enchantment levels, compare durability * unbreaking
-                    0 -> when (otherStack.totalDurability.compareTo(stack.totalDurability)) {
+                    0 -> when (otherStack.totalDurability.compareTo(item.totalDurability)) {
                         1 -> return false
                         // Both items are pretty much equally good, sorted item wins over not sorted, otherwise the one with higher index
                         0 -> {
@@ -912,14 +912,14 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
     }
 
     @Suppress("DEPRECATION")
-    private fun isSuitableBlock(stack: ItemStack?): Boolean {
-        val item = stack?.item ?: return false
+    private fun isSuitableBlock(item: ItemStack?): Boolean {
+        val item = item?.item ?: return false
 
         if (item is BlockItem) {
             val block = item.block
 
             return isFullBlock(block) && !block.hasBlockEntity()
-                    && block !is CraftingTableBlock && block !is BlockWithBlockEntity && block !is BlockFalling
+                    && block !is CraftingTableBlock && block !is BlockWithBlockEntity && block !is FallingBlock
         }
 
         return false
@@ -927,43 +927,43 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
 
     /**
      * Calculates resulting durability after repairing equipment.
-     * @return Combined durability of both stacks (with vanilla repair bonus) coerced to max durability
-     * or null if either stack has higher or equal durability than the combined durability.
+     * @return Combined durability of both items (with vanilla repair bonus) coerced to max durability
+     * or null if either item has higher or equal durability than the combined durability.
      */
-    private fun getCombinedDurabilityIfBeneficial(stack1: ItemStack, stack2: ItemStack): Int? {
-        // Get combined durability of both stacks (with vanilla repair bonus) coerced to max durability
+    private fun getCombinedDurabilityIfBeneficial(item1: ItemStack, item2: ItemStack): Int? {
+        // Get combined durability of both items (with vanilla repair bonus) coerced to max durability
         val combinedDurability =
-            (stack1.durability + stack2.durability + stack1.maxDamage * 5 / 100)
-                .coerceAtMost(stack1.maxDamage)
+            (item1.durability + item2.durability + item1.maxDamage * 5 / 100)
+                .coerceAtMost(item1.maxDamage)
 
-        // Check if combined durability is higher than total enchanted durability of either stack
-        return if (stack1.totalDurability >= combinedDurability || stack2.totalDurability >= combinedDurability) null
+        // Check if combined durability is higher than total enchanted durability of either item
+        return if (item1.totalDurability >= combinedDurability || item2.totalDurability >= combinedDurability) null
         else combinedDurability
     }
 
-    // Check if stack is repairable and either has no enchantments or just unbreaking.
-    private fun shouldBeRepaired(stack: ItemStack?) =
-        !stack.isEmpty() && stack.item.isRepairable && (
-                !stack.isItemEnchanted || (stack.enchantmentCount == 1 && Enchantment.unbreaking in stack.enchantments)
+    // Check if item is repairable and either has no enchantments or just unbreaking.
+    private fun shouldBeRepaired(item: ItemStack?) =
+        !item.isEmpty() && item.item.isRepairable && (
+                !item.isItemEnchanted || (item.enchantmentCount == 1 && Enchantment.unbreaking in item.enchantments)
                 )
 
-    fun canBeRepairedWithOther(stack: ItemStack?, stacks: List<ItemStack?>): Boolean {
+    fun canBeRepairedWithOther(item: ItemStack?, items: List<ItemStack?>): Boolean {
         if (!handleEvents() || !repairEquipment)
             return false
 
-        val item = stack?.item ?: return false
+        val item = item?.item ?: return false
 
-        if (!shouldBeRepaired(stack))
+        if (!shouldBeRepaired(item))
             return false
 
-        return stacks.any { otherStack ->
-            if (otherStack.isEmpty() || otherStack == stack)
+        return items.any { otherStack ->
+            if (otherStack.isEmpty() || otherStack == item)
                 return@any false
 
             if (otherStack.item != item)
                 return@any false
 
-            getCombinedDurabilityIfBeneficial(stack, otherStack) != null
+            getCombinedDurabilityIfBeneficial(item, otherStack) != null
         }
     }
 
@@ -984,14 +984,14 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
 }
 
 private val ITEMS_WHITELIST = arrayOf(
-    Items.arrow, Items.diamond, Items.iron_ingot, Items.gold_ingot, Items.stick
+    Items.ARR0W, Items.DIAMOND, Items.IRON_INGOT, Items.GOLD_INGOT, Items.STICK
 )
 
 private val THROWABLE_ITEMS = arrayOf(Items.egg, Items.snowball)
 
 val NEGATIVE_EFFECT_IDS = intArrayOf(
-    Potion.moveSlowdown.id, Potion.digSlowdown.id, Potion.harm.id, Potion.confusion.id, Potion.blindness.id,
-    Potion.hunger.id, Potion.weakness.id, Potion.poison.id, Potion.wither.id,
+    StatusEffect.moveSlowdown.id, StatusEffect.digSlowdown.id, StatusEffect.harm.id, StatusEffect.confusion.id, StatusEffect.blindness.id,
+    StatusEffect.hunger.id, StatusEffect.weakness.id, StatusEffect.poison.id, StatusEffect.wither.id,
 )
 
 private val SORTING_TARGETS: Map<String, ((Item?) -> Boolean)?> = mapOf(
@@ -1002,9 +1002,9 @@ private val SORTING_TARGETS: Map<String, ((Item?) -> Boolean)?> = mapOf(
     "Shovel" to { it is ShovelItem },
     "Food" to { it is FoodItem },
     "Block" to { it is BlockItem },
-    "Water" to { it == Items.water_bucket || it == Items.bucket },
-    "Fire" to { it is FlintAndSteelItem || it == Items.lava_bucket || it == Items.bucket },
-    "Gapple" to { it is ItemAppleGold },
+    "Water" to { it == Items.WATER_BUCKET || it == Items.BUCKET },
+    "Fire" to { it is FlintAndSteelItem || it == Items.LAVA_BUCKET || it == Items.BUCKET },
+    "Gapple" to { it is GoldenAppleItem },
     "Pearl" to { it is EnderPearlItem },
     "Potion" to { it is PotionItem },
     "Throwable" to { it is EggItem || it is SnowballItem },

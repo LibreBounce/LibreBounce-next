@@ -229,10 +229,10 @@ infix fun LivingEntity.setSprintSafely(new: Boolean) {
     isSprinting = new
 }
 
-// Modified mc.interactionManager.onPlayerRightClick() that sends correct stack in its C08
+// Modified mc.interactionManager.onPlayerRightClick() that sends correct item in its C08
 /*fun LocalClientPlayerEntity.onPlayerRightClick(
     clickPos: BlockPos, side: Direction, clickVec: Vec3d,
-    stack: ItemStack? = inventory.items[SilentHotbar.currentSlot],
+    item: ItemStack? = inventory.items[SilentHotbar.currentSlot],
 ): Boolean {
     val controller = mc.interactionManager ?: return false
 
@@ -244,7 +244,7 @@ infix fun LivingEntity.setSprintSafely(new: Boolean) {
     val (facingX, facingY, facingZ) = (clickVec - clickPos.toVec()).toFloatArray()
 
     val sendClick = {
-        sendPacket(PlayerUseC2SPacket(clickPos, side.index, stack, facingX, facingY, facingZ))
+        sendPacket(PlayerUseC2SPacket(clickPos, side.index, item, facingX, facingY, facingZ))
         true
     }
 
@@ -252,9 +252,9 @@ infix fun LivingEntity.setSprintSafely(new: Boolean) {
     if (controller.isSpectator)
         return sendClick()
 
-    val item = stack?.item
+    val item = item?.item
 
-    if (item?.onItemUseFirst(stack, this, world, clickPos, side, facingX, facingY, facingZ) == true)
+    if (item?.onItemUseFirst(item, this, world, clickPos, side, facingX, facingY, facingZ) == true)
         return true
 
     val blockState = clickPos.state
@@ -274,41 +274,41 @@ infix fun LivingEntity.setSprintSafely(new: Boolean) {
     )
         return sendClick()
 
-    if (item is BlockItem && !item.canPlaceBlockOnSide(world, clickPos, side, this, stack))
+    if (item is BlockItem && !item.canPlaceBlockOnSide(world, clickPos, side, this, item))
         return false
 
     sendClick()
 
-    if (stack == null)
+    if (item == null)
         return false
 
-    val prevMetadata = stack.metadata
-    val prevSize = stack.size
+    val prevMetadata = item.metadata
+    val prevSize = item.size
 
-    return stack.onItemUse(this, world, clickPos, side, facingX, facingY, facingZ).also {
+    return item.onItemUse(this, world, clickPos, side, facingX, facingY, facingZ).also {
         if (controller.hasCreativeInventory) {
-            stack.itemDamage = prevMetadata
-            stack.size = prevSize
-        } else if (stack.size <= 0) {
-            ForgeEventFactory.onPlayerDestroyItem(this, stack)
+            item.itemDamage = prevMetadata
+            item.size = prevSize
+        } else if (item.size <= 0) {
+            ForgeEventFactory.onPlayerDestroyItem(this, item)
         }
     }
 }
 
-// Modified mc.interactionManager.sendUseItem() that sends correct stack in its C08
-fun LocalClientPlayerEntity.sendUseItem(stack: ItemStack): Boolean {
+// Modified mc.interactionManager.sendUseItem() that sends correct item in its C08
+fun LocalClientPlayerEntity.sendUseItem(item: ItemStack): Boolean {
     if (mc.interactionManager.isSpectator)
         return false
 
     mc.interactionManager?.updateSelectedHotbarSlot()
 
-    sendPacket(PlayerUseC2SPacket(stack))
+    sendPacket(PlayerUseC2SPacket(item))
 
-    val prevSize = stack.size
+    val prevSize = item.size
 
-    val newStack = stack.useItemRightClick(world, this)
+    val newStack = item.useItemRightClick(world, this)
 
-    return if (newStack != stack || newStack.size != prevSize) {
+    return if (newStack != item || newStack.size != prevSize) {
         if (newStack.size <= 0) {
             mc.player.inventory.items[SilentHotbar.currentSlot] = null
             ForgeEventFactory.onPlayerDestroyItem(mc.player, newStack)

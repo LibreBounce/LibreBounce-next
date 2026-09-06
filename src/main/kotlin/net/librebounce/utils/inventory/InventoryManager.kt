@@ -103,7 +103,7 @@ object InventoryManager : Configurable("InventoryManager"), MinecraftInstance, L
         // Repair useful equipment by merging in the crafting grid
         InventoryCleaner.repairEquipment()
 
-        // Compact multiple small stacks into one to free up inventory space
+        // Compact multiple small items into one to free up inventory space
         InventoryCleaner.mergeStacks()
 
         // Sort hotbar (with useful items without even dropping bad items first)

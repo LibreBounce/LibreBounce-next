@@ -27,7 +27,7 @@ import net.librebounce.utils.timing.MSTimer
 import net.minecraft.entity.Entity
 import net.minecraft.entity.living.LivingEntity
 import net.minecraft.world.HitResult
-//import net.minecraft.potion.Potion
+//import net.minecraft.potion.StatusEffect
 import net.minecraft.util.*
 
 object Aimbot : Module("Aimbot", Category.COMBAT) {
@@ -253,8 +253,8 @@ object Aimbot : Module("Aimbot", Category.COMBAT) {
                 "HurtResistance" -> entity.invulnerableTimer.toDouble()
                 "HurtTime" -> entity.damagedTimer.toDouble()
                 "HealthAbsorption" -> (entity.health + entity.absorption).toDouble()
-                //"RegenAmplifier" -> if (entity.hasStatusEffect(Potion.regeneration)) {
-                    //entity.getEffectInstance(Potion.regeneration).amplifier.toDouble()
+                //"RegenAmplifier" -> if (entity.hasStatusEffect(StatusEffect.regeneration)) {
+                    //entity.getEffectInstance(StatusEffect.regeneration).amplifier.toDouble()
                 //} else -1.0
 
                 "InWeb" -> if (entity.inCobweb) -1.0 else Double.MAX_VALUE

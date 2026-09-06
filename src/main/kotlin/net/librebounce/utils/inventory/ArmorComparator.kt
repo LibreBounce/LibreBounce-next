@@ -7,7 +7,7 @@ import net.minecraft.item.ArmorItem
 import net.minecraft.item.ItemStack
 
 /*object ArmorComparator: MinecraftInstance {
-    fun getBestArmorSet(stacks: List<ItemStack?>, entityStacksMap: Map<ItemStack, ItemEntity>? = null): ArmorSet? {
+    fun getBestArmorSet(items: List<ItemStack?>, entityStacksMap: Map<ItemStack, ItemEntity>? = null): ArmorSet? {
         val player = mc.player ?: return null
 
         // Consider armor pieces dropped on ground
@@ -22,16 +22,16 @@ import net.minecraft.item.ItemStack
                 player.inventory.armor.asIterable().indexedArmorStacks { null }
             else emptyList()
 
-        val inventoryStacks = stacks.indexedArmorStacks()
+        val inventoryStacks = items.indexedArmorStacks()
 
-        val comparator = Comparator.comparingDouble<Pair<Int?, ItemStack>> { (index, stack) ->
+        val comparator = Comparator.comparingDouble<Pair<Int?, ItemStack>> { (index, item) ->
             // Sort items by distance from player, equipped items are always preferred with distance -1
             if (index == -1)
-                player.getSquaredDistance(entityStacksMap?.get(stack) ?: return@comparingDouble -1.0)
+                player.getSquaredDistance(entityStacksMap?.get(item) ?: return@comparingDouble -1.0)
             else -1.0
-        }.thenComparingInt { (index, stack) ->
+        }.thenComparingInt { (index, item) ->
             // Prioritise sets that are in lower parts of inventory (not in chest) or equipped, prevents stealing multiple armor duplicates.
-            if (stack in player.inventory.armor) Int.MIN_VALUE
+            if (item in player.inventory.armor) Int.MIN_VALUE
             else index?.inv() ?: Int.MIN_VALUE
         }.thenComparingInt {
             if (it.second in player.inventory.armor) Int.MAX_VALUE
@@ -81,8 +81,8 @@ import net.minecraft.item.ItemStack
  *         If the iterable is null, an empty list is returned.
  */
 private inline fun Iterable<ItemStack?>?.indexedArmorStacks(indexCallback: (Int) -> Int? = { it }): List<Pair<Int?, ItemStack>> =
-    this?.mapIndexedNotNull { index, stack ->
-        if (stack?.item is ArmorItem) indexCallback(index) to stack
+    this?.mapIndexedNotNull { index, item ->
+        if (item?.item is ArmorItem) indexCallback(index) to item
         else null
     } ?: emptyList()
 
@@ -98,11 +98,11 @@ class ArmorSet(private vararg val armorPairs: Pair<Int?, ItemStack>?) : Iterable
         var epf = 0
 
         forEach { pair ->
-            val stack = pair?.second ?: return@forEach
-            val item = stack.item as ArmorItem
+            val item = pair?.second ?: return@forEach
+            val item = item.item as ArmorItem
             baseDefensePercentage += item.material.getProtection(item.slot) * 4
 
-            val protectionLvl = stack.getLevel(Enchantment.PROTECTION)
+            val protectionLvl = item.getLevel(Enchantment.PROTECTION)
 
             // Calculate epf based on protection level
             if (protectionLvl > 0)
@@ -119,16 +119,16 @@ class ArmorSet(private vararg val armorPairs: Pair<Int?, ItemStack>?) : Iterable
 
     override fun iterator() = armorPairs.iterator()
 
-    operator fun contains(stack: ItemStack) = armorPairs.any { it?.second == stack }
+    operator fun contains(item: ItemStack) = armorPairs.any { it?.second == item }
 
     operator fun contains(index: Int) = armorPairs.any { it?.first == index }
 
-    fun indexOf(stack: ItemStack) = armorPairs.find { it?.second == stack }?.first ?: -1
+    fun indexOf(item: ItemStack) = armorPairs.find { it?.second == item }?.first ?: -1
 
     operator fun get(index: Int) = armorPairs.getOrNull(index)
 }
 
-operator fun ArmorSet?.contains(stack: ItemStack) = this?.contains(stack) ?: true
+operator fun ArmorSet?.contains(item: ItemStack) = this?.contains(item) ?: true
 
 private val NULL_LIST = listOf<Pair<Int?, ItemStack>?>(null)
 */

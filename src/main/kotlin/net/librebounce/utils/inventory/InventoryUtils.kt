@@ -110,10 +110,10 @@ object InventoryUtils : Listenable {
         val inventory = player.menu
 
         return (36..44).filter {
-            val stack = inventory.getSlot(it).item ?: return@filter false
-            val block = if (stack.item is BlockItem) (stack.item as BlockItem).block else return@filter false
+            val item = inventory.getSlot(it).item ?: return@filter false
+            val block = if (item.item is BlockItem) (item.item as BlockItem).block else return@filter false
 
-            stack.item is BlockItem && stack.size > 0 && block !in BLOCK_BLACKLIST && block !is PlantBlock
+            item.item is BlockItem && item.size > 0 && block !in BLOCK_BLACKLIST && block !is PlantBlock
         }.minByOrNull { (inventory.getSlot(it).item.item as BlockItem).block.isCube }?.minus(36)
     }
 
@@ -122,10 +122,10 @@ object InventoryUtils : Listenable {
         val inventory = player.menu
 
         return (36..44).filter {
-            val stack = inventory.getSlot(it).item ?: return@filter false
-            val block = if (stack.item is BlockItem) (stack.item as BlockItem).block else return@filter false
+            val item = inventory.getSlot(it).item ?: return@filter false
+            val block = if (item.item is BlockItem) (item.item as BlockItem).block else return@filter false
 
-            stack.item is BlockItem && stack.size > 0 && block.isCube && block !in BLOCK_BLACKLIST && block !is PlantBlock
+            item.item is BlockItem && item.size > 0 && block.isCube && block !in BLOCK_BLACKLIST && block !is PlantBlock
         }.maxByOrNull { inventory.getSlot(it).item.size }?.minus(36)
     }
 
@@ -134,16 +134,16 @@ object InventoryUtils : Listenable {
         val inventory = player.menu
 
         return (36..44).filter {
-            val stack = inventory.getSlot(it).item ?: return@filter false
-            val block = if (stack.item is BlockItem) (stack.item as BlockItem).block else return@filter false
+            val item = inventory.getSlot(it).item ?: return@filter false
+            val block = if (item.item is BlockItem) (item.item as BlockItem).block else return@filter false
 
-            stack.item is BlockItem && stack.size > amount && block.isCube && block !in BLOCK_BLACKLIST && block !is PlantBlock
+            item.item is BlockItem && item.size > amount && block.isCube && block !in BLOCK_BLACKLIST && block !is PlantBlock
         }.minByOrNull { (inventory.getSlot(it).item.item as BlockItem).block.isCube }?.minus(36)
     }
 
     // Converts container slot to hotbar slot id, else returns null
-    fun Int.toHotbarIndex(stacksSize: Int): Int? {
-        val parsed = this - stacksSize + 9
+    fun Int.toHotbarIndex(itemsSize: Int): Int? {
+        val parsed = this - itemsSize + 9
 
         return if (parsed in 0..8) parsed else null
     }
@@ -153,13 +153,13 @@ object InventoryUtils : Listenable {
         var amount = 0
 
         for (i in 36..44) {
-            val stack = player.inventorySlot(i).item ?: continue
-            val item = stack.item
+            val item = player.inventorySlot(i).item ?: continue
+            val item = item.item
             if (item is BlockItem) {
                 val block = item.block
                 val displayItemInHand = player.displayItemInHand
-                if (displayItemInHand != null && displayItemInHand == stack || block !in BLOCK_BLACKLIST && block !is PlantBlock) {
-                    amount += stack.size
+                if (displayItemInHand != null && displayItemInHand == item || block !in BLOCK_BLACKLIST && block !is PlantBlock) {
+                    amount += item.size
                 }
             }
         }

@@ -24,7 +24,7 @@ import net.librebounce.utils.timing.TickedActions.clickNextTick
 import net.librebounce.utils.timing.TickedActions.isTicked
 import net.librebounce.utils.timing.TickedActions.nextTick
 import net.minecraft.client.gui.screen.inventory.menu.SurvivalInventoryScreen
-import net.minecraft.entity.LivingEntity.getArmorPosition
+import net.minecraft.entity.LivingEntity.getEquipmentSlot
 import net.minecraft.item.ItemStack
 import net.minecraft.network.packet.c2s.play.PlayerUseC2SPacket
 
@@ -72,25 +72,25 @@ object AutoArmor : Module("AutoArmor", Category.COMBAT) {
 
         var hasClickedHotbar = false
 
-        val stacks = withContext(Dispatchers.Main) {
-            player.menu.slots.map { it.stack }
+        val items = withContext(Dispatchers.Main) {
+            player.menu.slots.map { it.item }
         }
 
-        val bestArmorSet = getBestArmorSet(stacks) ?: return
+        val bestArmorSet = getBestArmorSet(items) ?: return
 
         for (armorType in 0..3) {
-            val (index, stack) = bestArmorSet[armorType] ?: continue
+            val (index, item) = bestArmorSet[armorType] ?: continue
 
             // Check if the armor piece is in the hotbar
-            val hotbarIndex = index?.toHotbarIndex(stacks.size) ?: continue
+            val hotbarIndex = index?.toHotbarIndex(items.size) ?: continue
 
             if (isTicked(index) || isTicked(armorType + 5))
                 continue
 
-            if (!stack.hasItemAgePassed(minItemAge))
+            if (!item.hasItemAgePassed(minItemAge))
                 continue
 
-            val armorPos = getArmorPosition(stack) - 1
+            val armorPos = getEquipmentSlot(item) - 1
 
             // Check if target armor slot isn't occupied
             if (player.inventory.armor[armorPos] != null)
@@ -111,10 +111,10 @@ object AutoArmor : Module("AutoArmor", Category.COMBAT) {
                 )
 
                 // Switch selected hotbar slot, right click to equip
-                sendPacket(PlayerUseC2SPacket(stack))
+                sendPacket(PlayerUseC2SPacket(item))
 
                 // Instantly update inventory on client-side to prevent repetitive clicking because of ping
-                player.inventory.armor[armorPos] = stack
+                player.inventory.armor[armorPos] = item
                 player.inventory.items[hotbarIndex] = null
             }
 
@@ -149,14 +149,14 @@ object AutoArmor : Module("AutoArmor", Category.COMBAT) {
                 return
             }
 
-            val stacks = withContext(Dispatchers.Main) {
-                player.menu.slots.map { it.stack }
+            val items = withContext(Dispatchers.Main) {
+                player.menu.slots.map { it.item }
             }
 
-            val armorSet = getBestArmorSet(stacks) ?: continue
+            val armorSet = getBestArmorSet(items) ?: continue
 
             // Shouldn't iterate over armor set because after waiting for nomove and invopen it could be outdated
-            val (index, stack) = armorSet[armorType] ?: continue
+            val (index, item) = armorSet[armorType] ?: continue
 
             // Index is null when searching in chests for already equipped armor to prevent any accidental impossible interactions
             index ?: continue
@@ -165,20 +165,20 @@ object AutoArmor : Module("AutoArmor", Category.COMBAT) {
             if (isTicked(index) || isTicked(armorType + 5))
                 continue
 
-            if (!stack.hasItemAgePassed(minItemAge))
+            if (!item.hasItemAgePassed(minItemAge))
                 continue
 
             // Don't equip if it can be repaired with other armor piece, wait for the repair to happen first
             // Armor piece will then get equipped right after the repair
-            if (canBeRepairedWithOther(stack, stacks))
+            if (canBeRepairedWithOther(item, items))
                 continue
 
             // Set current slot being stolen for highlighting
             autoArmorCurrentSlot = index
 
-            when (stacks[armorType + 5]) {
+            when (items[armorType + 5]) {
                 // Best armor is already equipped
-                stack -> {
+                item -> {
                     autoArmorCurrentSlot = -1
                     autoArmorLastSlot = -1
                     continue
@@ -219,7 +219,7 @@ object AutoArmor : Module("AutoArmor", Category.COMBAT) {
         awaitTicked()
     }
 
-    fun equipFromHotbarInChest(hotbarIndex: Int?, stack: ItemStack) {
+    fun equipFromHotbarInChest(hotbarIndex: Int?, item: ItemStack) {
         // AutoArmor is disabled or prohibited from equipping while in containers
         if (hotbarIndex == null || !canEquipFromChest()) {
             autoArmorCurrentSlot = -1
@@ -232,7 +232,7 @@ object AutoArmor : Module("AutoArmor", Category.COMBAT) {
 
         SilentHotbar.selectSlotSilently(this, hotbarIndex, immediate = true, render = false, resetManually = true)
 
-        sendPacket(PlayerUseC2SPacket(stack))
+        sendPacket(PlayerUseC2SPacket(item))
     }
 
     fun canEquipFromChest() = handleEvents() && hotbar && !notInContainers

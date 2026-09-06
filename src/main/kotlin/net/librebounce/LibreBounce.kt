@@ -15,8 +15,8 @@ import net.librebounce.event.EventManager
 import net.librebounce.event.StartupEvent
 import net.librebounce.features.command.CommandManager
 import net.librebounce.features.command.CommandManager.registerCommands
-import net.librebounce.features.module.base.ModuleManager
-import net.librebounce.features.module.base.ModuleManager.registerModules
+import net.librebounce.features.module.ModuleManager
+import net.librebounce.features.module.ModuleManager.registerModules
 import net.librebounce.features.ui.elements.clickgui.dropdown.Dropdown
 import net.librebounce.file.FileManager
 import net.librebounce.file.FileManager.loadAllConfigs
