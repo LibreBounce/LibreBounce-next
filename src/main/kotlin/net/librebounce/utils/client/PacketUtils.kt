@@ -2,8 +2,8 @@ package net.librebounce.utils.client
 
 import kotlinx.coroutines.Dispatchers
 import net.librebounce.event.*
-/*import net.librebounce.features.module.modules.combat.FakeLag
-import net.librebounce.features.module.modules.combat.Velocity
+/*import net.librebounce.features.module.impl.combat.FakeLag
+import net.librebounce.features.module.impl.combat.Velocity
 import net.librebounce.injection.implementations.IMixinEntity*/
 import net.librebounce.utils.extensions.currPos
 import net.librebounce.utils.kotlin.removeEach
@@ -120,15 +120,15 @@ object PacketUtils : MinecraftInstance, Listenable {
             return
         }
 
-        val netManager = mc.networkHandler?.connection ?: return
+        val connection = mc.networkHandler?.connection ?: return
 
         PPSCounter.registerType(PPSCounter.PacketType.SEND)
-        if (netManager.isConnected) {
-            netManager.flushQueue()
-            netManager.doSend(packet, null)
+        if (connection.isConnected) {
+            connection.flushQueue()
+            connection.doSend(packet, null)
         } else {
-            netManager.lock.write {
-                netManager.sendQueue += Connection.QueuedPacket(packet, null)
+            connection.lock.write {
+                connection.sendQueue += Connection.QueuedPacket(packet, null)
             }
         }
     }

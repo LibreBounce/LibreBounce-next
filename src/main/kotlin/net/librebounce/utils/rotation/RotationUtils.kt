@@ -3,9 +3,9 @@ package net.librebounce.utils.rotation
 import net.librebounce.event.*
 import net.librebounce.features.module.base.settings.RandomizationSettings
 import net.librebounce.features.module.base.settings.RotationSettings
-//import net.librebounce.features.module.modules.combat.FastBow
-//import net.librebounce.features.module.modules.misc.NoRotateSet
-//import net.librebounce.features.module.modules.render.Rotations
+//import net.librebounce.features.module.impl.combat.FastBow
+//import net.librebounce.features.module.impl.misc.NoRotateSet
+//import net.librebounce.features.module.impl.render.Rotations
 import net.librebounce.utils.block.block
 import net.librebounce.utils.client.MinecraftInstance
 import net.librebounce.utils.client.chat

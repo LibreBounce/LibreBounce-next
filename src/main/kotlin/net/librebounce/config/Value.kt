@@ -51,9 +51,7 @@ sealed class Value<T>(
     fun exclude() = apply { excluded = true }
 
     fun excludeWhen(condition: Boolean) = apply {
-        if (condition) {
-            excluded = true
-        }
+        if (condition) excluded = true
     }
 
     fun setAndUpdateDefault(new: T): Boolean {

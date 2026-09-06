@@ -150,13 +150,13 @@ object LibreBounce {
             //Fonts.loadFonts()
 
             // Register listeners
-            /*RotationUtils
-            ClientFixes
-            BungeeCordSpoof
-            CapeService
+            RotationUtils
+            //ClientFixes
+            //BungeeCordSpoof
+            //CapeService
             InventoryUtils
             InventoryManager
-            MiniMapRegister
+            //MiniMapRegister
             TickedActions
             MovementUtils
             PacketUtils
@@ -164,18 +164,7 @@ object LibreBounce {
             BPSUtils
             WaitTickUtils
             SilentHotbar
-            BlinkUtils*/
-
-            RotationUtils
-            InventoryUtils
-            TimerBalanceUtils
-            BPSUtils
-            CombatUtils
-            MovementUtils
-            PacketUtils
-            SilentHotbar
-            TickedActions
-            WaitTickUtils
+            BlinkUtils
 
             // Load online settings
             /*loadSettings(false) {

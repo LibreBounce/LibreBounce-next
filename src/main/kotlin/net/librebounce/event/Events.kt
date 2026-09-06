@@ -5,7 +5,7 @@
  */
 package net.librebounce.event
 
-/*import net.librebounce.features.module.modules.render.FreeCam
+/*import net.librebounce.features.module.impl.render.FreeCam
 import net.librebounce.utils.extensions.withY*/
 import net.minecraft.block.Block
 import net.minecraft.client.gui.screen.Screen

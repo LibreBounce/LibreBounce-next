@@ -7,7 +7,7 @@ package net.librebounce.utils.render
 
 import net.librebounce.config.ColorValue
 import net.librebounce.config.Configurable
-//import net.ccbluex.liquidbounce.ui.client.hud.element.Element.Companion.MAX_GRADIENT_COLORS
+//import net.librebounce.ui.client.hud.element.Element.Companion.MAX_GRADIENT_COLORS
 import net.librebounce.utils.render.ColorUtils.withAlpha
 import java.awt.Color
 

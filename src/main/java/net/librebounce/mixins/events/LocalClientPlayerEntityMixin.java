@@ -179,7 +179,7 @@ public abstract class LocalClientPlayerEntityMixin extends Entity {
 			}
 
 			//if (!FreeCam.INSTANCE.shouldDisableRotations()) {
-				RotationUtils.INSTANCE.setServerRotation(new Rotation(yaw1, pitch1));
+			RotationUtils.INSTANCE.setServerRotation(new Rotation(yaw1, pitch1));
 			//}
 
 			if (rotated) {

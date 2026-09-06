@@ -1,9 +1,9 @@
 package net.librebounce.utils.attack
 
 import net.librebounce.config.Configurable
-/*import net.librebounce.features.module.modules.combat.NoFriends
-import net.librebounce.features.module.modules.misc.AntiBot.isBot
-import net.librebounce.features.module.modules.misc.Teams*/
+/*import net.librebounce.features.module.impl.combat.NoFriends
+import net.librebounce.features.module.impl.misc.AntiBot.isBot
+import net.librebounce.features.module.impl.misc.Teams*/
 import net.librebounce.utils.client.MinecraftInstance
 /*import net.librebounce.utils.extensions.isAnimal
 import net.librebounce.utils.extensions.isClientFriend
