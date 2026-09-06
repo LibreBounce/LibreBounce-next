@@ -11,7 +11,7 @@ object TabUtils {
 
                 // Cycle to previous textField when holding shift.
                 textFields[
-                    (i + (if (Keyboard.isPressed(Keyboard.KEY_LSHIFT)) -1 else 1) + textFields.size)
+                    (i + (if (Keyboard.pressed(Keyboard.KEY_LSHIFT)) -1 else 1) + textFields.size)
                             % textFields.size
                 ].isFocused = true
 

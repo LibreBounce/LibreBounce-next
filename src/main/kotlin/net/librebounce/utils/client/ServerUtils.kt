@@ -12,11 +12,8 @@ import net.minecraft.network.NetworkProtocol
 import net.minecraft.network.Connection
 import net.minecraft.network.packet.c2s.handshake.HandshakeC2SPacket
 import net.minecraft.network.packet.c2s.login.HelloC2SPacket
-import net.minecraftforge.fml.relauncher.Side
-import net.minecraftforge.fml.relauncher.SideOnly
 import java.net.InetAddress
 
-@SideOnly(Side.CLIENT)
 object ServerUtils : MinecraftInstance {
     var serverEntry: ServerListEntry? = null
 

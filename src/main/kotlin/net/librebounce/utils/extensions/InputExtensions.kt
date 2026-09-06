@@ -3,10 +3,10 @@ package net.librebounce.utils.extensions
 import net.minecraft.client.entity.living.player.Input
 
 fun Input.reset() {
-    this.forwardSpeed = 0f
+    this.movementForward = 0f
     this.movementSideways = 0f
-    this.jump = false
-    this.sneak = false
+    this.jumping = false
+    this.sneaking = false
 }
 
 val Input.isSideways

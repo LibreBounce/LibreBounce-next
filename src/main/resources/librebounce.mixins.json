@@ -8,13 +8,18 @@
     "modules.LivingEntityMixin"
   ],
   "client": [
+    "events.ConnectionMixin",
     "events.ClientPlayerInteractionManagerMixin",
+    "events.ClientPlayerInteractionManagerMixin",
+    "events.EntityMixin",
+    "events.ItemMixin",
     "events.GameGuiMixin",
     "events.GameRendererMixin",
     "events.LocalClientPlayerEntityMixin",
     "events.MinecraftMixin",
     "events.ScreenMixin",
-    "modules.MinecraftMixin"
+    "modules.MinecraftMixin",
+    "modules.LivingEntityMixin"
   ],
   "server": [
   ],

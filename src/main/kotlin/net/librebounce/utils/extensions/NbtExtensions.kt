@@ -2,7 +2,7 @@ package net.librebounce.utils.extensions
 
 import net.minecraft.nbt.*
 
-inline operator fun NbtCompound.set(key: String, value: Byte) {
+/*inline operator fun NbtCompound.set(key: String, value: Byte) {
     setByte(key, value)
 }
 
@@ -60,4 +60,4 @@ inline fun NbtList(builderAction: NbtList.() -> Unit): NbtList {
 
 inline fun NbtList.addElement(builderAction: NbtCompound.() -> Unit) {
     addElement(NbtCompound().apply(builderAction))
-}
+}*/

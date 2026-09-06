@@ -37,7 +37,7 @@ object BlinkUtils : MinecraftInstance, Listenable {
             }
 
             is SoundEventS2CPacket -> {
-                if (packet.soundName == "game.player.hurt") {
+                if (packet.name == "game.player.hurt") {
                     return
                 }
             }
@@ -56,7 +56,8 @@ object BlinkUtils : MinecraftInstance, Listenable {
                     packets += packet
                 }
                 if (packet is PlayerMoveC2SPacket && packet.hasPos) {
-                    val packetPos = Vec3d(packet.x, packet.y, packet.z)
+                    val p = packet as PlayerMoveC2SPacket
+                    val packetPos = Vec3d(p.x, p.minY, p.z)
                     synchronized(positions) {
                         positions += packetPos
                     }
@@ -135,7 +136,7 @@ object BlinkUtils : MinecraftInstance, Listenable {
         val player = mc.player ?: return
         val firstPosition = positions.firstOrNull() ?: return
 
-        player.teleport(firstPosition.xCoord, firstPosition.yCoord, firstPosition.zCoord)
+        player.teleport(firstPosition.x, firstPosition.y, firstPosition.z)
 
         synchronized(packets) {
             val iterator = packets.iterator()
@@ -155,10 +156,10 @@ object BlinkUtils : MinecraftInstance, Listenable {
         }
 
         // Remove fake player
-        fakePlayer?.apply {
+        /*fakePlayer?.apply {
             fakePlayer?.networkId?.let { mc.world?.removeEntityFromWorld(it) }
             fakePlayer = null
-        }
+        }*/
     }
 
     fun unblink() {
@@ -172,10 +173,10 @@ object BlinkUtils : MinecraftInstance, Listenable {
         clear()
 
         // Remove fake player
-        fakePlayer?.apply {
+        /*fakePlayer?.apply {
             fakePlayer?.networkId?.let { mc.world?.removeEntityFromWorld(it) }
             fakePlayer = null
-        }
+        }*/
     }
 
     fun clear() {

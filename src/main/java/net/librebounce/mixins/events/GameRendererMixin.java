@@ -46,7 +46,7 @@ public class GameRendererMixin {
             Rotation rotation = new Rotation(mc.player.yaw, mc.player.pitch);
             Vec3d vec31 = RotationUtils.INSTANCE.getRotationVector(RotationUtils.INSTANCE.getCurrentRotation() != null && OverrideRaycast.INSTANCE.shouldOverride() ? RotationUtils.INSTANCE.getCurrentRotation() : rotation);
             double p_rayTrace_1_ = (reach.handleEvents() ? reach.getBuildReach() : d0);
-            Vec3d vec32 = vec3.addVector(vec31.xCoord * p_rayTrace_1_, vec31.yCoord * p_rayTrace_1_, vec31.zCoord * p_rayTrace_1_);
+            Vec3d vec32 = vec3.addVector(vec31.x * p_rayTrace_1_, vec31.y * p_rayTrace_1_, vec31.z * p_rayTrace_1_);
             mc.crosshairTarget = entity.world.rayTrace(vec3, vec32, false, false, true);
             double d1 = d0;
             boolean flag = false;
@@ -63,7 +63,7 @@ public class GameRendererMixin {
 
             if (reach.handleEvents()) {
                 double p_rayTrace_1_2 = reach.getBuildReach();
-                Vec3d vec322 = vec3.addVector(vec31.xCoord * p_rayTrace_1_2, vec31.yCoord * p_rayTrace_1_2, vec31.zCoord * p_rayTrace_1_2);
+                Vec3d vec322 = vec3.addVector(vec31.x * p_rayTrace_1_2, vec31.y * p_rayTrace_1_2, vec31.z * p_rayTrace_1_2);
                 final HitResult movingObjectPosition = entity.world.rayTrace(vec3, vec322, false, false, true);
 
                 if (movingObjectPosition != null) d1 = movingObjectPosition.facePos.distanceTo(vec3);

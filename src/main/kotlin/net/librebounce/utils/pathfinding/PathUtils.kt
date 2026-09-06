@@ -1,7 +1,7 @@
 package net.librebounce.utils.pathfinding
 
 import net.librebounce.utils.client.MinecraftInstance
-import javax.vecmath.Vector3d
+import org.joml.Vector3d
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.sqrt
