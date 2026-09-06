@@ -41,7 +41,7 @@ object InventoryUtils : Listenable {
             }
         }
 
-    var serverOpenContainer = false
+    var servermenu = false
         private set
 
     // Backing fields
@@ -190,13 +190,13 @@ object InventoryUtils : Listenable {
             is CloseInventoryMenuC2SPacket, is CloseInventoryMenuS2CPacket, is OpenInventoryMenuS2CPacket -> {
                 isFirstInventoryClick = false
                 _serverOpenInventory = false
-                serverOpenContainer = false
+                servermenu = false
 
                 timeSinceClosedInventory = System.currentTimeMillis()
 
                 if (packet is OpenInventoryMenuS2CPacket) {
                     if (packet.type == "minecraft:chest" || packet.type == "minecraft:container")
-                        serverOpenContainer = true
+                        servermenu = true
                 } //else
                     //ChestAura.tileTarget = null
             }
@@ -236,7 +236,7 @@ object InventoryUtils : Listenable {
         SilentHotbar.resetSlot()
 
         _serverOpenInventory = false
-        serverOpenContainer = false
+        servermenu = false
     }
 
 

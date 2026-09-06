@@ -5,9 +5,9 @@ import kotlinx.coroutines.delay
 import net.librebounce.config.Configurable
 import net.librebounce.event.Listenable
 import net.librebounce.event.async.loopSequence
-import net.librebounce.features.module.modules.combat.AutoArmor
-import net.librebounce.features.module.modules.player.InventoryCleaner
-import net.librebounce.features.module.modules.world.ChestStealer
+import net.librebounce.features.module.impl.combat.AutoArmor
+import net.librebounce.features.module.impl.player.InventoryCleaner
+import net.librebounce.features.module.impl.world.ChestStealer
 import net.librebounce.utils.client.MinecraftInstance
 import net.librebounce.utils.extensions.isMoving
 import net.librebounce.utils.inventory.InventoryUtils.serverOpenInventory
@@ -134,11 +134,11 @@ object InventoryManager : Configurable("InventoryManager"), MinecraftInstance, L
             !canCloseInventory -> null
 
             // Prevent any other container guis from getting closed
-            mc.player?.openContainer?.networkId != 0 -> null
+            mc.player?.menu?.networkId != 0 -> null
 
             // Check if open inventory should be closed
             mc.screen is SurvivalInventoryScreen && invOpenValue.get() && autoCloseValue.get() ->
-                Runnable { mc.player?.closeScreen() }
+                Runnable { mc.player?.closeMenu() }
 
             // Check if simulated inventory should be closed
             mc.screen !is SurvivalInventoryScreen && simulateInventoryValue.get() && serverOpenInventory ->

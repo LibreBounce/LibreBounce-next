@@ -645,7 +645,7 @@ object RotationUtils : MinecraftInstance, Listenable {
 
         val playerRotation = player.rotation
 
-        val shouldUpdate = !InventoryUtils.serverOpenContainer && !InventoryUtils.serverOpenInventory
+        val shouldUpdate = !InventoryUtils.servermenu && !InventoryUtils.serverOpenInventory
 
         if (!shouldUpdate) {
             return

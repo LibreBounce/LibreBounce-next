@@ -10,7 +10,7 @@ fun Input.reset() {
 }
 
 val Input.isSideways
-    get() = forwardSpeed != 0f && movementSideways != 0f
+    get() = movementForward != 0f && movementSideways != 0f
 
 val Input.isMoving
-    get() = forwardSpeed != 0f || movementSideways != 0f
+    get() = movementForward != 0f || movementSideways != 0f

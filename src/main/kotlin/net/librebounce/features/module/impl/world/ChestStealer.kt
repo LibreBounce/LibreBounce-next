@@ -1,0 +1,478 @@
+@file:Suppress("unused")
+
+package net.librebounce.features.module.impl.world
+
+import kotlinx.coroutines.delay
+//import net.librebounce.LiquidBounce.hud
+import net.librebounce.event.PacketEvent
+import net.librebounce.event.Render2DEvent
+import net.librebounce.event.handler
+import net.librebounce.features.module.Category
+import net.librebounce.features.module.Module
+import net.librebounce.features.module.impl.combat.AutoArmor
+import net.librebounce.features.module.impl.player.InventoryCleaner
+import net.librebounce.features.module.impl.player.InventoryCleaner.canBeSortedTo
+import net.librebounce.features.module.impl.player.InventoryCleaner.isStackUseful
+//import net.librebounce.ui.client.hud.element.elements.Notification
+import net.librebounce.utils.client.chat
+import net.librebounce.utils.extensions.component1
+import net.librebounce.utils.extensions.component2
+import net.librebounce.utils.kotlin.RandomUtils.withinChance
+import net.librebounce.utils.inventory.InventoryManager
+import net.librebounce.utils.inventory.InventoryManager.canClickInventory
+import net.librebounce.utils.inventory.InventoryManager.chestStealerCurrentSlot
+import net.librebounce.utils.inventory.InventoryManager.chestStealerLastSlot
+import net.librebounce.utils.inventory.InventoryUtils.countSpaceInInventory
+import net.librebounce.utils.inventory.InventoryUtils.hasSpaceInInventory
+import net.librebounce.utils.inventory.SilentHotbar
+import net.librebounce.utils.render.RenderUtils.drawRect
+import net.librebounce.utils.timing.TickedActions.awaitTicked
+import net.librebounce.utils.timing.TickedActions.clickNextTick
+import net.librebounce.utils.timing.TickedActions.isTicked
+import net.librebounce.utils.timing.TickedActions.nextTick
+import net.librebounce.utils.timing.TimeUtils.randomDelay
+import net.minecraft.client.render.Window
+import net.minecraft.client.gui.screen.inventory.menu.ChestScreen
+import net.minecraft.inventory.slot.InventorySlot
+import net.minecraft.entity.EntityLiving.getArmorPosition
+import net.minecraft.init.Blocks.chest
+import net.minecraft.item.ArmorItem
+import net.minecraft.item.ItemStack
+import net.minecraft.network.packet.c2s.play.CloseInventoryMenuC2SPacket
+import net.minecraft.network.packet.s2c.play.OpenInventoryMenuS2CPacket
+import net.minecraft.network.packet.s2c.play.CloseInventoryMenuS2CPacket
+import net.minecraft.network.packet.s2c.play.InventoryMenuContentS2CPacket
+import java.awt.Color
+import kotlin.math.sqrt
+
+object ChestStealer : Module("ChestStealer", Category.WORLD) {
+
+    // TODO: Make SmartOrder prioritize slightly farther but more essential items, e.g, armor
+    // instead of arrows
+    private val sorting by choices("Sorting", arrayOf("Normal", "Distance", "Random"), "Normal")
+
+    private val delay by intRange("Delay", 50..50, 0..500, suffix = "ms")
+    private val startDelay by intRange("StartDelay", 50..100, 0..500, suffix = "ms")
+    private val closeDelay by intRange("CloseDelay", 50..100, 0..500, suffix = "ms")
+
+    private val smartDelay by boolean("SmartDelay", false)
+    private val multiplier by intRange("DelayMultiplier", 120..140, 0..500) { smartDelay }
+
+    // TODO: This is currently based on a chance option; while it still needs randomness,
+    // it is better to make it stop shortly in a more legit manner, e.g., after taking many items
+    private val simulateShortStop by boolean("SimulateShortStop", false)
+    private val shortStopChance by int("ShortStopChance", 75, 0..100, suffix = "%") { simulateShortStop }
+    private val shortStopLength by intRange("ShortStopLength", 350..650, 0..1000, suffix = "ms") { simulateShortStop }
+
+    // TODO: Add an option to not miss-click consecutively
+    private val missClick by boolean("MissClick", false)
+    private val missClickChance by int("MissClickChance", 4, 0..100, suffix = "%") { missClick }
+    private val missClickChanceDistMult by boolean("MissClickChanceDistanceMultiply", true) { missClick }
+    private val pauseAfterMissClick by intRange("PauseAfterMissClick", 350..650, 0..1000, suffix = "ms") { missClick }
+
+    private val noMove by +InventoryManager.noMoveValue
+    private val noMoveAir by +InventoryManager.noMoveAirValue
+    private val noMoveGround by +InventoryManager.noMoveGroundValue
+
+    val chestTitle by boolean("ChestTitle", true)
+
+    // TODO: The progress bar currently "show" all the items in the chest
+    // Instead, it should "show" only the items that are planned to be stolen
+    private val progressBar by boolean("ProgressBar", true).subjective()
+
+    // TODO: Add an option to show the chest GUI in a 3D way
+    val silentGUI by boolean("SilentGUI", false).subjective()
+
+    // TODO: Add an option to show the ChestStealer route
+    val highlightSlot by boolean("HighlightSlot", false) { !silentGUI }.subjective()
+    val backgroundColor =
+        color("BackgroundColor", Color(128, 128, 128)) { highlightSlot && !silentGUI }.subjective()
+    val missClickBackgroundColor =
+        color("MissClickBackgroundColor", Color(255, 0, 0)) { highlightSlot && !silentGUI }.subjective()
+
+    val borderStrength by int("BorderStrength", 3, 1..5) { highlightSlot && !silentGUI }.subjective()
+    val borderColor = color("BorderColor", Color(128, 128, 128)) { highlightSlot && !silentGUI }.subjective()
+
+    private val chestDebug by choices("ChestDebug", arrayOf("Off", "Text", "Notification"), "Off").subjective()
+    private val itemStolenDebug by boolean("ItemStolenDebug", false) { chestDebug != "Off" }.subjective()
+
+    private var progress: Float? = null
+        set(value) {
+            field = value?.coerceIn(0f, 1f)
+
+            if (field == null)
+                easingProgress = 0f
+        }
+
+    private var easingProgress = 0f
+    private var receivedId: Int? = null
+    private var stacks = emptyList<ItemStack?>()
+
+    var pauseAfterMissClickLength = pauseAfterMissClick.random().toLong()
+
+    var lastClickIsMissClick = false
+
+    var isCustomGUI = false
+
+    private suspend fun shouldOperate(): Boolean {
+        while (true) {
+            if (!handleEvents())
+                return false
+
+            if (mc.interactionManager?.gameMode?.isSurvivalOrAdventure != true)
+                return false
+
+            if (mc.screen !is ChestScreen)
+                return false
+
+            if (mc.player?.menu?.networkId != receivedId)
+                return false
+
+            // Wait until NoMove check isn't violated
+            if (canClickInventory())
+                return true
+
+            // If NoMove is violated, wait a tick and check again
+            // If there is no delay, very weird things happen: https://www.guilded.gg/CCBlueX/groups/1dgpg8Jz/channels/034be45e-1b72-4d5a-bee7-d6ba52ba1657/chat?messageId=94d314cd-6dc4-41c7-84a7-212c8ea1cc2a
+            delay(50)
+        }
+    }
+
+    suspend fun stealFromChest() {
+        if (!handleEvents())
+            return
+
+        val player = mc.player ?: return
+        val screen = mc.screen ?: return
+
+        if (screen !is ChestScreen)
+            return
+
+        isCustomGUI = chestTitle && chest.name !in (screen.lowerChestInventory ?: return).name
+
+        // Check if chest isn't a custom GUI or shouldn't operate for another reason
+        if (isCustomGUI || !shouldOperate())
+            return
+
+        progress = 0f
+
+        delay(startDelay.random().toLong())
+
+        debug("Stealing items...")
+
+        // Go through the chest multiple times, until there are no useful items
+        while (true) {
+            if (!shouldOperate())
+                return
+
+            if (!hasSpaceInInventory())
+                return
+
+            var hasTaken = false
+
+            val itemsToSteal = getItemsToSteal()
+
+            run scheduler@{
+                itemsToSteal.forEachIndexed { index, (slot, stack, sortableTo) ->
+                    // Wait for NoMove or cancel click
+                    if (!shouldOperate()) {
+                        nextTick { SilentHotbar.resetSlot() }
+                        chestStealerCurrentSlot = -1
+                        chestStealerLastSlot = -1
+                        return
+                    }
+
+                    if (!hasSpaceInInventory()) {
+                        chestStealerCurrentSlot = -1
+                        chestStealerLastSlot = -1
+                        return@scheduler
+                    }
+
+                    hasTaken = true
+
+                    val dist = if (index + 1 < itemsToSteal.size)
+                        squaredDistanceOfSlots(slot, itemsToSteal[index + 1].index)
+                    else 1
+
+                    val missClickingChance = missClickChance * if (missClickChanceDistMult) dist else 1
+
+                    if (missClick && withinChance(missClickingChance)) {
+                        performMissClick(screen, screen.slots.slots[slot])
+                        delay(pauseAfterMissClickLength)
+                    }
+
+                    // Set current slot being stolen for highlighting
+                    chestStealerCurrentSlot = slot
+
+                    val stealingDelay = delay.random() + if (smartDelay && index + 1 < itemsToSteal.size) {
+                        sqrt(dist.toDouble()) * multiplier.random()
+                    } else 0.0
+
+                    if (itemStolenDebug) debug("Stole ${stack.displayName.lowercase()} on slot ${slot}. Delay: ${stealingDelay}ms")
+
+                    // If target is sortable to a hotbar slot, steal and sort it at the same time, else shift + left-click
+                    clickNextTick(slot, sortableTo ?: 0, if (sortableTo != null) 2 else 1) {
+                        progress = (index + 1) / itemsToSteal.size.toFloat()
+
+                        if (!AutoArmor.canEquipFromChest())
+                            return@clickNextTick
+
+                        val item = stack.item
+
+                        if (item !is ArmorItem || player.inventory.armor[getArmorPosition(stack) - 1] != null)
+                            return@clickNextTick
+
+                        // TODO: should the stealing be suspended until the armor gets equipped and some delay on top of that, maybe toggleable?
+                        // Try to equip armor piece from hotbar 1 tick after stealing it
+                        nextTick {
+                            val hotbarStacks = player.inventory.items.take(9)
+
+                            // Can't get index of stack instance, because it is different even from the one returned from clickSlot()
+                            val newIndex = hotbarStacks.indexOfFirst { it?.getIsItemStackEqual(stack) == true }
+
+                            if (newIndex != -1)
+                                AutoArmor.equipFromHotbarInChest(newIndex, stack)
+                        }
+                    }
+
+                    lastClickIsMissClick = false
+
+                    delay(stealingDelay.toLong())
+
+                    if (simulateShortStop && withinChance(shortStopChance)) 
+                        delay(shortStopLength.random().toLong())                    
+                }
+            }
+
+            // If no clicks were sent in the last loop stop searching
+            if (!hasTaken) {
+                progress = 1f
+                delay(closeDelay.random().toLong())
+
+                nextTick { SilentHotbar.resetSlot() }
+                break
+            }
+
+            // Wait until all scheduled clicks were sent
+            awaitTicked()
+
+            // Before closing the chest, check all items once more; the server may have cancelled some of the actions
+            stacks = player.menu.inventory
+        }
+
+        // Wait before the chest gets closed (if it gets closed out of tick loop it could throw an NPE)
+        nextTick {
+            chestStealerCurrentSlot = -1
+            chestStealerLastSlot = -1
+            player.closeMenu()
+            progress = null
+
+            debug("Chest closed")
+        }
+
+        awaitTicked()
+    }
+
+    private fun squaredDistanceOfSlots(from: Int, to: Int): Int {
+        fun getCoords(slot: Int): IntArray {
+            val x = slot % 9
+            val y = slot / 9
+            return intArrayOf(x, y)
+        }
+
+        val (x1, y1) = getCoords(from)
+        val (x2, y2) = getCoords(to)
+        return (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)
+    }
+
+    private data class ItemTakeRecord(
+        val index: Int,
+        val stack: ItemStack,
+        val sortableToSlot: Int?
+    )
+
+    private fun getItemsToSteal(): List<ItemTakeRecord> {
+        val sortBlacklist = BooleanArray(9)
+
+        var spaceInInventory = countSpaceInInventory()
+
+        val itemsToSteal = stacks.dropLast(36)
+            .mapIndexedNotNullTo(ArrayList(32)) { index, stack ->
+                stack ?: return@mapIndexedNotNullTo null
+
+                if (isTicked(index)) return@mapIndexedNotNullTo null
+
+                val mergeableCount = mc.player.inventory.items.sumOf { otherStack ->
+                    otherStack ?: return@sumOf 0
+
+                    if (otherStack.isItemEqual(stack) && ItemStack.areItemStackTagsEqual(stack, otherStack))
+                        otherStack.maxStackSize - otherStack.size
+                    else 0
+                }
+
+                val canMerge = mergeableCount > 0
+                val canFullyMerge = mergeableCount >= stack.size
+
+                // Clicking this item wouldn't take it from chest or merge it
+                if (!canMerge && spaceInInventory <= 0) return@mapIndexedNotNullTo null
+
+                // If stack can be merged without occupying any additional slot, do not take stack limits into account
+                // TODO: player could theoretically already have too many stacks in inventory before opening the chest so no more should even get merged
+                // TODO: if it can get merged but would also need another slot, it could simulate 2 clicks, one which maxes out the stack in inventory and second that puts excess items back
+                if (InventoryCleaner.handleEvents() && !isStackUseful(stack, stacks, noLimits = canFullyMerge))
+                    return@mapIndexedNotNullTo null
+
+                var sortableTo: Int? = null
+
+                // If stack can get merged, do not try to sort it, normal shift + left-click will merge it
+                if (!canMerge && InventoryCleaner.handleEvents() && InventoryCleaner.sort) {
+                    for (hotbarIndex in 0..8) {
+                        if (sortBlacklist[hotbarIndex])
+                            continue
+
+                        if (!canBeSortedTo(hotbarIndex, stack.item))
+                            continue
+
+                        val hotbarStack = stacks.getOrNull(stacks.size - 9 + hotbarIndex)
+
+                        // If occupied hotbar slot isn't already sorted or isn't strictly best, sort to it
+                        if (!canBeSortedTo(hotbarIndex, hotbarStack?.item) || !isStackUseful(
+                                hotbarStack,
+                                stacks,
+                                strictlyBest = true
+                            )
+                        ) {
+                            sortableTo = hotbarIndex
+                            sortBlacklist[hotbarIndex] = true
+                            break
+                        }
+                    }
+                }
+
+                // If stack gets fully merged, no slot in inventory gets occupied
+                if (!canFullyMerge) spaceInInventory--
+
+                ItemTakeRecord(index, stack, sortableTo)
+            }.also { it ->
+                when (sorting) {
+                    "Normal" -> {
+                        // Prioritise armor pieces with lower priority, so that as many pieces can get equipped from hotbar after chest gets closed
+                        it.sortByDescending { it.stack.item is ArmorItem }
+
+                        // Prioritize items that can be sorted
+                        it.sortByDescending { it.sortableToSlot != null }
+
+                        // Fully prioritise armor pieces when it is possible to equip armor while in chest
+                        if (AutoArmor.canEquipFromChest())
+                            it.sortByDescending { it.stack.item is ArmorItem }
+                    }
+
+                    "Random" -> it.shuffle()
+                    "Distance" -> sortBasedOnOptimumPath(it)
+                }
+            }
+
+        return itemsToSteal
+    }
+ 
+    private fun performMissClick(screen: ChestScreen, targetSlot: InventorySlot) {
+        val closestEmptySlot = screen.slots.slots
+            .filter { it.stack == null || it.stack.size == 0 }
+            .minByOrNull { otherSlot ->
+                squaredDistanceOfSlots(targetSlot.slotNumber, otherSlot.slotNumber)
+            } ?: return
+
+        val slotId = closestEmptySlot.slotNumber
+        pauseAfterMissClickLength = pauseAfterMissClick.random().toLong()
+
+        clickNextTick(slotId, 0, 1)
+
+        if (itemStolenDebug)
+            debug("Miss-clicked on slot $slotId. Delay until next click: ${pauseAfterMissClickLength}ms")
+
+        chestStealerCurrentSlot = slotId
+
+        lastClickIsMissClick = true
+    }
+
+    private fun sortBasedOnOptimumPath(itemsToSteal: MutableList<ItemTakeRecord>) {
+        for (i in itemsToSteal.indices) {
+            var nextIndex = i
+            var minDistance = Int.MAX_VALUE
+            var next: ItemTakeRecord? = null
+
+            for (j in i + 1 until itemsToSteal.size) {
+                val distance = squaredDistanceOfSlots(itemsToSteal[i].index, itemsToSteal[j].index)
+
+                if (distance < minDistance) {
+                    minDistance = distance
+                    next = itemsToSteal[j]
+                    nextIndex = j
+                }
+            }
+
+            if (next != null) {
+                itemsToSteal[nextIndex] = itemsToSteal[i + 1]
+                itemsToSteal[i + 1] = next
+            }
+        }
+    }
+
+    // Progress bar
+    val onRender2D = handler<Render2DEvent> { event ->
+        if (!progressBar || mc.screen !is ChestScreen)
+            return@handler
+
+        val progress = progress ?: return@handler
+
+        val (scaledWidth, scaledHeight) = Window(mc)
+
+        val minX = scaledWidth * 0.3f
+        val maxX = scaledWidth * 0.7f
+        val minY = scaledHeight * 0.75f
+        val maxY = minY + 10f
+
+        easingProgress += (progress - easingProgress) / 6f * event.partialTicks
+
+        drawRect(minX - 2, minY - 2, maxX + 2, maxY + 2, Color(200, 200, 200).rgb)
+        drawRect(minX, minY, maxX, maxY, Color(50, 50, 50).rgb)
+        drawRect(
+            minX,
+            minY,
+            minX + (maxX - minX) * easingProgress,
+            maxY,
+            Color.HSBtoRGB(easingProgress / 5, 1f, 1f) or 0xFF0000
+        )
+    }
+
+    val onPacket = handler<PacketEvent> { event ->
+        when (val packet = event.packet) {
+            is CloseInventoryMenuC2SPacket, is OpenInventoryMenuS2CPacket, is CloseInventoryMenuS2CPacket -> {
+                receivedId = null
+                progress = null
+            }
+
+            is InventoryMenuContentS2CPacket -> {
+                // Chests never have networkId 0
+                val packetWindowId = packet.func_148911_c()
+
+                if (packetWindowId == 0)
+                    return@handler
+
+                if (receivedId != packetWindowId) {
+                    debug("Chest opened with ${stacks.size} items")
+                }
+
+                receivedId = packetWindowId
+
+                stacks = packet.cursorItems.toList()
+            }
+        }
+    }
+
+    private fun debug(message: String) = when (chestDebug) {
+        "Text" -> chat(message)
+        //"Notification" -> hud.addNotification(Notification(message, 500L))
+        else -> null
+    }
+}
