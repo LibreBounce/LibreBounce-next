@@ -7,8 +7,8 @@ import kotlinx.coroutines.delay
 import net.librebounce.event.PacketEvent
 import net.librebounce.event.Render2DEvent
 import net.librebounce.event.handler
-import net.librebounce.features.module.Category
-import net.librebounce.features.module.Module
+import net.librebounce.features.module.base.Category
+import net.librebounce.features.module.base.Module
 import net.librebounce.features.module.impl.combat.AutoArmor
 import net.librebounce.features.module.impl.player.InventoryCleaner
 import net.librebounce.features.module.impl.player.InventoryCleaner.canBeSortedTo
@@ -34,7 +34,7 @@ import net.librebounce.utils.timing.TimeUtils.randomDelay
 import net.minecraft.client.render.Window
 import net.minecraft.client.gui.screen.inventory.menu.ChestScreen
 import net.minecraft.inventory.slot.InventorySlot
-import net.minecraft.entity.EntityLiving.getArmorPosition
+import net.minecraft.entity.LivingEntity.getArmorPosition
 import net.minecraft.init.Blocks.chest
 import net.minecraft.item.ArmorItem
 import net.minecraft.item.ItemStack

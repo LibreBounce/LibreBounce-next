@@ -2,8 +2,8 @@ package net.librebounce.features.module.impl.player
 
 import kotlinx.coroutines.delay
 import net.librebounce.config.ListValue
-import net.librebounce.features.module.Category
-import net.librebounce.features.module.Module
+import net.librebounce.features.module.base.Category
+import net.librebounce.features.module.base.Module
 import net.librebounce.features.module.impl.combat.AutoArmor
 import net.librebounce.utils.block.BlockUtils.isFullBlock
 import net.librebounce.utils.client.chat

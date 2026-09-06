@@ -3,8 +3,8 @@ package net.librebounce.features.module.impl.combat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import net.librebounce.features.module.Category
-import net.librebounce.features.module.Module
+import net.librebounce.features.module.base.Category
+import net.librebounce.features.module.base.Module
 import net.librebounce.features.module.impl.player.InventoryCleaner.canBeRepairedWithOther
 import net.librebounce.utils.client.PacketUtils.sendPacket
 import net.librebounce.utils.inventory.ArmorComparator.getBestArmorSet
@@ -24,7 +24,7 @@ import net.librebounce.utils.timing.TickedActions.clickNextTick
 import net.librebounce.utils.timing.TickedActions.isTicked
 import net.librebounce.utils.timing.TickedActions.nextTick
 import net.minecraft.client.gui.screen.inventory.menu.SurvivalInventoryScreen
-import net.minecraft.entity.EntityLiving.getArmorPosition
+import net.minecraft.entity.LivingEntity.getArmorPosition
 import net.minecraft.item.ItemStack
 import net.minecraft.network.packet.c2s.play.PlayerUseC2SPacket
 
