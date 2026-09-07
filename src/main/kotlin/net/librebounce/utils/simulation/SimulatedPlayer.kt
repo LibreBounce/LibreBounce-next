@@ -851,7 +851,7 @@ class SimulatedPlayer(
                         try {
                             val block = state.block
 
-                            // We don't want things to negatively interact back to us (cactus, tripwire, tnt or whatever)
+                            // We don't want things to negatively interact back to us (cactus, tripwire, TNT or whatever)
                             if (block is CobwebBlock) {
                                 inCobweb = true
                             } else if (block is SoulSandBlock) {

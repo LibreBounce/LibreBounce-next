@@ -532,7 +532,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
 
             is BowItem ->
                 hasBestParameters(item, items, entityStacksMap) {
-                    it.getEnchantmentLevel(Enchantment.power).toFloat()
+                    it.getEnchantmentLevel(Enchantment.POWER).toFloat()
                 }
 
             else -> false
@@ -944,7 +944,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
     // Check if item is repairable and either has no enchantments or just unbreaking.
     private fun shouldBeRepaired(item: ItemStack?) =
         !item.isEmpty() && item.item.isRepairable && (
-                !item.isItemEnchanted || (item.enchantmentCount == 1 && Enchantment.unbreaking in item.enchantments)
+                !item.isItemEnchanted || (item.enchantmentCount == 1 && Enchantment.UNBREAKING in item.enchantments)
                 )
 
     fun canBeRepairedWithOther(item: ItemStack?, items: List<ItemStack?>): Boolean {
@@ -984,14 +984,14 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
 }
 
 private val ITEMS_WHITELIST = arrayOf(
-    Items.ARR0W, Items.DIAMOND, Items.IRON_INGOT, Items.GOLD_INGOT, Items.STICK
+    Items.ARROW, Items.DIAMOND, Items.IRON_INGOT, Items.GOLD_INGOT, Items.STICK
 )
 
-private val THROWABLE_ITEMS = arrayOf(Items.egg, Items.snowball)
+private val THROWABLE_ITEMS = arrayOf(Items.EGG, Items.SNOWBALL)
 
 val NEGATIVE_EFFECT_IDS = intArrayOf(
-    StatusEffect.moveSlowdown.id, StatusEffect.digSlowdown.id, StatusEffect.harm.id, StatusEffect.confusion.id, StatusEffect.blindness.id,
-    StatusEffect.hunger.id, StatusEffect.weakness.id, StatusEffect.poison.id, StatusEffect.wither.id,
+    StatusEffect.SLOWNESS.id, StatusEffect.MINING_FATIGUE.id, StatusEffect.INSTANT_DAMAGE.id, StatusEffect.NAUSEA.id, StatusEffect.BLINDNESS.id,
+    StatusEffect.HUNGER.id, StatusEffect.WEAKNESS.id, StatusEffect.POISON.id, StatusEffect.WITHER.id,
 )
 
 private val SORTING_TARGETS: Map<String, ((Item?) -> Boolean)?> = mapOf(
@@ -1009,7 +1009,7 @@ private val SORTING_TARGETS: Map<String, ((Item?) -> Boolean)?> = mapOf(
     "Potion" to { it is PotionItem },
     "Throwable" to { it is EggItem || it is SnowballItem },
     "FishingRod" to { it is FishingRodItem },
-    "TNT" to { it == Item.getItemFromBlock(tnt) },
+    "TNT" to { it == Item.byBlock(TNT) },
     "Shears" to { it is ShearsItem },
     "Ignore" to null
 )

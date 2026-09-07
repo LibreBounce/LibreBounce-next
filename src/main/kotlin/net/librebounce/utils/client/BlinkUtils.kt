@@ -77,7 +77,7 @@ object BlinkUtils : MinecraftInstance, Listenable {
                     sendPackets(*packets.toTypedArray(), triggerEvents = false)
                 }
                 if (packet is PlayerMoveC2SPacket && packet.hasPos) {
-                    val packetPos = Vec3d(packet.x, packet.y, packet.z)
+                    val packetPos = Vec3d(packet.x, packet.minY, packet.z)
                     synchronized(positions) {
                         positions += packetPos
                     }
@@ -99,7 +99,7 @@ object BlinkUtils : MinecraftInstance, Listenable {
                     packets += packet
                 }
                 if (packet is PlayerMoveC2SPacket && packet.hasPos) {
-                    val packetPos = Vec3d(packet.x, packet.y, packet.z)
+                    val packetPos = Vec3d(packet.x, packet.minY, packet.z)
                     synchronized(positions) {
                         positions += packetPos
                     }
