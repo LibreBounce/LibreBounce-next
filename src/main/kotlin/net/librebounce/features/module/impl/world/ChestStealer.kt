@@ -305,7 +305,7 @@ object ChestStealer : Module("ChestStealer", Category.WORLD) {
                 val mergeableCount = mc.player.inventory.items.sumOf { otherStack ->
                     otherStack ?: return@sumOf 0
 
-                    if (otherStack.isItemEqual(item) && ItemStack.areItemStackTagsEqual(item, otherStack))
+                    if (otherStack.isItemEqual(item) && ItemStack.matchesNbt(item, otherStack))
                         otherStack.maxSize - otherStack.size
                     else 0
                 }

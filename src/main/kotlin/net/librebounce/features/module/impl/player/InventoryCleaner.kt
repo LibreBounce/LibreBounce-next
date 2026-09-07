@@ -165,7 +165,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
                                     && clickedStack.size + itemToMerge.size <= clickedStack.maxSize
                                     // Check if items have the same NBT data and are actually mergeable
                                     && clickedStack.isItemEqual(itemToMerge)
-                                    && ItemStack.areItemStackTagsEqual(clickedStack, itemToMerge)
+                                    && ItemStack.matchesNbt(clickedStack, itemToMerge)
                         }
                     }?.index
                 }
@@ -256,7 +256,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
 
                 // Handle armor repairs with support for AutoArmor smart-swapping and equipping straight from crafting output
                 if (repairedItem is ArmorItem) {
-                    val armorSlot = repairedItem.armorType + 5
+                    val armorSlot = repairedItem.slot + 5
                     var equipAfterCrafting = true
 
                     // Check if armor can be equipped straight from crafting output
@@ -289,7 +289,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
                         click(0, 0, 0)
 
                         // Place it in armor slot
-                        click(repairedItem.armorType + 5, 0, 0)
+                        click(repairedItem.slot + 5, 0, 0)
 
                         continue@repair
                     }
@@ -504,7 +504,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
                 }
 
                 return hasBestParameters(item, items, entityStacksMap) {
-                    it.item.getStrVsBlock(it, blockType) * it.durability
+                    it.item.getMiningSpeed(it, blockType) * it.durability
                 }
             }
 
@@ -545,7 +545,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
         if (item !is PotionItem) return false
 
         val isSplash = item.isSplashPotion()
-        val isHarmful = item.getEffects(item)?.any { it.id in NEGATIVE_EFFECT_IDS } ?: return false
+        val isHarmful = item.getPotionEffects(item)?.any { it.id in NEGATIVE_EFFECT_IDS } ?: return false
 
         // Only keep helpful potions and, if 'onlyGoodPotions' is disabled, also splash harmful potions
         return !isHarmful || (!onlyGoodPotions && isSplash)
@@ -614,7 +614,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
         } else if (maxFoodStacks == 0)
             return false
 
-        val itemSaturation = item.getSaturationModifier(item) * item.size
+        val itemSaturation = item.getSaturation(item) * item.size
 
         val index = items.indexOf(item)
 
@@ -641,7 +641,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
             // Items dropped on ground should have index -1
             val otherIndex = if (otherIndex > items.lastIndex) -1 else otherIndex
 
-            val otherStackSaturation = otherItem.getSaturationModifier(otherStack) * otherStack.size
+            val otherStackSaturation = otherItem.getSaturation(otherStack) * otherStack.size
 
             when (otherStackSaturation.compareTo(itemSaturation)) {
                 // Other item has bigger saturation sum

@@ -78,13 +78,13 @@ object AutoArmor : Module("AutoArmor", Category.COMBAT) {
 
         val bestArmorSet = getBestArmorSet(items) ?: return
 
-        for (armorType in 0..3) {
-            val (index, item) = bestArmorSet[armorType] ?: continue
+        for (slot in 0..3) {
+            val (index, item) = bestArmorSet[slot] ?: continue
 
             // Check if the armor piece is in the hotbar
             val hotbarIndex = index?.toHotbarIndex(items.size) ?: continue
 
-            if (isTicked(index) || isTicked(armorType + 5))
+            if (isTicked(index) || isTicked(slot + 5))
                 continue
 
             if (!item.hasItemAgePassed(minItemAge))
@@ -142,7 +142,7 @@ object AutoArmor : Module("AutoArmor", Category.COMBAT) {
 
         val player = mc.player ?: return
 
-        for (armorType in 0..3) {
+        for (slot in 0..3) {
             if (!shouldOperate()) {
                 autoArmorCurrentSlot = -1
                 autoArmorLastSlot = -1
@@ -156,13 +156,13 @@ object AutoArmor : Module("AutoArmor", Category.COMBAT) {
             val armorSet = getBestArmorSet(items) ?: continue
 
             // Shouldn't iterate over armor set because after waiting for nomove and invopen it could be outdated
-            val (index, item) = armorSet[armorType] ?: continue
+            val (index, item) = armorSet[slot] ?: continue
 
             // Index is null when searching in chests for already equipped armor to prevent any accidental impossible interactions
             index ?: continue
 
             // Check if best item is already scheduled to be equipped next tick
-            if (isTicked(index) || isTicked(armorType + 5))
+            if (isTicked(index) || isTicked(slot + 5))
                 continue
 
             if (!item.hasItemAgePassed(minItemAge))
@@ -176,7 +176,7 @@ object AutoArmor : Module("AutoArmor", Category.COMBAT) {
             // Set current slot being stolen for highlighting
             autoArmorCurrentSlot = index
 
-            when (items[armorType + 5]) {
+            when (items[slot + 5]) {
                 // Best armor is already equipped
                 item -> {
                     autoArmorCurrentSlot = -1
@@ -198,7 +198,7 @@ object AutoArmor : Module("AutoArmor", Category.COMBAT) {
                         click(index, 0, 0)
 
                         // Swap it with currently equipped armor
-                        click(armorType + 5, 0, 0)
+                        click(slot + 5, 0, 0)
 
                         // Drop worse item by dragging and dropping it
                         click(-999, 0, 0)
@@ -206,7 +206,7 @@ object AutoArmor : Module("AutoArmor", Category.COMBAT) {
                         // Normal version
 
                         // Drop worse armor
-                        click(armorType + 5, 0, 4)
+                        click(slot + 5, 0, 4)
 
                         // Equip better armor
                         click(index, 0, 1)

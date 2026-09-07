@@ -6,7 +6,7 @@ import net.minecraft.entity.ItemEntity
 import net.minecraft.item.ArmorItem
 import net.minecraft.item.ItemStack
 
-/*object ArmorComparator: MinecraftInstance {
+object ArmorComparator: MinecraftInstance {
     fun getBestArmorSet(items: List<ItemStack?>, entityStacksMap: Map<ItemStack, ItemEntity>? = null): ArmorSet? {
         val player = mc.player ?: return null
 
@@ -131,4 +131,3 @@ class ArmorSet(private vararg val armorPairs: Pair<Int?, ItemStack>?) : Iterable
 operator fun ArmorSet?.contains(item: ItemStack) = this?.contains(item) ?: true
 
 private val NULL_LIST = listOf<Pair<Int?, ItemStack>?>(null)
-*/
