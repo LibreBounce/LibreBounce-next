@@ -35,7 +35,7 @@ import net.minecraft.client.render.Window
 import net.minecraft.client.gui.screen.inventory.menu.ChestScreen
 import net.minecraft.inventory.slot.InventorySlot
 import net.minecraft.entity.living.LivingEntity.getEquipmentSlot
-import net.minecraft.init.Blocks.chest
+import net.minecraft.block.Blocks.chest
 import net.minecraft.item.ArmorItem
 import net.minecraft.item.ItemStack
 import net.minecraft.network.packet.c2s.play.CloseInventoryMenuC2SPacket
@@ -257,7 +257,7 @@ object ChestStealer : Module("ChestStealer", Category.WORLD) {
             awaitTicked()
 
             // Before closing the chest, check all items once more; the server may have cancelled some of the actions
-            items = player.menu.inventory
+            items = player.menu.items
         }
 
         // Wait before the chest gets closed (if it gets closed out of tick loop it could throw an NPE)

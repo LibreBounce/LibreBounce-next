@@ -27,7 +27,7 @@ import net.minecraft.block.CraftingTableBlock
 import net.minecraft.client.gui.screen.inventory.menu.SurvivalInventoryScreen
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.entity.ItemEntity
-import net.minecraft.init.Blocks.*
+import net.minecraft.block.Blocks.*
 import net.minecraft.item.Items
 import net.minecraft.item.*
 import net.minecraft.entity.living.effect.StatusEffect
@@ -135,7 +135,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
         while (true) {
             if (!shouldOperate()) return
 
-            val items = player.menu.inventory
+            val items = player.menu.items
 
             // List of item indices with different types to be compacted by double-clicking
             val indicesToDoubleClick = items.withIndex()
@@ -206,7 +206,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
         while (true) {
             if (!shouldOperate()) return
 
-            val items = player.menu.inventory
+            val items = player.menu.items
 
             val pairsToRepair = items.withIndex()
                 .filter { (_, item) ->
@@ -338,7 +338,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
             // Stop if player violates invopen or nomove checks
             if (!shouldOperate()) return
 
-            val items = player.menu.inventory
+            val items = player.menu.items
 
             val index = hotbarIndex + 36
 
@@ -396,7 +396,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
             if (isTicked(index))
                 continue
 
-            val items = player.menu.inventory
+            val items = player.menu.items
             val item = items.getOrNull(index) ?: continue
 
             if (!item.hasItemAgePassed(minItemAge))
