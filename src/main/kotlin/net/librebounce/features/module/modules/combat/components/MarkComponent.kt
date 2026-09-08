@@ -1,4 +1,4 @@
-package net.librebounce.features.module.impl.combat.components
+package net.librebounce.features.module.modules.combat.components
 
 import net.librebounce.event.Listenable
 import net.librebounce.event.handler

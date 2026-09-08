@@ -1,16 +1,16 @@
-package net.librebounce.features.module.impl.combat
+package net.librebounce.features.module.modules.combat
 
 import net.librebounce.event.*
 import net.librebounce.features.module.base.Category
 import net.librebounce.features.module.base.Module
 import net.librebounce.features.module.base.settings.RotationSettings
 import net.librebounce.features.module.base.settings.RandomizationSettings
-import net.librebounce.features.module.impl.combat.AutoClicker
-import net.librebounce.features.module.impl.combat.components.MarkComponent
-//import net.librebounce.features.module.impl.combat.Backtrack.runWithSimulatedPosition
-//import net.librebounce.features.module.impl.world.Fucker
-//import net.librebounce.features.module.impl.world.Nuker
-//import net.librebounce.features.module.impl.world.scaffolds.*
+import net.librebounce.features.module.modules.combat.AutoClicker
+import net.librebounce.features.module.modules.combat.components.MarkComponent
+//import net.librebounce.features.module.modules.combat.Backtrack.runWithSimulatedPosition
+//import net.librebounce.features.module.modules.world.Fucker
+//import net.librebounce.features.module.modules.world.Nuker
+//import net.librebounce.features.module.modules.world.scaffolds.*
 import net.librebounce.utils.attack.EntityUtils.isLookingOnEntities
 import net.librebounce.utils.attack.EntityUtils.isSelected
 import net.librebounce.utils.extensions.*

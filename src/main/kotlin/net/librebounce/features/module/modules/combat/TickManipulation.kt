@@ -1,4 +1,4 @@
-package net.librebounce.features.module.impl.combat
+package net.librebounce.features.module.modules.combat
 
 import kotlinx.coroutines.Dispatchers
 import net.librebounce.event.AttackEvent

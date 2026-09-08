@@ -1,6 +1,6 @@
 package net.librebounce.mixins.modules;
 
-import net.librebounce.features.module.impl.render.Rotations;
+import net.librebounce.features.module.modules.render.Rotations;
 import net.librebounce.utils.rotation.Rotation;
 import net.minecraft.client.entity.living.player.LocalClientPlayerEntity;
 import net.minecraft.entity.living.LivingEntity;

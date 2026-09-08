@@ -1,4 +1,4 @@
-package net.librebounce.features.module.impl.combat
+package net.librebounce.features.module.modules.combat
 
 import net.librebounce.event.AttackEvent
 import net.librebounce.event.UpdateEvent

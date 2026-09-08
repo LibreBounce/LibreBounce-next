@@ -4,9 +4,9 @@ import net.librebounce.event.AttackEvent
 import net.librebounce.event.UpdateEvent
 import net.librebounce.event.Listenable
 import net.librebounce.event.handler
-import net.librebounce.features.module.impl.combat.HitDetector.debug
-import net.librebounce.features.module.impl.combat.HitDetector.hitDelay
-import net.librebounce.features.module.impl.combat.HitDetector.resetTargetAfter
+import net.librebounce.features.module.modules.combat.HitDetector.debug
+import net.librebounce.features.module.modules.combat.HitDetector.hitDelay
+import net.librebounce.features.module.modules.combat.HitDetector.resetTargetAfter
 import net.librebounce.utils.client.chat
 import net.librebounce.utils.client.MinecraftInstance
 import net.librebounce.utils.timing.MSTimer

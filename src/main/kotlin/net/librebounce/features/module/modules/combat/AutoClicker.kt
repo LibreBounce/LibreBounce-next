@@ -1,4 +1,4 @@
-package net.librebounce.features.module.impl.combat
+package net.librebounce.features.module.modules.combat
 
 import net.librebounce.event.Render3DEvent
 import net.librebounce.event.handler
@@ -32,7 +32,6 @@ object AutoClicker : Module("AutoClicker", Category.COMBAT) {
     private val right by boolean("Right", false)
     private val rightSettings = ClickingSettings(this, "Right", right)
     private val onlyBlocks by boolean("OnlyBlocks", true) { right }
-    //private val debug by boolean("Debug", false)
 
     val onRender3D = handler<Render3DEvent> {
         mc.player?.let { player ->

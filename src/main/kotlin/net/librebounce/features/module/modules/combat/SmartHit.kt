@@ -1,11 +1,11 @@
-package net.librebounce.features.module.impl.combat
+package net.librebounce.features.module.modules.combat
 
 import net.librebounce.event.AttackEvent
 import net.librebounce.event.GameTickEvent
 import net.librebounce.event.handler
 import net.librebounce.features.module.base.Module
 import net.librebounce.features.module.base.Category
-import net.librebounce.features.module.impl.combat.HitDetector.hitDelay
+import net.librebounce.features.module.modules.combat.HitDetector.hitDelay
 import net.librebounce.utils.attack.CombatUtils.canCritHit
 import net.librebounce.utils.attack.CombatUtils.canHit
 import net.librebounce.utils.attack.CombatUtils.lastAttackBlocked

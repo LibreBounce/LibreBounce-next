@@ -2,7 +2,7 @@ package net.librebounce.mixins.modules;
 
 import net.librebounce.LibreBounce;
 import net.librebounce.event.*;
-import net.librebounce.features.module.impl.combat.AutoClicker;
+import net.librebounce.features.module.modules.combat.AutoClicker;
 import net.librebounce.utils.attack.CPSCounter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;

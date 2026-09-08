@@ -1,9 +1,4 @@
-/*
- * LibreBounce Hacked Client
- * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge.
- * https://github.com/CCBlueX/LibreBounce/
- */
-package net.librebounce.features.module.impl.movement
+package net.librebounce.features.module.modules.movement
 
 import net.librebounce.event.PacketEvent
 import net.librebounce.event.UpdateEvent

@@ -1,4 +1,4 @@
-package net.librebounce.features.module.impl.movement
+package net.librebounce.features.module.modules.movement
 
 import net.librebounce.event.UpdateEvent
 import net.librebounce.event.handler

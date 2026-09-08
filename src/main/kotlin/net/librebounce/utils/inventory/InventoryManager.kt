@@ -5,9 +5,9 @@ import kotlinx.coroutines.delay
 import net.librebounce.config.Configurable
 import net.librebounce.event.Listenable
 import net.librebounce.event.async.loopSequence
-import net.librebounce.features.module.impl.combat.AutoArmor
-import net.librebounce.features.module.impl.player.InventoryCleaner
-import net.librebounce.features.module.impl.world.ChestStealer
+import net.librebounce.features.module.modules.combat.AutoArmor
+import net.librebounce.features.module.modules.player.InventoryCleaner
+import net.librebounce.features.module.modules.world.ChestStealer
 import net.librebounce.utils.client.MinecraftInstance
 import net.librebounce.utils.extensions.isMoving
 import net.librebounce.utils.inventory.InventoryUtils.serverOpenInventory

@@ -1,4 +1,4 @@
-package net.librebounce.features.module.impl.movement
+package net.librebounce.features.module.modules.movement
 
 import net.librebounce.features.module.base.Module
 import net.librebounce.features.module.base.Category

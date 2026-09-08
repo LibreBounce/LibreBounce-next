@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package net.librebounce.features.module.impl.world
+package net.librebounce.features.module.modules.world
 
 import kotlinx.coroutines.delay
 //import net.librebounce.LiquidBounce.hud
@@ -9,10 +9,10 @@ import net.librebounce.event.Render2DEvent
 import net.librebounce.event.handler
 import net.librebounce.features.module.base.Category
 import net.librebounce.features.module.base.Module
-import net.librebounce.features.module.impl.combat.AutoArmor
-import net.librebounce.features.module.impl.player.InventoryCleaner
-import net.librebounce.features.module.impl.player.InventoryCleaner.canBeSortedTo
-import net.librebounce.features.module.impl.player.InventoryCleaner.isStackUseful
+import net.librebounce.features.module.modules.combat.AutoArmor
+import net.librebounce.features.module.modules.player.InventoryCleaner
+import net.librebounce.features.module.modules.player.InventoryCleaner.canBeSortedTo
+import net.librebounce.features.module.modules.player.InventoryCleaner.isStackUseful
 //import net.librebounce.ui.client.hud.element.elements.Notification
 import net.librebounce.utils.client.chat
 import net.librebounce.utils.extensions.component1

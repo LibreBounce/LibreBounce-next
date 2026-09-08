@@ -1,11 +1,11 @@
-package net.librebounce.features.module.impl.combat
+package net.librebounce.features.module.modules.combat
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import net.librebounce.features.module.base.Category
 import net.librebounce.features.module.base.Module
-import net.librebounce.features.module.impl.player.InventoryCleaner.canBeRepairedWithOther
+import net.librebounce.features.module.modules.player.InventoryCleaner.canBeRepairedWithOther
 import net.librebounce.utils.client.PacketUtils.sendPacket
 import net.librebounce.utils.inventory.ArmorComparator.getBestArmorSet
 import net.librebounce.utils.inventory.InventoryManager

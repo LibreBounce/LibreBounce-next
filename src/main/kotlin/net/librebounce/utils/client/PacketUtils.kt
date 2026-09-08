@@ -2,8 +2,8 @@ package net.librebounce.utils.client
 
 import kotlinx.coroutines.Dispatchers
 import net.librebounce.event.*
-/*import net.librebounce.features.module.impl.combat.FakeLag
-import net.librebounce.features.module.impl.combat.Velocity
+/*import net.librebounce.features.module.modules.combat.FakeLag
+import net.librebounce.features.module.modules.combat.Velocity
 import net.librebounce.injection.implementations.IMixinEntity*/
 import net.librebounce.utils.extensions.currPos
 import net.librebounce.utils.kotlin.removeEach

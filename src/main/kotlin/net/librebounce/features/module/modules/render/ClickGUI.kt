@@ -1,4 +1,4 @@
-package net.librebounce.features.module.impl.render
+package net.librebounce.features.module.modules.render
 
 import net.librebounce.LibreBounce.clickGui
 import net.librebounce.features.module.base.Module

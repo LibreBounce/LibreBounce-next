@@ -1,4 +1,4 @@
-package net.librebounce.features.module.impl.misc
+package net.librebounce.features.module.modules.misc
 
 import net.librebounce.features.module.base.Category
 import net.librebounce.features.module.base.Module

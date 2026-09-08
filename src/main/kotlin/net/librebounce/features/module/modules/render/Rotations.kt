@@ -1,11 +1,11 @@
-package net.librebounce.features.module.impl.render
+package net.librebounce.features.module.modules.render
 
 import net.librebounce.event.EventState
 import net.librebounce.event.MotionEvent
 import net.librebounce.event.handler
 import net.librebounce.features.module.base.Category
 import net.librebounce.features.module.base.Module
-//import net.librebounce.features.module.impl.`fun`.Derp
+//import net.librebounce.features.module.modules.`fun`.Derp
 import net.librebounce.utils.rotation.Rotation
 import net.librebounce.utils.rotation.RotationUtils.currentRotation
 import net.librebounce.utils.rotation.RotationUtils.serverRotation

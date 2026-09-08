@@ -1,4 +1,4 @@
-package net.librebounce.features.module.impl.world.scaffold.components
+package net.librebounce.features.module.modules.world.scaffold.components
 
 import net.librebounce.config.Configurable
 import net.librebounce.event.Listenable

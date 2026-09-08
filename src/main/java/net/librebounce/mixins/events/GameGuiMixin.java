@@ -7,9 +7,9 @@ package net.librebounce.mixins.events;
 
 import net.librebounce.event.EventManager;
 import net.librebounce.event.Render2DEvent;
-/*import net.librebounce.features.module.impl.render.AntiBlind;
-import net.librebounce.features.module.impl.render.HUD;
-import net.librebounce.features.module.impl.render.SilentHotbarModule;
+/*import net.librebounce.features.module.modules.render.AntiBlind;
+import net.librebounce.features.module.modules.render.HUD;
+import net.librebounce.features.module.modules.render.SilentHotbarModule;
 import net.librebounce.ui.font.AWTFontRenderer;
 import net.librebounce.utils.client.ClassUtils;
 import net.librebounce.utils.inventory.SilentHotbar;

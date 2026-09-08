@@ -1,10 +1,10 @@
-package net.librebounce.features.module.impl.player
+package net.librebounce.features.module.modules.player
 
 import kotlinx.coroutines.delay
 import net.librebounce.config.ListValue
 import net.librebounce.features.module.base.Category
 import net.librebounce.features.module.base.Module
-import net.librebounce.features.module.impl.combat.AutoArmor
+import net.librebounce.features.module.modules.combat.AutoArmor
 import net.librebounce.utils.block.BlockUtils.isFullBlock
 import net.librebounce.utils.client.chat
 import net.librebounce.utils.extensions.shuffled

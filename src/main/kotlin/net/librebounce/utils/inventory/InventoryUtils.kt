@@ -1,9 +1,9 @@
 package net.librebounce.utils.inventory
 
 import net.librebounce.event.*
-import net.librebounce.features.module.impl.misc.NoSlotSet
-//import net.librebounce.features.module.impl.render.SilentHotbarModule
-//import net.librebounce.features.module.impl.world.ChestAura
+import net.librebounce.features.module.modules.misc.NoSlotSet
+//import net.librebounce.features.module.modules.render.SilentHotbarModule
+//import net.librebounce.features.module.modules.world.ChestAura
 import net.librebounce.utils.client.MinecraftInstance
 //import net.librebounce.utils.client.PacketUtils.sendPacket
 import net.librebounce.utils.extensions.lerpWith

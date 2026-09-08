@@ -1,8 +1,3 @@
-/*
- * LibreBounce Hacked Client
- * A free open source mixin-based injection hacked client for Minecraft using Minecraft Forge.
- * https://github.com/CCBlueX/LibreBounce/
- */
 package net.librebounce.features.module
 
 import net.librebounce.event.KeyEvent
@@ -12,28 +7,28 @@ import net.librebounce.features.command.CommandManager.registerCommand
 import net.librebounce.features.command.impl.ModuleCommand
 import net.librebounce.features.module.base.Category
 import net.librebounce.features.module.base.Module
-import net.librebounce.features.module.impl.combat.*
-import net.librebounce.features.module.impl.misc.NoSlotSet
-/*import net.librebounce.features.module.impl.exploit.*
-import net.librebounce.features.module.impl.`fun`.Derp
-import net.librebounce.features.module.impl.`fun`.SkinDerp
-import net.librebounce.features.module.impl.`fun`.SnakeGame
-import net.librebounce.features.module.impl.misc.*
-import net.librebounce.features.module.impl.misc.cheatdetector.CheatDetector*/
-import net.librebounce.features.module.impl.movement.*
-import net.librebounce.features.module.impl.render.*
-import net.librebounce.features.module.impl.world.*
-/*import net.librebounce.features.module.impl.movement.*
-import net.librebounce.features.module.impl.movement.fly.Fly
-import net.librebounce.features.module.impl.movement.liquidwalk.LiquidWalk
-import net.librebounce.features.module.impl.movement.longjump.LongJump
-import net.librebounce.features.module.impl.movement.noweb.NoWeb
-import net.librebounce.features.module.impl.movement.speed.Speed
-import net.librebounce.features.module.impl.player.*
-import net.librebounce.features.module.impl.player.nofall.NoFall
-import net.librebounce.features.module.impl.world.Timer
-import net.librebounce.features.module.impl.world.scaffolds.Scaffold*/
-import net.librebounce.features.module.impl.player.*
+import net.librebounce.features.module.modules.combat.*
+import net.librebounce.features.module.modules.misc.NoSlotSet
+/*import net.librebounce.features.module.modules.exploit.*
+import net.librebounce.features.module.modules.`fun`.Derp
+import net.librebounce.features.module.modules.`fun`.SkinDerp
+import net.librebounce.features.module.modules.`fun`.SnakeGame
+import net.librebounce.features.module.modules.misc.*
+import net.librebounce.features.module.modules.misc.cheatdetector.CheatDetector*/
+import net.librebounce.features.module.modules.movement.*
+import net.librebounce.features.module.modules.render.*
+import net.librebounce.features.module.modules.world.*
+/*import net.librebounce.features.module.modules.movement.*
+import net.librebounce.features.module.modules.movement.fly.Fly
+import net.librebounce.features.module.modules.movement.liquidwalk.LiquidWalk
+import net.librebounce.features.module.modules.movement.longjump.LongJump
+import net.librebounce.features.module.modules.movement.noweb.NoWeb
+import net.librebounce.features.module.modules.movement.speed.Speed
+import net.librebounce.features.module.modules.player.*
+import net.librebounce.features.module.modules.player.nofall.NoFall
+import net.librebounce.features.module.modules.world.Timer
+import net.librebounce.features.module.modules.world.scaffolds.Scaffold*/
+import net.librebounce.features.module.modules.player.*
 import net.librebounce.utils.client.ClientUtils.LOGGER
 import net.librebounce.utils.client.chat
 import java.util.*
