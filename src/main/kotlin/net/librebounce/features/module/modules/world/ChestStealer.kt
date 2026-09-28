@@ -32,7 +32,7 @@ import net.librebounce.utils.timing.TickedActions.isTicked
 import net.librebounce.utils.timing.TickedActions.nextTick
 import net.librebounce.utils.timing.TimeUtils.randomDelay
 import net.minecraft.client.render.Window
-import net.minecraft.client.gui.screen.game.inventory.menu.ChestScreen
+import net.minecraft.client.gui.screen.game.inventory.ChestScreen
 import net.minecraft.inventory.slot.InventorySlot
 import net.minecraft.entity.living.LivingEntity.getEquipmentSlot
 import net.minecraft.block.Blocks.CHEST
@@ -454,7 +454,7 @@ object ChestStealer : Module("ChestStealer", Category.WORLD) {
 
             is InventoryMenuContentS2CPacket -> {
                 // Chests never have networkId 0
-                val packetWindowId = packet.func_148911_c()
+                val packetWindowId = packet.menuId()
 
                 if (packetWindowId == 0)
                     return@handler

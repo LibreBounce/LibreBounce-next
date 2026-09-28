@@ -3,8 +3,8 @@ package net.librebounce.utils.client
 import kotlinx.coroutines.launch
 //import net.librebounce.ui.client.TitleScreen
 import net.librebounce.utils.kotlin.SharedScopes
-import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen
-import net.minecraft.client.gui.screen.ConnectScreen
+import net.minecraft.client.gui.screen.menu.multiplayer.MultiplayerScreen
+import net.minecraft.client.gui.screen.menu.multiplayer.ConnectScreen
 import net.minecraft.client.network.ServerAddress
 import net.minecraft.client.options.ServerListEntry
 import net.minecraft.client.network.handler.ClientLoginNetworkHandler
