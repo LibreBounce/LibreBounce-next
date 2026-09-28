@@ -10,6 +10,9 @@ object RenderUtils {
     fun drawString(font: Font, text: String, x: Float, y: Float, color: Color, shadow: Boolean = false) = drawString(font, text, x, y, color.rgb, shadow)
     fun drawString(font: Font, text: String, x: Float, y: Float, color: Int, shadow: Boolean = false) = drawUtil.`axolotlclient_rendering$drawString`(font, text, x, y, color, shadow)
 
+    fun drawRect(x: Int, y: Int, x1: Int, y2: Int, color: Color) = drawRect(x, y, x1, y2, color.rgb)
+    fun drawRect(x: Int, y: Int, x1: Int, y2: Int, color: Int) = drawUtil.`axolotlclient_rendering$roundedRect`(x, y, x1, y2, color, 0f)
+
     fun drawRoundedRect(x: Int, y: Int, x1: Int, y2: Int, color: Color, rounding: Float = 0f) = drawRoundedRect(x, y, x1, y2, color.rgb, rounding)
     fun drawRoundedRect(x: Int, y: Int, x1: Int, y2: Int, color: Int, rounding: Float = 0f) = drawUtil.`axolotlclient_rendering$roundedRect`(x, y, x1, y2, color, rounding)
 

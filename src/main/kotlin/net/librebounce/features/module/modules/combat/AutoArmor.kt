@@ -24,7 +24,7 @@ import net.librebounce.utils.timing.TickedActions.clickNextTick
 import net.librebounce.utils.timing.TickedActions.isTicked
 import net.librebounce.utils.timing.TickedActions.nextTick
 import net.minecraft.client.gui.screen.inventory.menu.SurvivalInventoryScreen
-import net.minecraft.entity.living.MobEntity.getEquipmentSlot
+import net.minecraft.entity.living.mob.MobEntity.getEquipmentSlot
 import net.minecraft.item.ItemStack
 import net.minecraft.network.packet.c2s.play.PlayerUseC2SPacket
 
@@ -245,7 +245,7 @@ object AutoArmor : Module("AutoArmor", Category.COMBAT) {
             if (!passedPostInventoryCloseDelay)
                 return false
 
-            if (mc.interactionManager?.gameMode?.isSurvivalOrAdventure != true)
+            if (mc.interactionManager?.gameMode?.isSurvival != true)
                 return false
 
             // It is impossible to equip armor when a container is open; only try to equip by right-clicking from hotbar (if NotInContainers is disabled)

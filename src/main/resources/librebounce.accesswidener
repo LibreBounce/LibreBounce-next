@@ -47,6 +47,8 @@ mutable field net/minecraft/util/math/Vec3d z D
 accessible field net/minecraft/client/options/KeyBinding pressed Z
 accessible field net/minecraft/client/options/KeyBinding clickCount I
 
+accessible field net/minecraft/client/gui/screen/game/inventory/ChestScreen inventory Lnet/minecraft/inventory/Inventory;
+
 accessible method net/minecraft/client/ClientPlayerInteractionManager updateSelectedHotbarSlot ()V
 accessible field net/minecraft/nbt/NbtCompound elements Ljava/util/Map;
 accessible field net/minecraft/nbt/NbtList elements Ljava/util/List;
@@ -55,3 +57,5 @@ accessible field net/minecraft/network/packet/s2c/play/OpenInventoryMenuS2CPacke
 
 accessible method net/minecraft/block/Block defaultState ()Lnet/minecraft/block/state/BlockState;
 accessible field net/minecraft/world/biome/Biome snowy Z
+
+accessible field net/minecraft/network/packet/s2c/play/SoundEventS2CPacket name Ljava/lang/String;

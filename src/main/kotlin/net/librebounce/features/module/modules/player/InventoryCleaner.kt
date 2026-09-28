@@ -105,7 +105,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
             if (!passedPostInventoryCloseDelay)
                 return false
 
-            if (mc.interactionManager?.gameMode?.isSurvivalOrAdventure != true)
+            if (mc.interactionManager?.gameMode?.isSurvival != true)
                 return false
 
             if (mc.player?.menu?.networkId != 0)
@@ -164,7 +164,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
                             clickedStack != itemToMerge
                                     && clickedStack.size + itemToMerge.size <= clickedStack.maxSize
                                     // Check if items have the same NBT data and are actually mergeable
-                                    && clickedStack.isItemEqual(itemToMerge)
+                                    && clickedStack.matchesItem(itemToMerge)
                                     && ItemStack.matchesNbt(clickedStack, itemToMerge)
                         }
                     }?.index
@@ -217,7 +217,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
                 .filter { itemGroup ->
                     // Only try to repair groups of items when they contain a useful item that can be repaired
                     // Prevents repairing of items that would get thrown out
-                    itemGroup.any { isStackUseful(it.value, items, noLimits = true) && it.value.isItemDamaged }
+                    itemGroup.any { isStackUseful(it.value, items, noLimits = true) && it.value.isDamaged }
                 }
                 .mapNotNull { groupStacks ->
                     // Get all pairs of items that can be merged
@@ -498,9 +498,9 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
 
             is ToolItem -> {
                 val blockType = when (item) {
-                    is AxeItem -> log
-                    is PickaxeItem -> stone
-                    else -> dirt
+                    is AxeItem -> LOG
+                    is PickaxeItem -> STONE
+                    else -> DIRT
                 }
 
                 return hasBestParameters(item, items, entityStacksMap) {
@@ -520,7 +520,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
 
             is ShearsItem ->
                 hasBestParameters(item, items, entityStacksMap) {
-                    it.durability.toFloat() * it.getEnchantmentLevel(Enchantment.efficiency)
+                    it.durability.toFloat() * it.getEnchantmentLevel(Enchantment.EFFICIENCY)
                 }
 
             // TODO: Knockback and Fire Aspect are also great
@@ -944,7 +944,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
     // Check if item is repairable and either has no enchantments or just unbreaking.
     private fun shouldBeRepaired(item: ItemStack?) =
         !item.isEmpty() && item.item.isRepairable && (
-                !item.isItemEnchanted || (item.enchantmentCount == 1 && Enchantment.UNBREAKING in item.enchantments)
+                !item.hasEnchantments || (item.enchantmentCount == 1 && Enchantment.UNBREAKING in item.enchantments)
                 )
 
     fun canBeRepairedWithOther(item: ItemStack?, items: List<ItemStack?>): Boolean {

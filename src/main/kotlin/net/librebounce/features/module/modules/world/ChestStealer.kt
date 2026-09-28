@@ -35,7 +35,7 @@ import net.minecraft.client.render.Window
 import net.minecraft.client.gui.screen.inventory.menu.ChestScreen
 import net.minecraft.inventory.slot.InventorySlot
 import net.minecraft.entity.living.LivingEntity.getEquipmentSlot
-import net.minecraft.block.Blocks.chest
+import net.minecraft.block.Blocks.CHEST
 import net.minecraft.item.ArmorItem
 import net.minecraft.item.ItemStack
 import net.minecraft.network.packet.c2s.play.CloseInventoryMenuC2SPacket
@@ -119,7 +119,7 @@ object ChestStealer : Module("ChestStealer", Category.WORLD) {
             if (!handleEvents())
                 return false
 
-            if (mc.interactionManager?.gameMode?.isSurvivalOrAdventure != true)
+            if (mc.interactionManager?.gameMode?.isSurvival != true)
                 return false
 
             if (mc.screen !is ChestScreen)
@@ -148,7 +148,7 @@ object ChestStealer : Module("ChestStealer", Category.WORLD) {
         if (screen !is ChestScreen)
             return
 
-        isCustomGUI = chestTitle && chest.name !in (screen.inventory ?: return).name
+        isCustomGUI = chestTitle && CHEST.name !in (screen.inventory ?: return).name
 
         // Check if chest isn't a custom GUI or shouldn't operate for another reason
         if (isCustomGUI || !shouldOperate())
@@ -305,7 +305,7 @@ object ChestStealer : Module("ChestStealer", Category.WORLD) {
                 val mergeableCount = mc.player.inventory.items.sumOf { otherStack ->
                     otherStack ?: return@sumOf 0
 
-                    if (otherStack.isItemEqual(item) && ItemStack.matchesNbt(item, otherStack))
+                    if (otherStack.matchesItem(item) && ItemStack.matchesNbt(item, otherStack))
                         otherStack.maxSize - otherStack.size
                     else 0
                 }
