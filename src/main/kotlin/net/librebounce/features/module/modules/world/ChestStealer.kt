@@ -217,7 +217,7 @@ object ChestStealer : Module("ChestStealer", Category.WORLD) {
                         if (!AutoArmor.canEquipFromChest())
                             return@clickNextTick
 
-                        val item = item.item
+                        //val item = item.item
 
                         if (item !is ArmorItem || player.inventory.armor[getEquipmentSlot(item) - 1] != null)
                             return@clickNextTick
@@ -465,7 +465,7 @@ object ChestStealer : Module("ChestStealer", Category.WORLD) {
 
                 receivedId = packetWindowId
 
-                items = packet.cursorItems.toList()
+                items = packet.items.toList()
             }
         }
     }

@@ -24,7 +24,7 @@ import net.librebounce.utils.timing.TickedActions.isTicked
 import net.minecraft.block.BlockWithBlockEntity
 import net.minecraft.block.FallingBlock
 import net.minecraft.block.CraftingTableBlock
-import net.minecraft.client.gui.screen.game.inventory.menu.SurvivalInventoryScreen
+import net.minecraft.client.gui.screen.game.inventory.SurvivalInventoryScreen
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.entity.ItemEntity
 import net.minecraft.block.Blocks.*
@@ -943,8 +943,8 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
 
     // Check if item is repairable and either has no enchantments or just unbreaking.
     private fun shouldBeRepaired(item: ItemStack?) =
-        !item.isEmpty() && item.item.isRepairable && (
-                !item.hasEnchantments || (item.enchantmentCount == 1 && Enchantment.UNBREAKING in item.enchantments)
+        !item.isEmpty() && item.item.isRepairable() && (
+                !item.hasEnchantments() || (item.enchantmentCount == 1 && Enchantment.UNBREAKING in item.enchantments)
                 )
 
     fun canBeRepairedWithOther(item: ItemStack?, items: List<ItemStack?>): Boolean {
