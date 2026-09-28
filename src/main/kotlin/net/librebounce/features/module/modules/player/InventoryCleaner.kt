@@ -342,7 +342,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
 
             val index = hotbarIndex + 36
 
-            val item = items.getOrNull(index)
+            val stack = items.getOrNull(index)
             val item = item?.item
 
             // Search for best item to sort
