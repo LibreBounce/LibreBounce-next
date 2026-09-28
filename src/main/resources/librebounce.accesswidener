@@ -8,8 +8,8 @@ accessible field net/minecraft/entity/Entity inWater Z
 accessible field net/minecraft/entity/Entity onFireTimer I
 accessible field net/minecraft/entity/Entity blocksWalkedOn I
 accessible field net/minecraft/entity/living/LivingEntity jumpingCooldown I
-accessible field net/minecraft/entity/living/LivingEntity flyingSpeed F
-accessible field net/minecraft/entity/living/player/PlayerEntity flyingSpeed F
+accessible field net/minecraft/entity/living/LivingEntity airSpeed F
+accessible field net/minecraft/entity/living/player/PlayerEntity airSpeed F
 accessible field net/minecraft/entity/living/player/PlayerEntity sleeping Z
 accessible field net/minecraft/client/render/entity/EntityRenderDispatcher offsetX D
 accessible field net/minecraft/client/render/entity/EntityRenderDispatcher offsetY D

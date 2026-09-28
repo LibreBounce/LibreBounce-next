@@ -73,7 +73,7 @@ class SimulatedPlayer(
     var z: Double,
     private val abilities: PlayerAbilities,
     private val vehicle: Entity?,
-    private var flyingSpeed: Float,
+    private var airSpeed: Float,
     private val world: World,
     var collidingHorizontally: Boolean,
     var collidingVertically: Boolean,
@@ -143,7 +143,7 @@ class SimulatedPlayer(
                 player.z,
                 abilities,
                 player.vehicle,
-                player.flyingSpeed,
+                player.airSpeed,
                 player.world,
                 player.collidingHorizontally,
                 player.collidingVertically,
@@ -197,7 +197,7 @@ class SimulatedPlayer(
                 player.z,
                 abilities,
                 player.vehicle,
-                player.flyingSpeed,
+                player.airSpeed,
                 player.world,
                 player.collidingHorizontally,
                 player.collidingVertically,
@@ -360,10 +360,10 @@ class SimulatedPlayer(
         this.playerSideMoveEntityWithHeading(this.sidewaysSpeed, this.forwardSpeed)
 
         // PlayerEntity post onLivingUpdate
-        flyingSpeed = SPEED_IN_AIR
+        airSpeed = SPEED_IN_AIR
 
         if (isSprinting())
-            flyingSpeed = (flyingSpeed.toDouble() + SPEED_IN_AIR.toDouble() * 0.3).toFloat()
+            airSpeed = (airSpeed.toDouble() + SPEED_IN_AIR.toDouble() * 0.3).toFloat()
 
         // LocalClientPlayerEntity post onLivingUpdate
         if (this.onGround && this.abilities.flying && !isSpectator) {
@@ -484,11 +484,11 @@ class SimulatedPlayer(
     private fun playerSideMoveEntityWithHeading(sidewaysSpeed: Float, forwardSpeed: Float) {
         if (abilities.flying && vehicle == null) {
             val d3 = velocityY
-            val f = flyingSpeed
-            flyingSpeed = abilities.flySpeed * (if (isSprinting()) 2 else 1).toFloat()
+            val f = airSpeed
+            airSpeed = abilities.flySpeed * (if (isSprinting()) 2 else 1).toFloat()
             livingEntitySideMoveEntityWithHeading(sidewaysSpeed, forwardSpeed)
             velocityY = d3 * 0.6
-            flyingSpeed = f
+            airSpeed = f
         } else livingEntitySideMoveEntityWithHeading(sidewaysSpeed, forwardSpeed)
     }
 
@@ -529,7 +529,7 @@ class SimulatedPlayer(
                     val f = 0.16277136f / (f4 * f4 * f4)
 
                     f5 = if (onGround) getAIMoveSpeed() * f
-                    else flyingSpeed
+                    else airSpeed
 
                     updateVelocity(strafing, forwards, f5)
 

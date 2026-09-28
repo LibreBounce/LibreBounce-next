@@ -44,7 +44,7 @@ class SimpleSimulatedPlayer(
         var v = strafe * strafe + forward * forward
 
         if (v >= 0.0001f) {
-            v = mc.player.flyingSpeed / sqrt(v).coerceAtLeast(1f)
+            v = mc.player.airSpeed / sqrt(v).coerceAtLeast(1f)
 
             strafe *= v
             forward *= v

@@ -545,7 +545,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
         if (item !is PotionItem) return false
 
         val isSplash = item.isSplashPotion()
-        val isHarmful = item.getPotionEffects(item)?.any { it.id in NEGATIVE_EFFECT_IDS } ?: return false
+        val isHarmful = item.getPotionEffects(item as ItemStack!)!!.any { it.id in NEGATIVE_EFFECT_IDS } ?: return false
 
         // Only keep helpful potions and, if 'onlyGoodPotions' is disabled, also splash harmful potions
         return !isHarmful || (!onlyGoodPotions && isSplash)
@@ -614,7 +614,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
         } else if (maxFoodStacks == 0)
             return false
 
-        val itemSaturation = item.getSaturation(item) * item.size
+        val itemSaturation = item.getSaturation(item as ItemStack!) * item.size
 
         val index = items.indexOf(item)
 
