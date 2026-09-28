@@ -13,7 +13,7 @@ import net.librebounce.utils.extensions.isMoving
 import net.librebounce.utils.inventory.InventoryUtils.serverOpenInventory
 import net.librebounce.utils.inventory.InventoryUtils.timeSinceClosedInventory
 import net.librebounce.utils.movement.MovementUtils.serverOnGround
-import net.minecraft.client.gui.screen.inventory.menu.SurvivalInventoryScreen
+import net.minecraft.client.gui.screen.game.inventory.menu.SurvivalInventoryScreen
 import java.awt.Color
 
 object InventoryManager : Configurable("InventoryManager"), MinecraftInstance, Listenable {

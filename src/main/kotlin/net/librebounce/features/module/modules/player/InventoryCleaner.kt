@@ -24,7 +24,7 @@ import net.librebounce.utils.timing.TickedActions.isTicked
 import net.minecraft.block.BlockWithBlockEntity
 import net.minecraft.block.FallingBlock
 import net.minecraft.block.CraftingTableBlock
-import net.minecraft.client.gui.screen.inventory.menu.SurvivalInventoryScreen
+import net.minecraft.client.gui.screen.game.inventory.menu.SurvivalInventoryScreen
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.entity.ItemEntity
 import net.minecraft.block.Blocks.*
@@ -570,7 +570,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
         var distanceSqToItem = .0
 
         if (!entityStacksMap.isNullOrEmpty()) {
-            distanceSqToItem = mc.player.getSquaredDistanceToEntity(entityStacksMap[item] ?: return false)
+            distanceSqToItem = mc.player.squaredDistanceTo(entityStacksMap[item] ?: return false)
             itemsToIterate += entityStacksMap.keys
         }
 
@@ -590,7 +590,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
             if (index == otherIndex) {
                 val otherItemEntity = entityStacksMap?.get(otherStack) ?: return@none false
 
-                return distanceSqToItem > mc.player.getSquaredDistanceToEntity(otherItemEntity)
+                return distanceSqToItem > mc.player.squaredDistanceTo(otherItemEntity)
             }
 
             canBeSortedTo(otherIndex, otherItem, items.size)
@@ -625,7 +625,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
         var distanceSqToItem = .0
 
         if (!entityStacksMap.isNullOrEmpty()) {
-            distanceSqToItem = mc.player.getSquaredDistanceToEntity(entityStacksMap[item] ?: return false)
+            distanceSqToItem = mc.player.squaredDistanceTo(entityStacksMap[item] ?: return false)
             itemsToIterate += entityStacksMap.keys
         }
 
@@ -653,7 +653,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
                         val otherItemEntity = entityStacksMap?.get(otherStack) ?: return@count false
 
                         // If other item is closer, count it as better
-                        distanceSqToItem > mc.player.getSquaredDistanceToEntity(otherItemEntity)
+                        distanceSqToItem > mc.player.squaredDistanceTo(otherItemEntity)
                     } else {
                         val isOtherSorted = canBeSortedTo(otherIndex, otherItem, items.size)
 
@@ -693,7 +693,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
         var distanceSqToItem = .0
 
         if (!entityStacksMap.isNullOrEmpty()) {
-            distanceSqToItem = mc.player.getSquaredDistanceToEntity(entityStacksMap[item] ?: return false)
+            distanceSqToItem = mc.player.squaredDistanceTo(entityStacksMap[item] ?: return false)
             itemsToIterate += entityStacksMap.keys
         }
 
@@ -714,7 +714,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
                         val otherItemEntity = entityStacksMap?.get(otherStack) ?: return@count false
 
                         // If other item is closer, count it as better
-                        distanceSqToItem > mc.player.getSquaredDistanceToEntity(otherItemEntity)
+                        distanceSqToItem > mc.player.squaredDistanceTo(otherItemEntity)
                     } else {
                         val isOtherSorted = canBeSortedTo(otherIndex, otherStack.item, items.size)
 
@@ -756,7 +756,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
         var distanceSqToItem = .0
 
         if (!entityStacksMap.isNullOrEmpty()) {
-            distanceSqToItem = mc.player.getSquaredDistanceToEntity(entityStacksMap[item] ?: return false)
+            distanceSqToItem = mc.player.squaredDistanceTo(entityStacksMap[item] ?: return false)
             itemsToIterate += entityStacksMap.keys
         }
 
@@ -781,7 +781,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
                         val otherItemEntity = entityStacksMap?.get(otherStack) ?: return@count false
 
                         // If other item is closer, count it as better
-                        distanceSqToItem > mc.player.getSquaredDistanceToEntity(otherItemEntity)
+                        distanceSqToItem > mc.player.squaredDistanceTo(otherItemEntity)
                     } else {
                         val isOtherSorted = canBeSortedTo(otherIndex, otherStack.item, items.size)
 
@@ -818,7 +818,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
         var distanceSqToItem = .0
 
         if (!entityStacksMap.isNullOrEmpty()) {
-            distanceSqToItem = mc.player.getSquaredDistanceToEntity(entityStacksMap[item] ?: return false)
+            distanceSqToItem = mc.player.squaredDistanceTo(entityStacksMap[item] ?: return false)
             itemsToIterate += entityStacksMap.keys
         }
 
@@ -838,7 +838,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
             if (index == otherIndex) {
                 val otherItemEntity = entityStacksMap?.get(otherStack) ?: return@none false
 
-                return distanceSqToItem > mc.player.getSquaredDistanceToEntity(otherItemEntity)
+                return distanceSqToItem > mc.player.squaredDistanceTo(otherItemEntity)
             }
 
             canBeSortedTo(otherIndex, otherItem, items.size) || otherIndex > index
@@ -862,7 +862,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
         var distanceSqToItem = .0
 
         if (!entityStacksMap.isNullOrEmpty()) {
-            distanceSqToItem = mc.player.getSquaredDistanceToEntity(entityStacksMap[item] ?: return false)
+            distanceSqToItem = mc.player.squaredDistanceTo(entityStacksMap[item] ?: return false)
             itemsToIterate += entityStacksMap.keys
         }
 
@@ -895,7 +895,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
                             // Only true when both items are dropped on ground, if other item is closer, compared one isn't the best
                             if (index == otherIndex) {
                                 val otherItemEntity = entityStacksMap?.get(otherStack) ?: return@forEachIndexed
-                                when (distanceSqToItem.compareTo(mc.player.getSquaredDistanceToEntity(otherItemEntity))) {
+                                when (distanceSqToItem.compareTo(mc.player.squaredDistanceTo(otherItemEntity))) {
                                     1 -> return false
                                     // Both items are exactly far, pretty much impossible
                                     0 -> return true

@@ -23,7 +23,7 @@ import net.librebounce.utils.timing.TickedActions.awaitTicked
 import net.librebounce.utils.timing.TickedActions.clickNextTick
 import net.librebounce.utils.timing.TickedActions.isTicked
 import net.librebounce.utils.timing.TickedActions.nextTick
-import net.minecraft.client.gui.screen.inventory.menu.SurvivalInventoryScreen
+import net.minecraft.client.gui.screen.game.inventory.menu.SurvivalInventoryScreen
 import net.minecraft.entity.living.mob.MobEntity.getEquipmentSlot
 import net.minecraft.item.ItemStack
 import net.minecraft.network.packet.c2s.play.PlayerUseC2SPacket
