@@ -11,6 +11,7 @@ import net.librebounce.utils.block.toVec*/
 import net.librebounce.utils.inventory.SilentHotbar
 import net.librebounce.utils.movement.MovementUtils
 import net.librebounce.utils.render.ColorUtils.stripColor*/
+import net.librebounce.utils.movement.MovementUtils
 import net.librebounce.utils.rotation.Rotation
 import net.librebounce.utils.rotation.RotationUtils.getFixedSensitivityAngle
 import net.minecraft.client.Minecraft

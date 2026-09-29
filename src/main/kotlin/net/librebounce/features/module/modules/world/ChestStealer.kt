@@ -34,7 +34,7 @@ import net.librebounce.utils.timing.TimeUtils.randomDelay
 import net.minecraft.client.render.Window
 import net.minecraft.client.gui.screen.game.inventory.ChestScreen
 import net.minecraft.inventory.slot.InventorySlot
-import net.minecraft.entity.living.LivingEntity.getEquipmentSlot
+import net.minecraft.entity.living.mob.MobEntity.getEquipmentSlot
 import net.minecraft.block.Blocks.CHEST
 import net.minecraft.item.ArmorItem
 import net.minecraft.item.ItemStack
@@ -419,7 +419,7 @@ object ChestStealer : Module("ChestStealer", Category.WORLD) {
     }
 
     // Progress bar
-    val onRender2D = handler<Render2DEvent> { event ->
+    /*val onRender2D = handler<Render2DEvent> { event ->
         if (!progressBar || mc.screen !is ChestScreen)
             return@handler
 
@@ -443,7 +443,7 @@ object ChestStealer : Module("ChestStealer", Category.WORLD) {
             maxY,
             Color.HSBtoRGB(easingProgress / 5, 1f, 1f) or 0xFF0000
         )
-    }
+    }*/
 
     val onPacket = handler<PacketEvent> { event ->
         when (val packet = event.packet) {
