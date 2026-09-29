@@ -144,11 +144,11 @@ val Entity.lastTickPos: Vec3d
 val LivingEntity?.isMoving: Boolean
     get() = this?.run { forwardSpeed != 0F || sidewaysSpeed != 0F } == true
 
-/*val LocalClientPlayerEntity.airTicks
+val LocalClientPlayerEntity.airTicks
     get() = MovementUtils.airTicks
 
 val LocalClientPlayerEntity.groundTicks
-    get() = MovementUtils.groundTicks*/
+    get() = MovementUtils.groundTicks
 
 val Entity.isInLiquid: Boolean
     get() = inWater || isInLava
