@@ -99,10 +99,10 @@ class ArmorSet(private vararg val armorPairs: Pair<Int?, ItemStack>?) : Iterable
 
         forEach { pair ->
             val item = pair?.second ?: return@forEach
-            val item = item.item as ArmorItem
-            baseDefensePercentage += item.material.getProtection(item.slot) * 4
+            val stack = item.item as ArmorItem
+            baseDefensePercentage += stack.material.getProtection(stack.slot) * 4
 
-            val protectionLvl = item.getLevel(Enchantment.PROTECTION)
+            val protectionLvl = stack.getLevel(Enchantment.PROTECTION)
 
             // Calculate epf based on protection level
             if (protectionLvl > 0)
