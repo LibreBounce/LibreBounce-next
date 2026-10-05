@@ -953,7 +953,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
 
         val item = item?.item ?: return false
 
-        if (!shouldBeRepaired(item))
+        if (!shouldBeRepaired(item as ItemStack))
             return false
 
         return items.any { otherStack ->
@@ -963,7 +963,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
             if (otherStack.item != item)
                 return@any false
 
-            getCombinedDurabilityIfBeneficial(item, otherStack) != null
+            getCombinedDurabilityIfBeneficial(item as ItemStack, otherStack) != null
         }
     }
 
