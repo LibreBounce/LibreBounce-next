@@ -348,7 +348,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
             // Search for best item to sort
             suspend fun searchAndSort(strictlyBest: Boolean = false): Boolean {
                 // InventorySlot is already sorted
-                if (isRightType(item) && isStackUseful(item, items, strictlyBest = strictlyBest))
+                if (isRightType(item) && isStackUseful(item as ItemStack, items, strictlyBest = strictlyBest))
                     return true
 
                 for ((otherIndex, otherStack) in items.withIndex()) {
@@ -464,24 +464,24 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
 
             is EnderPearlItem, is EnchantedBookItem, is BedItem -> true
 
-            is FoodItem -> isUsefulFood(item, items, entityStacksMap, noLimits, strictlyBest)
-            is BlockItem -> isUsefulBlock(item, items, entityStacksMap, noLimits, strictlyBest)
+            is FoodItem -> isUsefulFood(item as ItemStack, items, entityStacksMap, noLimits, strictlyBest)
+            is BlockItem -> isUsefulBlock(item as ItemStack, items, entityStacksMap, noLimits, strictlyBest)
 
             is ArmorItem, is ToolItem, is SwordItem, is BowItem, is FishingRodItem, is ShearsItem -> isUsefulEquipment(
-                item,
+                item as ItemStack,
                 items,
                 entityStacksMap
             )
 
             is BoatItem, is MinecartItem -> !ignoreVehicles
 
-            is PotionItem -> isUsefulPotion(item)
+            is PotionItem -> isUsefulPotion(item as ItemStack)
 
-            is BucketItem -> isUsefulBucket(item, items, entityStacksMap)
+            is BucketItem -> isUsefulBucket(item as ItemStack, items, entityStacksMap)
 
-            is FlintAndSteelItem -> isUsefulLighter(item, items, entityStacksMap)
+            is FlintAndSteelItem -> isUsefulLighter(item as ItemStack, items, entityStacksMap)
 
-            in THROWABLE_ITEMS -> isUsefulThrowable(item, items, entityStacksMap, noLimits, strictlyBest)
+            in THROWABLE_ITEMS -> isUsefulThrowable(item as ItemStack, items, entityStacksMap, noLimits, strictlyBest)
 
             else -> false
         }
@@ -494,7 +494,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
         val item = item?.item ?: return false
 
         return when (item) {
-            is ArmorItem -> item in getBestArmorSet(items, entityStacksMap)
+            is ArmorItem -> (item as ItemStack) in getBestArmorSet(items, entityStacksMap)
 
             is ToolItem -> {
                 val blockType = when (item) {
@@ -503,7 +503,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
                     else -> DIRT
                 }
 
-                return hasBestParameters(item, items, entityStacksMap) {
+                return hasBestParameters(item as ItemStack, items, entityStacksMap) {
                     it.item.getMiningSpeed(it, blockType) * it.durability
                 }
             }
@@ -513,25 +513,25 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
 
                 if (fishingRod <= maxFishingRodStacks) return true
 
-                hasBestParameters(item, items, entityStacksMap) {
+                hasBestParameters(item as ItemStack, items, entityStacksMap) {
                     it.durability.toFloat()
                 }
             }
 
             is ShearsItem ->
-                hasBestParameters(item, items, entityStacksMap) {
+                hasBestParameters(item as ItemStack, items, entityStacksMap) {
                     it.durability.toFloat() * it.getEnchantmentLevel(Enchantment.EFFICIENCY)
                 }
 
             // TODO: Knockback and Fire Aspect are also great
             // For instance, a Sharpness + Knockback/Fire Aspect Diamond Sword is better than a Sharpness 2 Iron Sword
             is SwordItem ->
-                hasBestParameters(item, items, entityStacksMap) {
+                hasBestParameters(item as ItemStack, items, entityStacksMap) {
                     it.attackDamage.toFloat()
                 }
 
             is BowItem ->
-                hasBestParameters(item, items, entityStacksMap) {
+                hasBestParameters(item as ItemStack, items, entityStacksMap) {
                     it.getEnchantmentLevel(Enchantment.POWER).toFloat()
                 }
 
@@ -544,7 +544,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
 
         if (item !is PotionItem) return false
 
-        val isSplash = item.isSplashPotion()
+        val isSplash = (item as ItemStack).isSplashPotion()
         val isHarmful = item.getPotionEffects(item as ItemStack!)!!.any { it.id in NEGATIVE_EFFECT_IDS } ?: return false
 
         // Only keep helpful potions and, if 'onlyGoodPotions' is disabled, also splash harmful potions
@@ -853,7 +853,7 @@ object InventoryCleaner : Module("InventoryCleaner", Category.PLAYER) {
 
         val index = items.indexOf(item)
 
-        val currentStats = parameters(item)
+        val currentStats = parameters(item as ItemStack)
 
         val isSorted = canBeSortedTo(index, item, items.size)
 
