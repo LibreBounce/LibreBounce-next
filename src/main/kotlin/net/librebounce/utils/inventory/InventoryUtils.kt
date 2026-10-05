@@ -154,12 +154,12 @@ object InventoryUtils : Listenable {
 
         for (i in 36..44) {
             val item = player.inventorySlot(i).item ?: continue
-            val item = item.item
-            if (item is BlockItem) {
-                val block = item.block
+            val stack = item.item
+            if (stack is BlockItem) {
+                val block = stack.block
                 val displayItemInHand = player.displayItemInHand
-                if (displayItemInHand != null && displayItemInHand == item || block !in BLOCK_BLACKLIST && block !is PlantBlock) {
-                    amount += item.size
+                if (displayItemInHand != null && displayItemInHand == stack || block !in BLOCK_BLACKLIST && block !is PlantBlock) {
+                    amount += stack.size
                 }
             }
         }

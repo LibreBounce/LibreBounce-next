@@ -208,7 +208,7 @@ object ChestStealer : Module("ChestStealer", Category.WORLD) {
                         sqrt(dist.toDouble()) * multiplier.random()
                     } else 0.0
 
-                    if (itemStolenDebug) debug("Stole ${item.displayName.lowercase()} on slot ${slot}. Delay: ${stealingDelay}ms")
+                    if (itemStolenDebug) debug("Stole ${item.hoverName.lowercase()} on slot ${slot}. Delay: ${stealingDelay}ms")
 
                     // If target is sortable to a hotbar slot, steal and sort it at the same time, else shift + left-click
                     clickNextTick(slot, sortableTo ?: 0, if (sortableTo != null) 2 else 1) {
