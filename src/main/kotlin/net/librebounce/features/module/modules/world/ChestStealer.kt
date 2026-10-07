@@ -217,9 +217,9 @@ object ChestStealer : Module("ChestStealer", Category.WORLD) {
                         if (!AutoArmor.canEquipFromChest())
                             return@clickNextTick
 
-                        //val item = item.item
+                        val stack = item.item
 
-                        if (item !is ArmorItem || player.inventory.armor[getEquipmentSlot(item) - 1] != null)
+                        if (stack !is ArmorItem || player.inventory.armor[getEquipmentSlot(item) - 1] != null)
                             return@clickNextTick
 
                         // TODO: should the stealing be suspended until the armor gets equipped and some delay on top of that, maybe toggleable?
@@ -454,16 +454,15 @@ object ChestStealer : Module("ChestStealer", Category.WORLD) {
 
             is InventoryMenuContentS2CPacket -> {
                 // Chests never have networkId 0
-                val packetWindowId = packet.menuId()
 
-                if (packetWindowId == 0)
+                if (packet.menuId == 0)
                     return@handler
 
-                if (receivedId != packetWindowId) {
+                if (receivedId != packet.menuId) {
                     debug("Chest opened with ${items.size} items")
                 }
 
-                receivedId = packetWindowId
+                receivedId = packet.menuId
 
                 items = packet.items.toList()
             }

@@ -42,9 +42,17 @@ import static net.minecraft.client.render.platform.GlStateManager.*;
 import static org.lwjgl.opengl.GL11.*;
 
 @Mixin(GameGui.class)
-public abstract class GameGuiMixin extends GuiElement {
-	@Inject(method = "render", at = @At("HEAD"), cancellable = true)
-	private void libreBounce$injectRender2DEvent(float delta, CallbackInfo ci) {
-		EventManager.INSTANCE.call(new Render2DEvent(delta));
-	}
+public abstract class GameGuiMixin {
+	@Inject(
+        method = "render",
+        at = @At(
+                value = "INVOKE",
+                target = "Lnet/minecraft/client/render/platform/GlStateManager;enableBlend()V",
+                shift = At.Shift.AFTER,
+                ordinal = 0
+        )
+    )
+    private void libreBounce$render2DEvent(float tickDelta, CallbackInfo ci, @Local Window window) {
+        EventManager.INSTANCE.call(new Render2DEvent(delta));
+    }
 }
