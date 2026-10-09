@@ -11,7 +11,7 @@ import net.librebounce.utils.client.MinecraftInstance
 import net.librebounce.utils.client.chat
 import net.librebounce.utils.client.rotation
 import net.librebounce.utils.extensions.*
-import net.librebounce.utils.inventory.InventoryUtils
+//import net.librebounce.utils.inventory.InventoryUtils
 import net.librebounce.utils.kotlin.RandomUtils.nextDouble
 import net.librebounce.utils.kotlin.RandomUtils.nextFloat
 import net.librebounce.utils.rotation.RaycastUtils.raycastEntity
@@ -645,7 +645,7 @@ object RotationUtils : MinecraftInstance, Listenable {
 
         val playerRotation = player.rotation
 
-        val shouldUpdate = !InventoryUtils.servermenu && !InventoryUtils.serverOpenInventory
+        val shouldUpdate = true//!InventoryUtils.servermenu && !InventoryUtils.serverOpenInventory
 
         if (!shouldUpdate) {
             return

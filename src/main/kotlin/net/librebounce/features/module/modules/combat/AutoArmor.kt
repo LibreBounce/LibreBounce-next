@@ -1,4 +1,4 @@
-package net.librebounce.features.module.modules.combat
+/*package net.librebounce.features.module.modules.combat
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -290,4 +290,4 @@ object AutoArmor : Module("AutoArmor", Category.COMBAT) {
 
         delay(delay.random().toLong())
     }
-}
+}*/

@@ -236,9 +236,9 @@ object ModuleManager : Listenable, Collection<Module> by MODULE_REGISTRY {
             AutoClicker,
             Aimbot,
             AutoLeave,
-            AutoArmor,
+            /*AutoArmor,
             InventoryCleaner,
-            ChestStealer,
+            ChestStealer,*/
             SmartHit,
             Criticals,
             TickManipulation,
