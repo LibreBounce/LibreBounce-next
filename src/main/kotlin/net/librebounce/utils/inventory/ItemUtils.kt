@@ -12,6 +12,7 @@ import net.minecraft.resource.Identifier
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 import kotlin.math.roundToInt
+import kotlin.collections.sum
 
 object ItemUtils {
     val mc = Minecraft.getInstance()
@@ -124,7 +125,7 @@ val ItemStack.enchantmentCount
 val ItemStack.enchantmentSum
     get() = enchantments.values.sum()
 
-fun ItemStack.getEnchantmentLevel(enchantment: Enchantment) = enchantments.getOrDefault(enchantment, 0)
+fun ItemStack.getEnchantmentLevel(enchantment: Enchantment) = enchantments.getOrDefault<Enchantment, Int>(enchantment, 0)
 
 // Makes Kotlin smart-cast the item to not null ItemStack
 @OptIn(ExperimentalContracts::class)
