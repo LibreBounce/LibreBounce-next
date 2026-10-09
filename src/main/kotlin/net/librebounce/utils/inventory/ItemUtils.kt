@@ -106,14 +106,12 @@ val ItemStack.enchantments: Map<Enchantment, Int>
         if (this.nbt == null || nbt.isEmpty)
             return enchantments
 
-        val enchList = nbt.getList("Enchantments", 10)
-        repeat(enchList.size) { index ->
-            val enchantment = enchList.getCompound(index)
-            if (enchantment.contains("id")) {
-                val enchId = enchantment.getInt("id")
-                val enchLevel = enchantment.getInt("lvl")
-                enchantments[Enchantment.byId(enchId)] = enchLevel
-            }
+        val enchList = nbt.getList("ench", 10) // 10 = TAG_COMPOUND
+        for (i in 0 until enchList.size()) {
+            val enchTag = enchList.getCompound(i)
+            val enchId = enchTag.getShort("id").toInt()
+            val enchLevel = enchTag.getShort("lvl").toInt()
+            enchantments[Enchantment.byId(enchId)] = enchLevel
         }
 
         return enchantments
