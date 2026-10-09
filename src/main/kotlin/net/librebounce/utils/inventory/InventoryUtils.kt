@@ -1,4 +1,4 @@
-package net.librebounce.utils.inventory
+/*package net.librebounce.utils.inventory
 
 import net.librebounce.event.*
 import net.librebounce.features.module.modules.misc.NoSlotSet
@@ -240,4 +240,4 @@ object InventoryUtils : Listenable {
     }
 
 
-}
+}*/

@@ -1,4 +1,4 @@
-package net.librebounce.utils.inventory
+/*package net.librebounce.utils.inventory
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -157,4 +157,4 @@ object InventoryManager : Configurable("InventoryManager"), MinecraftInstance, L
             false
         } else true // Simulated inventory will get reopen before a window click, delaying it by start delay
 
-}
+}*/

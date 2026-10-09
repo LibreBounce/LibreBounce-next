@@ -1,4 +1,4 @@
-@file:Suppress("unused")
+/*@file:Suppress("unused")
 
 package net.librebounce.features.module.modules.world
 
@@ -474,4 +474,4 @@ object ChestStealer : Module("ChestStealer", Category.WORLD) {
         //"Notification" -> hud.addNotification(Notification(message, 500L))
         else -> null
     }
-}
+}*/

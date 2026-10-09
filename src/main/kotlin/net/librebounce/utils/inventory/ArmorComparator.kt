@@ -1,4 +1,4 @@
-package net.librebounce.utils.inventory
+/*package net.librebounce.utils.inventory
 
 import net.librebounce.utils.client.MinecraftInstance
 import net.minecraft.enchantment.Enchantment
@@ -130,4 +130,4 @@ class ArmorSet(private vararg val armorPairs: Pair<Int?, ItemStack>?) : Iterable
 
 operator fun ArmorSet?.contains(item: ItemStack) = this?.contains(item) ?: true
 
-private val NULL_LIST = listOf<Pair<Int?, ItemStack>?>(null)
+private val NULL_LIST = listOf<Pair<Int?, ItemStack>?>(null)*/

@@ -1,4 +1,4 @@
-package net.librebounce.features.module.modules.player
+/*package net.librebounce.features.module.modules.player
 
 import kotlinx.coroutines.delay
 import net.librebounce.config.ListValue
@@ -1016,4 +1016,4 @@ private val SORTING_TARGETS: Map<String, ((Item?) -> Boolean)?> = mapOf(
 
 private val SORTING_KEYS = SORTING_TARGETS.keys.toTypedArray()
 
-private val SINGLE_KEYS = SORTING_KEYS.copyOfRange(0, 5)
+private val SINGLE_KEYS = SORTING_KEYS.copyOfRange(0, 5)*/
