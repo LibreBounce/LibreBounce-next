@@ -106,10 +106,14 @@ val ItemStack.enchantments: Map<Enchantment, Int>
         if (this.nbt == null || nbt.isEmpty)
             return enchantments
 
-        repeat(nbt.elements.size) {
-            val features = nbt.getCompound(it)
-            if (features.contains("ench") || features.contains("id"))
-                enchantments[Enchantment.byId(features.getInt("id"))] = features.getInt("lvl")
+        val enchList = nbt.getList("Enchantments", 10)
+        repeat(enchList.size) { index ->
+            val enchantment = enchList.getCompound(index)
+            if (enchantment.contains("id")) {
+                val enchId = enchantment.getInt("id")
+                val enchLevel = enchantment.getInt("lvl")
+                enchantments[Enchantment.byId(enchId)] = enchLevel
+            }
         }
 
         return enchantments
@@ -120,7 +124,7 @@ val ItemStack.enchantmentCount
 
 // Returns sum of levels of all enchantment levels
 val ItemStack.enchantmentSum
-    get() = it.enchantments.elements.sum()
+    get() = enchantments.elements.sum()
 
 fun ItemStack.getEnchantmentLevel(enchantment: Enchantment) = enchantments.getOrDefault(enchantment, 0)
 
