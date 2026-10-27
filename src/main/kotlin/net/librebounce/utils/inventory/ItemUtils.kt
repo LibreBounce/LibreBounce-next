@@ -123,7 +123,7 @@ val ItemStack.enchantmentCount
 
 // Returns sum of levels of all enchantment levels
 val ItemStack.enchantmentSum
-    get() = enchantments.values.sum()
+    get() = enchantments.entries.sum()
 
 fun ItemStack.getEnchantmentLevel(enchantment: Enchantment) = enchantments.getOrDefault<Enchantment, Int>(enchantment, 0)
 
